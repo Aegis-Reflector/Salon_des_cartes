@@ -1,0 +1,85 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F8335388-19E7-0C51-052F-0001C36D5F71" name="Permission">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:18:25 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="Lire" id="7C9B62AC-139C-A33A-B0CE-EF52D92298E2">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:18:32 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Modifier" id="D2CA295C-828E-2A93-800C-2E331DDC936A">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:18:32 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Ajouter" id="F5BC4827-4B61-8BD7-984F-64EF71934866">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:18:32 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="Supprimer" id="DDA4F357-B980-0FA0-D336-0D581D6071D3">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:18:32 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_utilisateur" id="FED614B2-53FD-8DF2-E9E6-96D1B0723DC5">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:19:28 UTC</createdTime>
+<generatorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<referedAttribute>52EB8D01-7291-CACE-1BCF-13AFB26DCCC7</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+</Entity>

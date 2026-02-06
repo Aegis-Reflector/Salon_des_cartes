@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Relational_1" id="9D711459-FFCB-FEA7-E3CC-A1595267AFC2" mainViewID="CAC8BB39-999A-E9CA-029B-3A09FE0014A2">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:00:02 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>01F6E6D1-21D0-CFBD-ABDD-3988D1813575</selectedRDBMSSite>
+<importDDLFileStamps>
+<importDDLFileStamp class="oracle.dbtools.crest.imports.DDLFileStamp">
+<fileName>Script_creation_table.ddl</fileName>
+<pathName>C:\Dev\Application-Web-Transactionelles-CartiFans123-Gr07\BD</pathName>
+<dbType>17</dbType>
+</importDDLFileStamp>
+</importDDLFileStamps>
+</relationalModel>

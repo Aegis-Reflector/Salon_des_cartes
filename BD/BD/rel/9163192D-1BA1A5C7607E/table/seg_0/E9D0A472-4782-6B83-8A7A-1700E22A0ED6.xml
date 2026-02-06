@@ -1,0 +1,110 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E9D0A472-4782-6B83-8A7A-1700E22A0ED6" name="commande">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>A70B9B16-0022-A98D-8294-3DA1C5DA368B</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_commande" id="7984E049-3B08-9862-320A-7DC65904F028">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>593F20AD-951C-1590-B82D-D11B4AAC828F</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="date_commande" id="5A979434-45B1-D848-4300-691E36BE6B49">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>E9D5897D-A2EC-A631-E0F7-9E179CA74417</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="addresse" id="3694C1FF-B113-9360-0747-2AFFC4E92CCC">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>34E17498-D400-8750-F83E-F8D1CAF72B9A</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ville" id="EE64D8F7-37AB-D027-3370-2BBE7881CBE8">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>790AC7E4-7C6B-A0EE-E15F-B746C097C719</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="code_postal" id="CD2DCEB2-3E88-C57B-2975-43645E04E84B">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>CDBD4A88-3BCB-2828-4D68-6565E9425DA2</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Utilisateur_id_utilisateur" id="74DA8638-F4E3-A4AE-5495-9C52066A22C1">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>7E2F5D79-C509-DE5E-C0B2-CA701BE53408</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C4E73360-9EC8-9F53-12B3-92416128E966" referredColumn="40DD4F1C-678A-6F8C-6C2E-BAC38A1C3504"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="189876B9-292B-8E53-C4CA-2F7462A29F1D" name="commande_PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>A6041962-8401-5F85-1B6E-568FFA67787F</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7984E049-3B08-9862-320A-7DC65904F028"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A5366D4C-F879-0CEA-230C-B1BA30A9EF89" name="commande_Utilisateur_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>6D495739-B075-750E-C3C3-6142D4B71DD8</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="74DA8638-F4E3-A4AE-5495-9C52066A22C1"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

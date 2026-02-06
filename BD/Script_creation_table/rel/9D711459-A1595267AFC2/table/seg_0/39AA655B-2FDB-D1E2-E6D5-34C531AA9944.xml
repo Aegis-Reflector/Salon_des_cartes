@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="39AA655B-2FDB-D1E2-E6D5-34C531AA9944" name="commande">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>19F2C551-3DDF-5335-4BBB-C00D689CB7DE</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_commande" id="7D52D803-33ED-782E-4E7A-E0A20C54F860">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>1D310FBB-DA84-8127-AF22-D78003361F75</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementSequenceName>commande_id_commande_seq</autoIncrementSequenceName>
+<autoIncrementTriggerName>commande_id_commande_trg</autoIncrementTriggerName>
+</Column>
+<Column name="client_id_client" id="D71158AC-E9FE-49C2-FCF2-05E836375F63">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>9D329A9E-C8F1-9225-FFA8-9EA2FE8BE3DD</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2B19D2A3-A207-1970-B96E-40F442E73D75" referredColumn="D1F1833F-7DC9-41FC-373E-65362645FD19"/>
+</associations>
+</Column>
+<Column name="date_commande" id="84023A3D-EA99-D0CC-D615-ADF7D4060EB6">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>9ED581E4-90DE-6F18-038C-DFF2C78C4EF1</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<domain>A61E16CD-518A-4062-B332-17507B46270D</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="addresse" id="7EAC852F-069C-EE13-F68B-5CCEEE21914F">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>3F52767D-0A20-76A2-C18C-EDE8E658A2F1</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>CF66F921-E143-5320-ACD2-7E9E64FFAFA8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ville" id="F826B4F7-C83E-03A3-D873-8BCB06AAB072">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>DC5552A8-2AAE-04BC-7DF5-D5AD86D95CEB</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>CF66F921-E143-5320-ACD2-7E9E64FFAFA8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="code_postal" id="57528610-5EC3-71EE-2DB6-2DC6BA67095B">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>8FAD6DEA-156B-0624-57E5-B19455FB9627</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>CF66F921-E143-5320-ACD2-7E9E64FFAFA8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F23BF0D0-EC22-71B6-3796-FF043E9D5A74" name="commande_pk">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>84D91806-0D15-6530-6B02-3C07ED5DE35F</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7D52D803-33ED-782E-4E7A-E0A20C54F860"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A207B2F5-CDBD-907A-0B6E-1CCD56F24727" name="commande_client_fk">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D71158AC-E9FE-49C2-FCF2-05E836375F63"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

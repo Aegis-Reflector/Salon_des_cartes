@@ -1,0 +1,67 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F91BB3A9-E078-300B-41E3-2F9EF811487A" name="client">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>D058B7AE-8336-77B8-30D0-03F90E2DF7CF</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_client" id="D1F1833F-7DC9-41FC-373E-65362645FD19">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>CD0EA3C6-2128-D8C0-1665-507DD9D7F46B</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementSequenceName>client_id_client_seq</autoIncrementSequenceName>
+<autoIncrementTriggerName>client_id_client_trg</autoIncrementTriggerName>
+</Column>
+<Column name="courriel" id="06592D7F-ECAA-F9FC-6AD0-7B6FF0BC4170">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>A3196DF9-59BA-77DD-91D5-9EEA514B35F1</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>CF66F921-E143-5320-ACD2-7E9E64FFAFA8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="mot_de_passe" id="A60F9DA1-7332-FBDD-7B4D-111212D6A63F">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>941BFEE8-7BA0-406A-2C21-6E7DFECD1B7F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>CF66F921-E143-5320-ACD2-7E9E64FFAFA8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A8A650D5-7009-4C82-225A-F9B7577EB782" name="client_pk">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>96286175-7A71-1839-B014-B737ED119F33</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D1F1833F-7DC9-41FC-373E-65362645FD19"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

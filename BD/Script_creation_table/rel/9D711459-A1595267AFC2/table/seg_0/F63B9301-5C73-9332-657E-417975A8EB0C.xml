@@ -1,0 +1,106 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F63B9301-5C73-9332-657E-417975A8EB0C" name="panier">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>B29DC5B9-4863-77D0-11A0-E9CF02DD67A8</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_panier" id="73AA8155-54A6-B28C-853A-C2D5117C48B8">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>E81E53C2-B167-6DFB-8010-93DC258B8022</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementSequenceName>panier_id_panier_seq</autoIncrementSequenceName>
+<autoIncrementTriggerName>panier_id_panier_trg</autoIncrementTriggerName>
+</Column>
+<Column name="produit_id_produit" id="60F35B5D-23B0-90A6-1E55-5626890560C2">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>EA81FD04-2DD6-23E4-5B5E-75F68FAFF40C</importedID>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D25A72D2-C1D2-F840-253C-70D7CD65EFBD" referredColumn="9C3F22CB-4141-6A64-31D5-9F0E60D6530A"/>
+</associations>
+</Column>
+<Column name="quantite" id="BB0BD8D8-A386-B51D-76E2-49548B9C2B03">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>5B80D3FE-614B-E451-83F9-CC63B50EF373</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="client_id_client" id="C3EB5F89-E7F2-D4EE-F9F2-24AD30D00A38">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>C528E507-4145-7497-31FB-9D25FD9D3652</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<domain>612CE977-0D9D-59AB-6C6F-EB797133D355</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9DF939A0-074E-AC0D-27FA-858D13008180" referredColumn="D1F1833F-7DC9-41FC-373E-65362645FD19"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EC34243A-E727-1E21-D98E-B7556F18BF5A" name="panier_pk">
+<sourceDDLFile>Script_creation_table.ddl</sourceDDLFile>
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<importedID>629C8B1D-CF75-0073-D4C1-6122AB39C703</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="73AA8155-54A6-B28C-853A-C2D5117C48B8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0E0914C6-4381-1A8B-FCB7-802381F65F34" name="panier_client_fk">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C3EB5F89-E7F2-D4EE-F9F2-24AD30D00A38"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0F190F81-8777-7CAA-BEA9-CB9568F75F52" name="panier_produit_fk">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:01:26 UTC</createdTime>
+<ownerDesignName>Script_creation_table</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="60F35B5D-23B0-90A6-1E55-5626890560C2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,72 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7200ECCB-6F28-7B23-0068-0C22E6B196FF" name="Panier">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:28:39 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_panier" id="71C03321-3DD2-2C46-7474-E1F07235F5BB">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:28:45 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="quantite" id="8857CB39-601F-5102-F736-D159655E2D2B">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:29:03 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_utilisateur" id="7B7CC575-A8C3-442D-8B7D-048DAF34DBA0">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:23:51 UTC</createdTime>
+<generatorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<referedAttribute>52EB8D01-7291-CACE-1BCF-13AFB26DCCC7</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="DDBC686C-25DF-3BF3-7373-D0C6D29D40FB" name="Panier PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:29:02 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>71C03321-3DD2-2C46-7474-E1F07235F5BB</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

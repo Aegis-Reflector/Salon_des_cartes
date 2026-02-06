@@ -1,0 +1,99 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1E44FCF0-201F-F488-0640-5D9FC4CF80C7" name="Permission">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>F8335388-19E7-0C51-052F-0001C36D5F71</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Lire" id="A7C6E240-9AB5-B319-D064-1B21A3B595B8">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>7C9B62AC-139C-A33A-B0CE-EF52D92298E2</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Modifier" id="CAFCD994-6394-3BEA-7247-86FF9BFCB01C">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>D2CA295C-828E-2A93-800C-2E331DDC936A</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Ajouter" id="1AE877A6-A3B2-08F0-2A29-8A77A0070FFA">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>F5BC4827-4B61-8BD7-984F-64EF71934866</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Supprimer" id="B1ABB677-AB9D-A397-1D26-85D9BA03433E">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>DDA4F357-B980-0FA0-D336-0D581D6071D3</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Utilisateur_id_utilisateur" id="CF10E002-354A-0B1C-9681-E68CF122FBAA">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>FED614B2-53FD-8DF2-E9E6-96D1B0723DC5</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="E59F285D-9F81-21F5-AD50-B9C889B5FF44" referredColumn="40DD4F1C-678A-6F8C-6C2E-BAC38A1C3504"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="ABE4C7A4-293D-B1FE-C60A-F9B21F3EBD77" name="Permission__IDX">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="CF10E002-354A-0B1C-9681-E68CF122FBAA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="7E1FA642-1300-E552-AC1D-D9BD372A4525" name="Permission_Utilisateur_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="CF10E002-354A-0B1C-9681-E68CF122FBAA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="6635A60C-2AE5-3986-52DB-D30B0B65CCC0" containerWithKeyObject="A67BA50C-9116-BAA9-8A59-EA052C7F41A0" localFKIndex="C60308EE-EE8F-70F3-BCB9-799D8AE611A8" name="Relation_4_Panier_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<generatorID>B326CA44-4FBA-C3D2-8E6E-F060275BBCAA</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<referredTableLongName>Panier</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>4D6147A7-377C-CB94-A494-514889FD1F8C</referredTableID>
+<keyObject>C3325EA7-394A-B46C-5B29-791AA281BD90</keyObject>
+<referredKeyID>C3325EA7-394A-B46C-5B29-791AA281BD90</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_panier</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

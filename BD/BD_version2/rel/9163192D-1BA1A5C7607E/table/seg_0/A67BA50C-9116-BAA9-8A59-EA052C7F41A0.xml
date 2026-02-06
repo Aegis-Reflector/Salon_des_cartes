@@ -1,0 +1,75 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="A67BA50C-9116-BAA9-8A59-EA052C7F41A0" name="Panier_produit">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Panier_id_panier" id="F9A7F62D-14E6-9FD1-A5FC-6237F77F179E">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6635A60C-2AE5-3986-52DB-D30B0B65CCC0" referredColumn="30813CB0-7B73-7263-911D-CFA2DECFD62B"/>
+</associations>
+</Column>
+<Column name="Produit_id_produit" id="9F5646E3-C934-4BA0-3A9F-0114B1B1C65C">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5283653C-0F1B-1A7A-C1C7-40BE47E81997" referredColumn="833A3193-CF85-77F6-BEF8-93D93488AA72"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C9A4F20B-EDF3-9BA2-7172-7207680D7D13" name="Relation_4_PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9A7F62D-14E6-9FD1-A5FC-6237F77F179E"/>
+<colUsage columnID="9F5646E3-C934-4BA0-3A9F-0114B1B1C65C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C60308EE-EE8F-70F3-BCB9-799D8AE611A8" name="Relation_4_Panier_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<generatorID>B326CA44-4FBA-C3D2-8E6E-F060275BBCAA</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F9A7F62D-14E6-9FD1-A5FC-6237F77F179E"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A407A639-169F-28D3-18CA-328B88F6F893" name="Relation_4_Produit_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:44:30 UTC</createdTime>
+<generatorID>B326CA44-4FBA-C3D2-8E6E-F060275BBCAA</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9F5646E3-C934-4BA0-3A9F-0114B1B1C65C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,98 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F16D5FE1-3F53-23D0-58F7-87D20BDEC2FE" name="Utilisateur">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>D17B913C-D348-6748-3740-AC7D8735FEB8</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_utilisateur" id="40DD4F1C-678A-6F8C-6C2E-BAC38A1C3504">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>52EB8D01-7291-CACE-1BCF-13AFB26DCCC7</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="courriel" id="928679AD-89D3-CD85-4DA7-8BADC2130221">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>77A10FC9-DCB5-7824-D1A4-B67669BBC63B</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="mot_de_passe" id="6B454A1A-E013-AA47-78E7-DF95B4CAFF1E">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>017CC0D0-0F3D-A2AC-A93A-B8B611A01D66</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>255</dataTypeSize>
+<ownDataTypeParameters>255,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Panier_id_panier" id="6300148F-5B9F-487F-D988-C1C45CC0AE7A">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>86B91308-BA87-2982-891D-9E95D16D85F0</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D48A3D6B-024A-3DE7-9758-F346756AB408" referredColumn="30813CB0-7B73-7263-911D-CFA2DECFD62B"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="75F2A1C1-4116-E257-56EC-BEB0E4702CE0" name="Utilisateur_PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<generatorID>AC7622E4-CDE4-0396-1D13-8E918562D8E9</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="40DD4F1C-678A-6F8C-6C2E-BAC38A1C3504"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="FA3A3E33-071A-B81B-AD25-53B24E610892" name="Utilisateur__IDX">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:41:06 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="6300148F-5B9F-487F-D988-C1C45CC0AE7A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D3565A89-5AAB-73D9-ED07-A37C302BD1C4" name="Utilisateur_Panier_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 15:46:24 UTC</createdTime>
+<generatorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6300148F-5B9F-487F-D988-C1C45CC0AE7A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

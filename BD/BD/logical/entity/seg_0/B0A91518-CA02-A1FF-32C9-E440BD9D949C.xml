@@ -1,0 +1,72 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B0A91518-CA02-A1FF-32C9-E440BD9D949C" name="Inventaire">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:29:36 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id_inventaire" id="021F4C95-61FC-DD5E-801C-CE3A40CB7DB7">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:29:41 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="quantite_disponible" id="D732A387-5A7A-06A3-D04B-FF2AB342E01A">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:29:57 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id_produit" id="FFB34816-40AC-3E05-CCBA-EE09080809FA">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:52:44 UTC</createdTime>
+<generatorID>9CDE9E5E-0526-9629-EF1A-7EA510EC7CE7</generatorID>
+<ownerDesignName>BD</ownerDesignName>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
+</engineerTo>
+<referedAttribute>7067F4BA-535D-8E33-7D65-10BB5E7BDE24</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="3A9FA347-807E-3CA6-4C87-5A7A73317EB8" name="Inventaire PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-06 14:30:18 UTC</createdTime>
+<ownerDesignName>BD</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>021F4C95-61FC-DD5E-801C-CE3A40CB7DB7</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
