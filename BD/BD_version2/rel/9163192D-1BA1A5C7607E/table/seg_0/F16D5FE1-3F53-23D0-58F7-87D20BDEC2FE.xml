@@ -68,7 +68,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="B9BC5C80-5A85-8C87-B25E-F91CD5DADEB8" referredColumn="E6DB89D1-87DD-A101-4AEA-5684BA0E0023"/>
+<colAssociation fkAssociation="2E03557F-A357-A309-1033-7CF29FA71DC4" referredColumn="E6DB89D1-87DD-A101-4AEA-5684BA0E0023"/>
 </associations>
 </Column>
 </columns>
@@ -107,9 +107,9 @@
 <colUsage columnID="D7BD1416-A622-E4D0-F8B2-2F0F3EC14A30"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="A71C31FA-B127-DF1D-3634-47C01967969F" name="Utilisateur_Permission_FK">
+<ind_PK_UK id="672F2E37-9DFF-5D9F-4C3F-EA086A7100A0" name="Utilisateur_Permission_FK">
 <createdBy>ngngs</createdBy>
-<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<createdTime>2026-02-19 21:59:09 UTC</createdTime>
 <generatorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</generatorID>
 <ownerDesignName>BD_version2</ownerDesignName>
 <indexState>Foreign Key</indexState>
