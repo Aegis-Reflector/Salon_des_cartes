@@ -8,6 +8,19 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="Permission_ID" id="E6DB89D1-87DD-A101-4AEA-5684BA0E0023">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<isSurrogateColumn>true</isSurrogateColumn>
+</Column>
 <Column name="Lire" id="A7C6E240-9AB5-B319-D064-1B21A3B595B8">
 <createdBy>ngngs</createdBy>
 <createdTime>2026-02-06 15:41:06 UTC</createdTime>
@@ -73,6 +86,16 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="B1529A16-A737-B3BB-E757-D88C25517CF7" name="Permission_PK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<indexColumnUsage>
+<colUsage columnID="E6DB89D1-87DD-A101-4AEA-5684BA0E0023"/>
+</indexColumnUsage>
+</ind_PK_UK>
 <ind_PK_UK id="ABE4C7A4-293D-B1FE-C60A-F9B21F3EBD77" name="Permission__IDX">
 <createdBy>ngngs</createdBy>
 <createdTime>2026-02-06 15:41:06 UTC</createdTime>

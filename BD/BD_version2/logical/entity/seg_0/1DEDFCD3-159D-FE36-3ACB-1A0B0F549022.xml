@@ -148,9 +148,9 @@
 <logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id_inventaire" id="680F873B-7CBE-DF79-7454-156A8DF2F6FE">
+<Attribute name="id_inventaire" id="FF8F67F4-E989-FE40-7B4B-47BAC693339F">
 <createdBy>ngngs</createdBy>
-<createdTime>2026-02-06 15:26:55 UTC</createdTime>
+<createdTime>2026-02-19 21:36:39 UTC</createdTime>
 <generatorID>9CDE9E5E-0526-9629-EF1A-7EA510EC7CE7</generatorID>
 <ownerDesignName>BD_version2</ownerDesignName>
 <engineerTo>

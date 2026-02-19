@@ -39,20 +39,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id_produit" id="FFB34816-40AC-3E05-CCBA-EE09080809FA">
-<createdBy>ngngs</createdBy>
-<createdTime>2026-02-06 14:52:44 UTC</createdTime>
-<generatorID>9CDE9E5E-0526-9629-EF1A-7EA510EC7CE7</generatorID>
-<ownerDesignName>BD_version2</ownerDesignName>
-<engineerTo>
-<item key="9163192D-EF33-C97E-431D-1BA1A5C7607E" value="true"/>
-</engineerTo>
-<referedAttribute>7067F4BA-535D-8E33-7D65-10BB5E7BDE24</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="3A9FA347-807E-3CA6-4C87-5A7A73317EB8" name="Inventaire PK">

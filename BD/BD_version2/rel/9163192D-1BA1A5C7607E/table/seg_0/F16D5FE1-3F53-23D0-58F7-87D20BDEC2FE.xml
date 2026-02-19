@@ -56,8 +56,19 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="Permission_Permission_ID" id="D7BD1416-A622-E4D0-F8B2-2F0F3EC14A30">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="D48A3D6B-024A-3DE7-9758-F346756AB408" referredColumn="30813CB0-7B73-7263-911D-CFA2DECFD62B"/>
+<colAssociation fkAssociation="B9BC5C80-5A85-8C87-B25E-F91CD5DADEB8" referredColumn="E6DB89D1-87DD-A101-4AEA-5684BA0E0023"/>
 </associations>
 </Column>
 </columns>
@@ -85,15 +96,26 @@
 <colUsage columnID="6300148F-5B9F-487F-D988-C1C45CC0AE7A"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="D3565A89-5AAB-73D9-ED07-A37C302BD1C4" name="Utilisateur_Panier_FK">
+<ind_PK_UK id="29EFF75E-0362-07D0-C2EE-9C0F5C1CCA51" name="Utilisateur__IDX">
 <createdBy>ngngs</createdBy>
-<createdTime>2026-02-06 15:46:24 UTC</createdTime>
-<generatorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</generatorID>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<ownerDesignName>BD_version2</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<relationGeneratorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</relationGeneratorID>
+<indexColumnUsage>
+<colUsage columnID="D7BD1416-A622-E4D0-F8B2-2F0F3EC14A30"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A71C31FA-B127-DF1D-3634-47C01967969F" name="Utilisateur_Permission_FK">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<generatorID>33120AF1-55B1-2D52-BE30-8B47A2EA2FA3</generatorID>
 <ownerDesignName>BD_version2</ownerDesignName>
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="6300148F-5B9F-487F-D988-C1C45CC0AE7A"/>
+<colUsage columnID="D7BD1416-A622-E4D0-F8B2-2F0F3EC14A30"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

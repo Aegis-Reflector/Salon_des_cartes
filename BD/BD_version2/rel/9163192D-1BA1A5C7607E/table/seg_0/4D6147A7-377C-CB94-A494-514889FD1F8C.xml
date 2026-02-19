@@ -43,9 +43,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="12B96234-2EE9-003B-9AB4-6CD921C6894C" referredColumn="40DD4F1C-678A-6F8C-6C2E-BAC38A1C3504"/>
-</associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
@@ -68,17 +65,6 @@
 <indexState>Unique Plain Index</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <relationGeneratorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</relationGeneratorID>
-<indexColumnUsage>
-<colUsage columnID="4F48FB8E-5CAB-D00D-19F4-F455661231D5"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="4748881C-3AE8-8E53-F431-3A41AD01E9E0" name="Panier_Utilisateur_FK">
-<createdBy>ngngs</createdBy>
-<createdTime>2026-02-06 15:46:24 UTC</createdTime>
-<generatorID>D4F938FD-BBC2-40E9-420D-03D8B0DC02D6</generatorID>
-<ownerDesignName>BD_version2</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="4F48FB8E-5CAB-D00D-19F4-F455661231D5"/>
 </indexColumnUsage>

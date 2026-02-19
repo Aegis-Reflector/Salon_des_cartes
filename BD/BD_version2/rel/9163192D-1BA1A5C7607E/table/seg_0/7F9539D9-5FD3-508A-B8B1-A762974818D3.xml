@@ -160,6 +160,18 @@
 <colAssociation fkAssociation="5C974B59-8C90-AC54-18E0-B5714E271E94" referredColumn="7F2FF95F-12E0-943D-8106-8BE843B463FA"/>
 </associations>
 </Column>
+<Column name="id_inventaire" id="09E38FA9-2921-BF21-D694-C9F43278F7D2">
+<createdBy>ngngs</createdBy>
+<createdTime>2026-02-19 21:56:20 UTC</createdTime>
+<generatorID>FF8F67F4-E989-FE40-7B4B-47BAC693339F</generatorID>
+<ownerDesignName>BD_version2</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="7D254F73-3DEC-72D3-3E04-487A732AA460" name="Produit_PK">

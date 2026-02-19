@@ -1,0 +1,68 @@
+--Script Insertion 
+
+INSERT INTO utilisateur (courriel, mot_de_passe) VALUES
+('alice@mail.com', 'pass123'),
+('bob@mail.com', 'pass123'),
+('charlie@mail.com', 'pass123'),
+('david@mail.com', 'pass123'),
+('emma@mail.com', 'pass123');
+
+
+INSERT INTO permission (lire, modifier, ajouter, supprimer, id_utilisateur) VALUES
+('Y','N','N','N',1),
+('Y','Y','N','N',2),
+('Y','Y','Y','N',3),
+('Y','Y','Y','Y',4),
+('Y','N','Y','N',5);
+
+
+INSERT INTO panier (quantite, id_utilisateur) VALUES
+(2,1),
+(1,2),
+(3,3),
+(0,4),
+(5,5);
+
+
+INSERT INTO produit 
+(nom, prix, carte_texte, type, artiste, numero_carte, rarete, attaque, description) 
+VALUES
+('Dragon Rouge', 19.99, 'Feu puissant', 'Feu', 'Artiste A', '001', 'Rare', '80', 'Carte feu très puissante'),
+('Magicien Bleu', 14.99, 'Sort magique', 'Eau', 'Artiste B', '002', 'Commune', '50', 'Carte eau stratégique'),
+('Guerrier Vert', 9.99, 'Force brute', 'Plante', 'Artiste C', '003', 'Peu commune', '60', 'Carte plante équilibrée'),
+('Ombre Noire', 29.99, 'Attaque furtive', 'Ténèbres', 'Artiste D', '004', 'Ultra rare', '90', 'Carte ténèbres très rare'),
+('Éclair Jaune', 24.99, 'Vitesse extrême', 'Électrique', 'Artiste E', '005', 'Rare', '85', 'Carte électrique rapide');
+
+
+INSERT INTO inventaire (quantite_disponible, id_produit) VALUES
+(10,1),
+(15,2),
+(8,3),
+(5,4),
+(20,5);
+
+
+INSERT INTO commande 
+(date_commande, addresse, ville, code_postal, id_utilisateur) 
+VALUES
+('2026-02-01','123 Rue A','Montreal','H1A1A1',1),
+('2026-02-02','456 Rue B','Laval','H7B2B2',2),
+('2026-02-03','789 Rue C','Quebec','G1C3C3',3),
+('2026-02-04','321 Rue D','Gatineau','J8X4D4',4),
+('2026-02-05','654 Rue E','Sherbrooke','J1H5E5',5);
+
+
+INSERT INTO produit_commande (id_commande, id_produit) VALUES
+(1,1),
+(1,2),
+(2,3),
+(3,4),
+(4,5);
+
+
+INSERT INTO panier_produit (id_panier, id_produit) VALUES
+(1,1),
+(1,3),
+(2,2),
+(3,4),
+(5,5);
