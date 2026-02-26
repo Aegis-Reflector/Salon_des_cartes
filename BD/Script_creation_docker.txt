@@ -1,0 +1,116 @@
+use scott;
+-- MySQL 8+ / InnoDB / utf8mb4
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS panier_produit;
+DROP TABLE IF EXISTS produit_commande;
+DROP TABLE IF EXISTS inventaire;
+DROP TABLE IF EXISTS produit;
+DROP TABLE IF EXISTS panier;
+DROP TABLE IF EXISTS permission;
+DROP TABLE IF EXISTS commande;
+DROP TABLE IF EXISTS utilisateur;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE utilisateur (
+  id_utilisateur INT NOT NULL AUTO_INCREMENT,
+  courriel       VARCHAR(255) NOT NULL,
+  mot_de_passe   VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id_utilisateur),
+  UNIQUE KEY uq_utilisateur_courriel (courriel)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE commande (
+  id_commande     INT NOT NULL AUTO_INCREMENT,
+  date_commande   DATE NOT NULL,
+  addresse        VARCHAR(255) NOT NULL,
+  ville           VARCHAR(255) NOT NULL,
+  code_postal     VARCHAR(255) NOT NULL,
+  id_utilisateur  INT NOT NULL,
+  PRIMARY KEY (id_commande),
+  KEY idx_commande_utilisateur (id_utilisateur),
+  CONSTRAINT fk_commande_utilisateur
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE permission (
+  permission_id   INT NOT NULL AUTO_INCREMENT,
+  lire            CHAR(1) NOT NULL,
+  modifier        CHAR(1) NOT NULL,
+  ajouter         CHAR(1) NOT NULL,
+  supprimer       CHAR(1) NOT NULL,
+  id_utilisateur  INT NOT NULL,
+  PRIMARY KEY (permission_id),
+  UNIQUE KEY uq_permission_utilisateur (id_utilisateur),
+  CONSTRAINT fk_permission_utilisateur
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE panier (
+  id_panier      INT NOT NULL AUTO_INCREMENT,
+  quantite       INT NOT NULL,
+  id_utilisateur INT NOT NULL,
+  PRIMARY KEY (id_panier),
+  UNIQUE KEY uq_panier_utilisateur (id_utilisateur),
+  CONSTRAINT fk_panier_utilisateur
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE produit (
+  id_produit    INT NOT NULL AUTO_INCREMENT,
+  nom           VARCHAR(255) NOT NULL,
+  prix          DECIMAL(10,2) NOT NULL,
+  carte_texte   VARCHAR(255),
+  type          VARCHAR(255),
+  artiste       VARCHAR(255),
+  numero_carte  VARCHAR(255),
+  rarete        VARCHAR(255),
+  attaque       VARCHAR(255),
+  description   LONGTEXT NOT NULL,
+  PRIMARY KEY (id_produit)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 1 inventaire par produit (1–1) via UNIQUE
+CREATE TABLE inventaire (
+  id_inventaire       INT NOT NULL AUTO_INCREMENT,
+  quantite_disponible INT NOT NULL,
+  id_produit          INT NOT NULL,
+  PRIMARY KEY (id_inventaire),
+  UNIQUE KEY uq_inventaire_produit (id_produit),
+  CONSTRAINT fk_inventaire_produit
+    FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table de jointure commande <-> produit
+CREATE TABLE produit_commande (
+  id_commande INT NOT NULL,
+  id_produit  INT NOT NULL,
+  PRIMARY KEY (id_commande, id_produit),
+  KEY idx_pc_produit (id_produit),
+  CONSTRAINT fk_pc_commande
+    FOREIGN KEY (id_commande) REFERENCES commande(id_commande)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_pc_produit
+    FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table de jointure panier <-> produit
+CREATE TABLE panier_produit (
+  id_panier  INT NOT NULL,
+  id_produit INT NOT NULL,
+  PRIMARY KEY (id_panier, id_produit),
+  KEY idx_pp_produit (id_produit),
+  CONSTRAINT fk_pp_panier
+    FOREIGN KEY (id_panier) REFERENCES panier(id_panier)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_pp_produit
+    FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
