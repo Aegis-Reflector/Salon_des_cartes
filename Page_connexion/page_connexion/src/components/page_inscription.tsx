@@ -1,110 +1,71 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export default function PageInscription() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    start_date: "",
-    end_date: "",
-    description: "",
-    location: "",
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const changedHtmlElement = e.target;
-    setFormData({
-      ...formData, // Makes a full copy of the current formData
-      // Updates only the element that was changed
-      [changedHtmlElement.name]: changedHtmlElement.value,
-    });
-  };
-
-  const handleSubmit = (e: React.SubmitEvent) => {
-    e.preventDefault();
-
-    fetch("http://localhost:4000/events/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to create event");
-        }
-        navigate("/events");
-      })
-      .catch((err) => console.error(err));
-  };
-
   return (
-    <div className="container mt-5">
-      <h2>Create Event</h2>
+    <>
+      <div className="container-fluid bg-light min-vh-100 p-0">
+        <div className="row min-vh-100 g-0">
+          <div className="col-3 bg-danger"></div>
+          <div className="col-9  bg-light d-flex justify-content-center align-items-center">
+            <div>
+              <h3>Inscrivez-vous à Salon de Carte</h3>
 
-      <form onSubmit={handleSubmit} className="mt-4">
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+              <form className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3">
+                <div className="form-group ">
+                  <label htmlFor="exampleInputEmail1">Email address</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="Enter email"
+                  />
+                </div>
+                <div className="form-group ">
+                  <label htmlFor="exampleInputEmail1">
+                    Confirmation Email address
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    placeholder="Enter email"
+                  />
+                </div>
+                <div className="form-group pb-3">
+                  <label htmlFor="exampleInputPassword1">Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="exampleInputPassword1"
+                    placeholder="Password"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="btn btn-light border border-dark align-self-center px-4"
+                >
+                  Connexion
+                </button>
+              </form>
+
+              <p className="pt-4">
+                Ce site est protege par hCaptcha et sa politique de
+                confidentialite et ses conditions d'utilisations s'appliquent
+              </p>
+
+              <div className=" alight-self-center px-4">
+                <p> Vous n'avez pas encore de compte? </p>
+                <Link to="/Connexion" className="">
+                  Inscrivez-vous ici
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="mb-3">
-          <label className="form-label">Start Date</label>
-          <input
-            type="datetime-local"
-            className="form-control"
-            name="start_date"
-            value={formData.start_date}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">End Date</label>
-          <input
-            type="datetime-local"
-            className="form-control"
-            name="end_date"
-            value={formData.end_date}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Description</label>
-          <textarea
-            className="form-control"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Location</label>
-          <input
-            type="text"
-            className="form-control"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button type="submit" className="btn btn-primary">
-          Create Event
-        </button>
-      </form>
-    </div>
+      </div>
+    </>
   );
 }
