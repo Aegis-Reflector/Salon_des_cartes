@@ -1,6 +1,41 @@
 import { Link } from "react-router";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function PageConnexion() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    //No idea if this is right
+    fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          navigate("/catalogue");
+        } else {
+          alert("Email ou mot de passe incorrect");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <>
       <div className="container-fluid bg-light min-vh-100 p-0">
@@ -10,7 +45,10 @@ export default function PageConnexion() {
             <div>
               <h3>Connectez-vous à Salon de Carte</h3>
 
-              <form className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3">
+              <form
+                className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
+                onSubmit={handleSubmit}
+              >
                 <div className="form-group ">
                   <label htmlFor="exampleInputEmail1">Email address</label>
                   <input
@@ -19,6 +57,9 @@ export default function PageConnexion() {
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
                     placeholder="Enter email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="form-group pb-3">
@@ -28,6 +69,9 @@ export default function PageConnexion() {
                     className="form-control"
                     id="exampleInputPassword1"
                     placeholder="Password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -44,7 +88,7 @@ export default function PageConnexion() {
                 confidentialite et ses conditions d'utilisations s'appliquent
               </p>
 
-              <div className=" alight-self-center px-4">
+              <div className=" alight-self-center ">
                 <p> Vous n'avez pas encore de compte? </p>
                 <Link to="/Inscription" className="">
                   Inscrivez-vous ici
