@@ -1,3 +1,4 @@
+use scott;
 -- MySQL 8+ / InnoDB / utf8mb4
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
