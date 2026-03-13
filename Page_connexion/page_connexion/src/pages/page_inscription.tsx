@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 export default function PageInscription() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [confirmEmail, setConfirmEmail] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -13,7 +13,7 @@ export default function PageInscription() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.email != confirmEmail) {
+    if (formData.password != confirmPassword) {
       alert("Les emails ne correspondent pas");
       return;
     }
@@ -62,20 +62,6 @@ export default function PageInscription() {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="form-group ">
-                  <label htmlFor="exampleInputEmail1">
-                    Confirmation Email address
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter email"
-                    value={confirmEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
-                  />
-                </div>
                 <div className="form-group pb-3">
                   <label htmlFor="exampleInputPassword1">Password</label>
                   <input
@@ -86,6 +72,19 @@ export default function PageInscription() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group ">
+                  <label htmlFor="exampleInputPassword1">
+                    Confirmation mot de passe
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="exampleInputPassword1"
+                    placeholder="Confirmer mot de passe"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </div>
 
