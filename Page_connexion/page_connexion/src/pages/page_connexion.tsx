@@ -28,7 +28,7 @@ export default function PageConnexion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          navigate("/catalogue");
+          navigate("/Accueil");
         } else {
           alert("Email ou mot de passe incorrect");
         }

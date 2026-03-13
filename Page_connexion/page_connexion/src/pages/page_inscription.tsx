@@ -29,7 +29,7 @@ export default function PageInscription() {
       .then((data) => {
         if (data.success) {
           alert("Compte creer !");
-          navigate("/Connexion");
+          navigate("/Accueil");
         } else {
           alert("Erreur de creation");
         }
