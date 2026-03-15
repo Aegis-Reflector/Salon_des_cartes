@@ -1,0 +1,81 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- UTILISATEUR
+INSERT INTO utilisateur (id_utilisateur, courriel, mot_de_passe, panier_id_panier) VALUES
+(1,'ash@pokemon.com','pikachu123',1),
+(2,'misty@pokemon.com','togepi123',2),
+(3,'brock@pokemon.com','onix123',3),
+(4,'gary@pokemon.com','eevee123',4),
+(5,'cynthia@pokemon.com','garchomp123',5),
+(6,'admin@pokemon.com','admin123',6);
+
+-- PANIER
+INSERT INTO panier (id_panier, quantite, id_utilisateur) VALUES
+(1,2,1),
+(2,1,2),
+(3,4,3),
+(4,3,4),
+(5,5,5),
+(6,0,6);
+
+-- PERMISSION
+INSERT INTO permission (permission_id,lire,modifier,ajouter,supprimer) VALUES
+(1,1,1,1,1),   -- admin
+(2,1,1,0,0),
+(3,1,0,0,0),
+(4,1,1,1,0),
+(5,1,0,1,0);
+
+-- UTILISATEUR_PERMISSION
+INSERT INTO utilisateur_permission (id_utilisateur,permission_id) VALUES
+(1,3),  
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,1);  -- Admin user
+
+-- COMMANDE
+INSERT INTO commande (id_commande,date_commande,addresse,ville,code_postal,id_utilisateur) VALUES
+(1,'2026-03-10','123 Rue Pikachu','Montreal','H1A1A1',1),
+(2,'2026-03-11','456 Rue Starmie','Laval','H2B2B2',2),
+(3,'2026-03-12','789 Rue Onix','Quebec','G1C3C3',3),
+(4,'2026-03-13','321 Rue Eevee','Sherbrooke','J1D4D4',4),
+(5,'2026-03-14','654 Rue Garchomp','Longueuil','J4E5E5',5);
+
+-- INVENTAIRE
+INSERT INTO inventaire (id_inventaire,quantite_disponible,produit_commande_id_commande) VALUES
+(1,15,1),
+(2,8,2),
+(3,12,3),
+(4,5,4),
+(5,20,5);
+
+-- PRODUIT
+INSERT INTO produit
+(id_produit,nom,prix,carte_texte,type,artiste,numero_carte,rarete,attaque,description,commande_id_commande,inventaire_id_inventaire)
+VALUES
+(1,'Pikachu V',19.99,'Electric','Pokemon','5ban Graphics','043/185','Ultra Rare','Thunder Shock','Electric mascot Pokemon card.',1,1),
+(2,'Charizard VSTAR',89.99,'Fire','Pokemon','aky CG Works','018/172','Secret Rare','Star Blaze','One of the most iconic fire Pokemon cards.',2,2),
+(3,'Mewtwo EX',49.99,'Psychic','Pokemon','5ban Graphics','054/113','Rare','Psydrive','Legendary psychic Pokemon with immense power.',3,3),
+(4,'Rayquaza GX',59.99,'Dragon','Pokemon','PLANETA Tsuji','177a/168','Hyper Rare','Dragon Break','Legendary sky dragon Pokemon card.',4,4),
+(5,'Umbreon VMAX',94.99,'Dark','Pokemon','AKIRA EGAWA','095/203','Alternate Art Rare','Max Darkness','Highly collectible dark-type Pokemon card.',5,5);
+
+-- PRODUIT_COMMANDE
+INSERT INTO produit_commande (id_commande,id_produit) VALUES
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5);
+
+-- PANIER_PRODUIT
+INSERT INTO panier_produit (id_panier,id_produit) VALUES
+(1,1),
+(2,2),
+(3,3),
+(4,4),
+(5,5),
+(6,2);
+
+SET FOREIGN_KEY_CHECKS = 1;
