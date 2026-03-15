@@ -123,3 +123,15 @@ CREATE TABLE utilisateur_permission (
 ALTER TABLE produit
 ADD extension VARCHAR(255);
 ALTER TABLE produit ADD image VARCHAR(255);
+ALTER TABLE produit MODIFY type VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY artiste VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY attaque VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY description LONGTEXT NULL;
+
+ALTER TABLE produit MODIFY commande_id_commande INT NULL;
+
+ALTER TABLE produit MODIFY inventaire_id_inventaire INT NULL;
+
