@@ -119,3 +119,7 @@ CREATE TABLE utilisateur_permission (
     FOREIGN KEY (permission_id) REFERENCES permission(permission_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE produit
+ADD extension VARCHAR(255);
+ALTER TABLE produit ADD image VARCHAR(255);
