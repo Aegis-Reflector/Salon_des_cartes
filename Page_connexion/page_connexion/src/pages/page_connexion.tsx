@@ -5,10 +5,13 @@ import { useNavigate } from "react-router";
 export default function PageConnexion() {
   const navigate = useNavigate();
 
+  // État qui contient les données du formulaire de connexion
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  //met à jour la valeur correspondante dans le state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -16,10 +19,11 @@ export default function PageConnexion() {
     });
   };
 
+  //Fonction appelée lors de la soumission du forms
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    //No idea if this is right
+    // Envoie une requête POST au serveur pour vérifier les informations de connexion
     fetch("http://localhost:4000/connexion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -27,13 +31,15 @@ export default function PageConnexion() {
     })
       .then((res) => res.json())
       .then((data) => {
+        //Si la connexion est un success
         if (data.success) {
           if (formData.email === "admin@pokemon.com") {
-            navigate("/PageAdmin");
+            navigate("/PageAdmin"); //Redirection a la page admin
           } else {
-            navigate("/Accueil");
+            navigate("/Accueil"); //Redirection a la page accueil
           }
         } else {
+          //Si les informations sont incorrects
           alert("Email ou mot de passe incorrect");
         }
       })
@@ -44,15 +50,21 @@ export default function PageConnexion() {
     <>
       <div className="container-fluid bg-light min-vh-100 p-0">
         <div className="row min-vh-100 g-0">
+          {/*Colonne rouge a gauche de l'ecran*/}
           <div className="col-3 bg-danger"></div>
+
+          {/*Colonne droite de l'ecran*/}
           <div className="col-9  bg-light d-flex justify-content-center align-items-center">
             <div>
+              {/*Titre de la page*/}
               <h3>Connectez-vous à Salon de Carte</h3>
 
+              {/*Formulaire de connexion */}
               <form
                 className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
                 onSubmit={handleSubmit}
               >
+                {/* Champ pour l'email */}
                 <div className="form-group ">
                   <label htmlFor="exampleInputEmail1">Email address</label>
                   <input
@@ -66,6 +78,7 @@ export default function PageConnexion() {
                     onChange={handleChange}
                   />
                 </div>
+                {/* Champ pour le mot de passe  */}
                 <div className="form-group pb-3">
                   <label htmlFor="exampleInputPassword1">Password</label>
                   <input
@@ -78,7 +91,7 @@ export default function PageConnexion() {
                     onChange={handleChange}
                   />
                 </div>
-
+                {/* Button pour envoyer le formulaire  */}
                 <button
                   type="submit"
                   className="btn btn-light border border-dark align-self-center px-4"
@@ -92,11 +105,14 @@ export default function PageConnexion() {
                 confidentialite et ses conditions d'utilisations s'appliquent
               </p>
 
-              <div className=" alight-self-center ">
-                <p> Vous n'avez pas encore de compte? </p>
-                <Link to="/Inscription" className="">
-                  Inscrivez-vous ici
-                </Link>
+              {/* Lien vers la page d'inscription */}
+              <div className="d-flex flex-column align-items-center gap-2 mt-3">
+                <p>
+                  Vous n'avez pas encore de compte? {""}
+                  <Link to="/Inscription" className="">
+                    Inscrivez-vous ici
+                  </Link>
+                </p>
               </div>
             </div>
           </div>
