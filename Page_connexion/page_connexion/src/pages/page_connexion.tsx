@@ -28,7 +28,11 @@ export default function PageConnexion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          navigate("/Accueil");
+          if (formData.email === "admin@pokemon.com") {
+            navigate("/PageAdmin");
+          } else {
+            navigate("/Accueil");
+          }
         } else {
           alert("Email ou mot de passe incorrect");
         }
