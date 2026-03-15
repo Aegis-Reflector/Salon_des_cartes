@@ -1,3 +1,4 @@
+use scott;
 -- MySQL 8+ / InnoDB / utf8mb4
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -118,3 +119,19 @@ CREATE TABLE utilisateur_permission (
     FOREIGN KEY (permission_id) REFERENCES permission(permission_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE produit
+ADD extension VARCHAR(255);
+ALTER TABLE produit ADD image VARCHAR(255);
+ALTER TABLE produit MODIFY type VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY artiste VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY attaque VARCHAR(255) NULL;
+
+ALTER TABLE produit MODIFY description LONGTEXT NULL;
+
+ALTER TABLE produit MODIFY commande_id_commande INT NULL;
+
+ALTER TABLE produit MODIFY inventaire_id_inventaire INT NULL;
+
