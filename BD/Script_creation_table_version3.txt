@@ -18,7 +18,7 @@ CREATE TABLE utilisateur (
   id_utilisateur INT NOT NULL AUTO_INCREMENT,
   courriel       VARCHAR(255) NOT NULL,
   mot_de_passe   VARCHAR(255) NOT NULL,
-  panier_id_panier INT NOT NULL,
+  panier_id_panier INT NULL,
   PRIMARY KEY (id_utilisateur),
   UNIQUE KEY uq_utilisateur_panier (panier_id_panier)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

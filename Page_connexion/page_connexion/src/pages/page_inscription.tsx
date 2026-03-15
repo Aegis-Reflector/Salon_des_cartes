@@ -18,7 +18,7 @@ export default function PageInscription() {
       return;
     }
 
-    fetch("http://localhost:4000/users", {
+    fetch("http://localhost:4000/inscription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

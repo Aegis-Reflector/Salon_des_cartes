@@ -20,7 +20,7 @@ export default function PageConnexion() {
     e.preventDefault();
 
     //No idea if this is right
-    fetch("http://localhost:4000/login", {
+    fetch("http://localhost:4000/connexion", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
