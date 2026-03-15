@@ -1,0 +1,301 @@
+                   /* TEST CSS Est seulement utilisé pour les tests de route */
+
+
+   :root {
+  --bg: #e6e6e6;
+  --black: #111;
+  --mid: #3a3a3a;
+  --white: #fff;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.page {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* FULL WIDTH CONTAINER */
+.containerWide {
+  width: 100%;
+  padding: 0 40px;
+}
+
+/* TOPBAR */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid #ddd;
+}
+
+.topbarGrid {
+  display: grid;
+  grid-template-columns: 140px 1fr 140px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 40px;
+}
+
+.pill {
+  width: 90px;
+  height: 20px;
+  background: #cfcfcf;
+  border-radius: 999px;
+}
+
+/* SEARCH */
+.search {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.search input {
+  width: min(520px, 100%);
+  padding: 10px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  outline: none;
+  background: #444;
+  color: white;
+}
+
+.search input::placeholder {
+  color: #ddd;
+}
+
+.search button {
+  padding: 10px 12px;
+  border: 0;
+  background: var(--black);
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ICONS */
+.icons {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
+
+.icons button {
+  width: 56px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+/* NAVBAR */
+.navbar {
+  background: black;
+}
+
+.navLinks {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  padding: 14px 0;
+}
+
+.navLinks a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* CONTENT */
+.content {
+  padding: 20px 40px 50px;
+}
+
+/* BANNER */
+.banner {
+  height: 120px;
+  background: #3b3b3b;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+}
+
+/* SPECIAL */
+.special {
+  height: 170px;
+  background: #111;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.specialOverlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+.specialOverlay h1 {
+  margin: 0;
+  font-size: 70px;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.specialOverlay button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 0;
+  background: white;
+  cursor: pointer;
+}
+
+/* PROMO GRID */
+.promoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.promo {
+  height: 95px;
+  background: #4a4a4a;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+.promoTag {
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  color: white;
+  font-weight: bold;
+}
+
+.promoCenter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.promo button {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 0;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+/* FEATURED */
+.featuredTitle {
+  color: #bdbdbd;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+}
+
+.featuredWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.arrow {
+  height: 42px;
+  width: 42px;
+  border: 0;
+  background: #111;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.featuredRow {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 6px 2px 12px;
+  scroll-behavior: smooth;
+  flex: 1;
+}
+
+/* CARD */
+.card {
+  width: 190px;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+}
+
+.cardImage {
+  height: 120px;
+  background: #1e3575; /* placeholder */
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.cardDesc {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+  .topbarGrid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 12px 16px;
+  }
+
+  .containerWide {
+    padding: 0 16px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+
+  .icons {
+    justify-content: center;
+  }
+
+  .promoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .specialOverlay h1 {
+    font-size: 48px;
+  }
+}
