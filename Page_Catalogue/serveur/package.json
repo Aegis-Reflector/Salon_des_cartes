@@ -7,10 +7,16 @@
   "type": "module",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx server.ts"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.2",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mysql2": "^3.18.2"
+    "mysql2": "^3.18.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
