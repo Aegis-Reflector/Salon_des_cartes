@@ -83,19 +83,15 @@ app.put("/produits/:id", async (req, res) => {
       image,
       extension
     } = req.body;
-
+      // Change insert to update 
      const [result] = await pool.query<ResultSetHeader>(
-      `
-      INSERT INTO produit
-      (nom, prix, carte_texte, numero_carte, rarete, image, extension)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-      `,
-      [nom, prix, carte_texte, numero_carte, rarete, image, extension]
+      "UPDATE produit  Set nom = ? , prix = ? , carte_texte =? , numero_carte =? , rarete = ? , image =? , extension = ?  WHERE id_produit =? ",
+      [nom, prix, carte_texte, numero_carte, rarete, image, extension,id]
     );
 
     res.status(201).json({
-      message: "Produit ajouté",
-      id: result.insertId,
+      message: "Produit modifié",
+      id:id,
     });
   } catch (error) {
     console.error(error);
@@ -208,14 +204,6 @@ app.post("/inscription", async (req, res) => {
   }
 });
 
-app.get("/events", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM events");
-    res.status(201).json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Database error" });
-  }
-});
+
 
 

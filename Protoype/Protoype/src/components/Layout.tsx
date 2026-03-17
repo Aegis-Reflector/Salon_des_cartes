@@ -9,7 +9,7 @@ function Layout() {
 
     <div>
       <Header />
-      <div className="container-fluid py-4 bg-light min-vh-100">
+      <div className="container-fluid py-0 px-0 m-0 bg-light min-vh-100">
         <Outlet />
       </div>
       <Footer />

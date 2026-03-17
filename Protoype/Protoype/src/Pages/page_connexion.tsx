@@ -48,8 +48,8 @@ export default function PageConnexion() {
 
   return (
     <>
-      <div className="container-fluid bg-light min-vh-100 px-0">
-        <div className="row min-vh-100 g-0">
+      <div className="container-fluid bg-light min-vh-100 px-0 mx-0">
+        <div className="row min-vh-100 g-0 mx-0">
           {/*Colonne rouge a gauche de l'ecran*/}
           <div className="col-3 bg-danger"></div>
 

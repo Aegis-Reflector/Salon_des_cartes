@@ -5,7 +5,7 @@ import promo3 from "../images/promo3.png";
 import promo4 from "../images/promo4.png";
 import arrowLeft from "..//images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import CarteAccueil from "../components/CarteAccueil";
 
 
@@ -14,6 +14,19 @@ type PromoCardProps = {
   img: string;
   title: string;
 };
+
+type Carte = {
+  id_produit: number;
+  nom: string;
+  numero_carte: string;
+  rarete: string;
+  carte_texte: string;
+  prix: number;
+  extension: string;
+  image: string;
+};
+
+
 
 function PromoCard({ img, title }: PromoCardProps) {
   return (
@@ -46,102 +59,30 @@ function PromoCard({ img, title }: PromoCardProps) {
 }
 
 export default function Accueil() {
-  // Données de produits simulées
-  const produits = [
-    {
-      id: 1,
-      nom: "Mega Gengar ex",
-      prix: 49.99,
-      inventaire: 12,
-      image: promo1,
-    },
-    {
-      id: 2,
-      nom: "Mewtwo GX",
-      prix: 39.99,
-      inventaire: 8,
-      image: promo2,
-    },
-    {
-      id: 3,
-      nom: "Charizard VMAX",
-      prix: 79.99,
-      inventaire: 5,
-      image: promo3,
-    },
-    {
-      id: 4,
-      nom: "Rayquaza EX",
-      prix: 64.99,
-      inventaire: 7,
-      image: promo4,
-    },
-    {
-      id: 5,
-      nom: "Pikachu Illustration",
-      prix: 24.99,
-      inventaire: 20,
-      image: promo1,
-    },
-    {
-      id: 6,
-      nom: "Lucario GX",
-      prix: 34.99,
-      inventaire: 10,
-      image: promo2,
-    },
-    {
-      id: 7,
-      nom: "Gardevoir EX",
-      prix: 44.99,
-      inventaire: 9,
-      image: promo3,
-    },
-    {
-      id: 8,
-      nom: "Dragonite V",
-      prix: 54.99,
-      inventaire: 6,
-      image: promo4,
-    },
-    {
-      id: 9,
-      nom: "Umbreon GX",
-      prix: 59.99,
-      inventaire: 4,
-      image: promo1,
-    },
-    {
-      id: 10,
-      nom: "Blastoise EX",
-      prix: 42.99,
-      inventaire: 11,
-      image: promo2,
-    },
-    {
-      id: 11,
-      nom: "Snorlax VMAX",
-      prix: 36.99,
-      inventaire: 13,
-      image: promo3,
-    },
-    {
-      id: 12,
-      nom: "Garchomp EX",
-      prix: 47.99,
-      inventaire: 3,
-      image: promo4,
-    },
-  ];
+  const [cartes, setCartes] = useState<Carte[]>([]);
+  
+    useEffect(() => {
+      voirCartes();
+    }, []);
 
-  const produitsParPage = 6;
+  const produitsParPage = 4;
   const [page, setPage] = useState(1);
-  const totalPages = Math.ceil(produits.length / produitsParPage);
+  const totalPages = Math.ceil(cartes.length / produitsParPage);
 
-  const produitsAffiches = useMemo(
-    () => produits.slice((page - 1) * produitsParPage, page * produitsParPage),
-    [page],
+  const produitsAffiches =  cartes.slice(
+    (page - 1) * produitsParPage, 
+    page * produitsParPage
   );
+  async function voirCartes() {
+    try {
+      const response = await fetch("http://localhost:4000/produits");
+      const data = await response.json();
+      console.log(data);
+      setCartes(data);
+    } catch (error) {
+      console.error("Erreur GET:", error);
+    }
+  }
 
   return (
 
@@ -186,14 +127,14 @@ export default function Accueil() {
         {/* Section Vedette */}
         <h2 className="text-uppercase mb-4 fw-normal">En vedette</h2>
 
-        <div className="row g-4">
-          {produitsAffiches.map((produit) => (
-            <div className="col-6 col-md-4 col-lg-2" key={produit.id}>
+        <div className="row g-4 mx-0">
+          {produitsAffiches.map((cartes) => (
+            <div className="col-lg-3 col-md-4 col-sm-6 p-3" key={cartes.id_produit}>
               <CarteAccueil
-                nom={produit.nom}
-                prix={produit.prix}
-                inventaire={produit.inventaire}
-                image={produit.image}
+                nom={cartes.nom}
+                prix={cartes.prix}
+                inventaire={25}
+                image={cartes.image}
               />
             </div>
           ))}

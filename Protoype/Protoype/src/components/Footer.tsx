@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 function Footer() {
   return (
-    <footer className="bg-black text-white pt-5 pb-4 mt-5">
+    <footer className="bg-black text-white pt-4 pb-4 mt-0">
       <div className="container-fluid">
         <div className="row">
           {/* Boutique */}
