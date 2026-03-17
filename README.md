@@ -1,6 +1,6 @@
 ﻿> Written with [StackEdit](https://stackedit.io/).
 
-# Salon des cartes – Équipe CartiFans
+# Salon des cartes
 
 ## Description du projet
 
@@ -25,16 +25,16 @@ git clone https://github.com/Aegis-Reflector/Application-Web-Transactionelles-Ca
 
 ### Backend (serveur)
 
-cd Application-Web-Transactionelles-CartiFans123-Gr07/Page_connexion/page_connexion/serveur
+cd Application-Web-Transactionelles-CartiFans123-Gr07\Protoype\serveur
 
 Exécutez les commandes suivantes dans le terminal:
 npm install express mysql2 cors dotenv  
 npm install --save-dev typescript tsx @types/node @types/express @types/cors
 
-### Frontend (`page_connexion`)
+### Frontend (`Prototype`)
 
 cd ../ # revenir au dossier frontend si nécessaire  
-cd Application-Web-Transactionelles-CartiFans123-Gr07/Page_connexion/page_connexion
+cd Application-Web-Transactionelles-CartiFans123-Gr07\Protoype\Protoype
 
 Exécutez les commandes suivantes dans le terminal :
 npm install react react-dom react-router-dom
@@ -62,21 +62,24 @@ Ces scripts permettent :
 
     4.1.  Ouvrir un terminal dans le dossier :
 
-Application-Web-Transactionelles-CartiFans123-Gr07/Page_connexion/page_connexion/serveur
+cd Application-Web-Transactionelles-CartiFans123-Gr07\Protoype\serveur
 
     4.2.  Exécuter la commande :
+
     **npm run dev**
     4.3.  Le serveur sera accessible à l’adresse : http://localhost:4000
 
 **5. Démarrer le site web (frontend)**
 
     5.1.  Ouvrir un autre terminal dans le dossier :
-    **Application-Web-Transactionelles-CartiFans123-Gr07/Page_connexion/page_connexion**
+cd  Application-Web-Transactionelles-CartiFans123-Gr07\Protoype\Protoype
 
     5.2.  Exécuter la commande :
     **npm run dev**
 
-    5.3.  Le site sera accessible à l’adresse : http://localhost:5173
+    5.3.  Le site sera accessible à l’adresse : http://localhost:5173/Accueil
+
+
 
 **Pour accéder à la page admin **
 
@@ -89,6 +92,10 @@ Application-Web-Transactionelles-CartiFans123-Gr07/Page_connexion/page_connexion
 
 3. Cliquer sur le bouton connexion
 
+
+
 # Auteurs
 
+– Équipe CartiFans
+Allens-William Lapeine , Emmanuel Jean Rigaud Desmornes et Jordan Ly
 Projet réalisé dans le cadre du cours Applications Web transactionnelles.
