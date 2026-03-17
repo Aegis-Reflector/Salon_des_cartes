@@ -21,9 +21,10 @@ app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-//GET
+//GET - Récupérer tous les produits
     app.get("/produits", async (req, res) => {
     try {
+      // Requête SQL pour aller chercher les colonnes voulues
         const [rows] = await pool.query(`
         SELECT id_produit, nom, prix, carte_texte, numero_carte, rarete, image, extension
         FROM produit
@@ -36,9 +37,10 @@ app.listen(PORT, () => {
     }
     });
 
-// POST
+// POST - Ajouter un nouveau produit
 app.post("/produits", async (req, res) => {
   try {
+    // Récupération des données envoyées par le frontend
     const {
       nom,
       prix,
@@ -49,6 +51,7 @@ app.post("/produits", async (req, res) => {
       extension
     } = req.body;
 
+    // Insertion du nouveau produit dans la base de données
     const [result] = await pool.query<ResultSetHeader>(
       `
       INSERT INTO produit
@@ -69,11 +72,13 @@ app.post("/produits", async (req, res) => {
   }
 });
 
-//PUT
+//PUT - Modifier un produit existant
 app.put("/produits/:id", async (req, res) => {
   try {
+    // Récupération de l'id depuis l'URL
     const { id } = req.params;
 
+      // Récupération des nouvelles données envoyées
     const {
       nom,
       prix,
@@ -83,7 +88,7 @@ app.put("/produits/:id", async (req, res) => {
       image,
       extension
     } = req.body;
-      // Change insert to update 
+      // Mise à jour du produit correspondant à l'id 
      const [result] = await pool.query<ResultSetHeader>(
       "UPDATE produit  Set nom = ? , prix = ? , carte_texte =? , numero_carte =? , rarete = ? , image =? , extension = ?  WHERE id_produit =? ",
       [nom, prix, carte_texte, numero_carte, rarete, image, extension,id]
@@ -99,7 +104,7 @@ app.put("/produits/:id", async (req, res) => {
   }
 });
 
-//DELETE
+//DELETE - Supprimer un produit
 app.delete("/produits/:id", async (req, res) => {
   try {
     const { id } = req.params;

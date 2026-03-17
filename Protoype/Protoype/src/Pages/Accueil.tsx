@@ -59,8 +59,10 @@ function PromoCard({ img, title }: PromoCardProps) {
 }
 
 export default function Accueil() {
+  // État qui contient toutes les cartes récupérées du backend
   const [cartes, setCartes] = useState<Carte[]>([]);
   
+    // useEffect appelé au chargement de la page pour aller chercher les cartes
     useEffect(() => {
       voirCartes();
     }, []);
@@ -69,10 +71,12 @@ export default function Accueil() {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(cartes.length / produitsParPage);
 
+ // Produits affichés pour la page actuelle
   const produitsAffiches =  cartes.slice(
     (page - 1) * produitsParPage, 
     page * produitsParPage
   );
+  // Fonction pour récupérer les cartes depuis le backend
   async function voirCartes() {
     try {
       const response = await fetch("http://localhost:4000/produits");

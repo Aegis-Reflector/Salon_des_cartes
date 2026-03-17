@@ -14,6 +14,7 @@ import Layout from "./components/Layout.tsx";
 
 const router = createBrowserRouter([
   {
+    // Layout commun affiché autour de toutes les pages
     element: <Layout />,
     children: [
       { path: "/", element: <Accueil /> },

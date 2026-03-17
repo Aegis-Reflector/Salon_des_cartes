@@ -14,7 +14,7 @@ type Carte = {
 export default function PageAdmin() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [modifieID, setmodifieId] = useState<number | null>(null);
-
+  //État liés aux champs du formulaire
   const [nom, setNom] = useState("");
   const [numero_carte, setNumeroCarte] = useState("");
   const [rarete, setRarete] = useState("");
@@ -49,6 +49,7 @@ export default function PageAdmin() {
     setmodifieId(null);
   }
 
+  //fait un ajout ou une modification
   async function ajouterCarte(e: any) {
     e.preventDefault();
 
@@ -62,6 +63,7 @@ export default function PageAdmin() {
         image,
       };
       try {
+         // Si aucune carte n'est en modification, on ajoute
         if (modifieID === null) {
           await fetch("http://localhost:4000/produits", {
             method: "POST",
@@ -71,6 +73,7 @@ export default function PageAdmin() {
             body: JSON.stringify(dataCarte),
           });
         } else {
+          // Sinon, on modifie la carte existante
           await fetch(`http://localhost:4000/produits/${modifieID}`, {
             method: "PUT",
             headers: {
@@ -79,6 +82,7 @@ export default function PageAdmin() {
             body: JSON.stringify(dataCarte),
           });
         }
+         // On vide le formulaire puis on recharge la liste
         viderFormulaire();
         voirCartes();
       } catch (error) {
@@ -86,6 +90,7 @@ export default function PageAdmin() {
       }
     }
 
+    // Fonction pour supprimer une carte
     async function supprimerCarte(id: number) {
       try {
         await fetch(`http://localhost:4000/produits/${id}`, {
@@ -100,9 +105,13 @@ export default function PageAdmin() {
         console.error("Erreur DELETE :", error);
       }
     }
+
+     // les infos d'une carte dans le formulaire afin de la modifier
     function modifierCarte(carte: Carte) {
+      
       console.log("carte à modifier:", carte);
       setmodifieId(carte.id_produit);
+      // Remplit les champs avec les données de la carte choisie aussi si l'info est null sa montre rien
       setNom(carte.nom ?? "" );
       setNumeroCarte(carte.numero_carte ?? "" );
       setRarete(carte.rarete ?? "");
