@@ -36,7 +36,7 @@ export default function PageConnexion() {
           if (formData.email === "admin@pokemon.com") {
             navigate("/admin"); //Redirection a la page admin
           } else {
-            navigate("/Accueil"); //Redirection a la page accueil
+            navigate("/."); //Redirection a la page accueil
           }
         } else {
           //Si les informations sont incorrects

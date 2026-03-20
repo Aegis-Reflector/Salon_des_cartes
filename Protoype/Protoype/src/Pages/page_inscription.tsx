@@ -38,7 +38,7 @@ export default function PageInscription() {
         // Si le serveur confirme la création du compte
         if (data.success) {
           alert("Compte creer !");
-          navigate("/Accueil"); //Redirection au page d'accueil
+          navigate("/."); //Redirection au page d'accueil
         } else {
           alert("Erreur de creation");
         }

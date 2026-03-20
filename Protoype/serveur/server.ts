@@ -196,7 +196,10 @@ app.post("/inscription", async (req, res) => {
     const userId = user.insertId;
 
     //Creation de nouveau panier associer avec cette nouveau utilisateur
-    await pool.query("INSERT INTO panier(quantite, id_utilisateur) VALUES(?,?)", [0,userId]);
+    const [panier] = await pool.query<ResultSetHeader>("INSERT INTO panier(quantite, id_utilisateur) VALUES(?,?)", [0,userId]);
+    const panierId = panier.insertId;
+
+    await pool.query("UPDATE utilisateur SET panier_id_panier = ?  WHERE id_utilisateur = ?", [panierId, userId])
     
 
     return res.json({success: true})
