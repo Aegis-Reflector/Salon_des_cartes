@@ -1,0 +1,279 @@
+use("Salon")
+
+db.produits.insertMany([
+  {
+    _id: 1,
+    nom: "Pikachu V",
+    prix: 19.99,
+    carteTexte: "Electric",
+    type: "Pokemon",
+    artiste: "5ban Graphics",
+    numeroCarte: "043/185",
+    rarete: "Ultra Rare",
+    attaque: "Thunder Shock",
+    description: "Electric mascot Pokemon card.",
+    inventaire: {
+      quantiteDisponible: 15
+    }
+  },
+  {
+    _id: 2,
+    nom: "Charizard VSTAR",
+    prix: 89.99,
+    carteTexte: "Fire",
+    type: "Pokemon",
+    artiste: "aky CG Works",
+    numeroCarte: "018/172",
+    rarete: "Secret Rare",
+    attaque: "Star Blaze",
+    description: "One of the most iconic fire Pokemon cards.",
+    inventaire: {
+      quantiteDisponible: 8
+    }
+  },
+  {
+    _id: 3,
+    nom: "Mewtwo EX",
+    prix: 49.99,
+    carteTexte: "Psychic",
+    type: "Pokemon",
+    artiste: "5ban Graphics",
+    numeroCarte: "054/113",
+    rarete: "Rare",
+    attaque: "Psydrive",
+    description: "Legendary psychic Pokemon with immense power.",
+    inventaire: {
+      quantiteDisponible: 12
+    }
+  },
+  {
+    _id: 4,
+    nom: "Rayquaza GX",
+    prix: 59.99,
+    carteTexte: "Dragon",
+    type: "Pokemon",
+    artiste: "PLANETA Tsuji",
+    numeroCarte: "177a/168",
+    rarete: "Hyper Rare",
+    attaque: "Dragon Break",
+    description: "Legendary sky dragon Pokemon card.",
+    inventaire: {
+      quantiteDisponible: 5
+    }
+  },
+  {
+    _id: 5,
+    nom: "Umbreon VMAX",
+    prix: 94.99,
+    carteTexte: "Dark",
+    type: "Pokemon",
+    artiste: "AKIRA EGAWA",
+    numeroCarte: "095/203",
+    rarete: "Alternate Art Rare",
+    attaque: "Max Darkness",
+    description: "Highly collectible dark-type Pokemon card.",
+    inventaire: {
+      quantiteDisponible: 20
+    }
+  }
+])
+
+
+db.utilisateurs.insertMany([
+  {
+    _id: 1,
+    courriel: "ash@pokemon.com",
+    motDePasse: "pikachu123",
+    permissions: {
+      lire: true,
+      modifier: false,
+      ajouter: false,
+      supprimer: false
+    },
+    panier: {
+      items: [
+        { produitId: 1, quantite: 2 }
+      ]
+    }
+  },
+  {
+    _id: 2,
+    courriel: "misty@pokemon.com",
+    motDePasse: "togepi123",
+    permissions: {
+      lire: true,
+      modifier: true,
+      ajouter: false,
+      supprimer: false
+    },
+    panier: {
+      items: [
+        { produitId: 2, quantite: 1 }
+      ]
+    }
+  },
+  {
+    _id: 3,
+    courriel: "brock@pokemon.com",
+    motDePasse: "onix123",
+    permissions: {
+      lire: true,
+      modifier: false,
+      ajouter: false,
+      supprimer: false
+    },
+    panier: {
+      items: [
+        { produitId: 3, quantite: 4 }
+      ]
+    }
+  },
+  {
+    _id: 4,
+    courriel: "gary@pokemon.com",
+    motDePasse: "eevee123",
+    permissions: {
+      lire: true,
+      modifier: true,
+      ajouter: true,
+      supprimer: false
+    },
+    panier: {
+      items: [
+        { produitId: 4, quantite: 3 }
+      ]
+    }
+  },
+  {
+    _id: 5,
+    courriel: "cynthia@pokemon.com",
+    motDePasse: "garchomp123",
+    permissions: {
+      lire: true,
+      modifier: false,
+      ajouter: true,
+      supprimer: false
+    },
+    panier: {
+      items: [
+        { produitId: 5, quantite: 5 }
+      ]
+    }
+  },
+  {
+    _id: 6,
+    courriel: "admin@pokemon.com",
+    motDePasse: "admin123",
+    permissions: {
+      lire: true,
+      modifier: true,
+      ajouter: true,
+      supprimer: true
+    },
+    panier: {
+      items: [
+        { produitId: 2, quantite: 0 }
+      ]
+    }
+  }
+])
+
+
+db.commandes.insertMany([
+  {
+    _id: 1,
+    userId: 1,
+    dateCommande: new Date("2026-03-10"),
+    adresseLivraison: {
+      adresse: "123 Rue Pikachu",
+      ville: "Montreal",
+      codePostal: "H1A1A1"
+    },
+    items: [
+      {
+        produitId: 1,
+        nom: "Pikachu V",
+        prix: 19.99,
+        quantite: 1
+      }
+    ],
+    total: 19.99
+  },
+  {
+    _id: 2,
+    userId: 2,
+    dateCommande: new Date("2026-03-11"),
+    adresseLivraison: {
+      adresse: "456 Rue Starmie",
+      ville: "Laval",
+      codePostal: "H2B2B2"
+    },
+    items: [
+      {
+        produitId: 2,
+        nom: "Charizard VSTAR",
+        prix: 89.99,
+        quantite: 1
+      }
+    ],
+    total: 89.99
+  },
+  {
+    _id: 3,
+    userId: 3,
+    dateCommande: new Date("2026-03-12"),
+    adresseLivraison: {
+      adresse: "789 Rue Onix",
+      ville: "Quebec",
+      codePostal: "G1C3C3"
+    },
+    items: [
+      {
+        produitId: 3,
+        nom: "Mewtwo EX",
+        prix: 49.99,
+        quantite: 1
+      }
+    ],
+    total: 49.99
+  },
+  {
+    _id: 4,
+    userId: 4,
+    dateCommande: new Date("2026-03-13"),
+    adresseLivraison: {
+      adresse: "321 Rue Eevee",
+      ville: "Sherbrooke",
+      codePostal: "J1D4D4"
+    },
+    items: [
+      {
+        produitId: 4,
+        nom: "Rayquaza GX",
+        prix: 59.99,
+        quantite: 1
+      }
+    ],
+    total: 59.99
+  },
+  {
+    _id: 5,
+    userId: 5,
+    dateCommande: new Date("2026-03-14"),
+    adresseLivraison: {
+      adresse: "654 Rue Garchomp",
+      ville: "Longueuil",
+      codePostal: "J4E5E5"
+    },
+    items: [
+      {
+        produitId: 5,
+        nom: "Umbreon VMAX",
+        prix: 94.99,
+        quantite: 1
+      }
+    ],
+    total: 94.99
+  }
+])
+

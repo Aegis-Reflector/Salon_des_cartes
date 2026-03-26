@@ -16,7 +16,20 @@ type Carte = {
   image: string;
 };
 
+
+
 export default function CatalogueProduitPage() {
+
+    async function voirCartes() {
+    try {
+      const response = await fetch("http://localhost:4000/produits");
+      const data = await response.json();
+      console.log(data);
+      setCartes(data);
+    } catch (error) {
+      console.error("Erreur GET:", error);
+    }
+  }
   // État qui contient toutes les cartes récupérées du backend
   const [cartes, setCartes] = useState<Carte[]>([]);
 // useEffect appelé au chargement de la page pour aller chercher les cartes
@@ -34,17 +47,7 @@ export default function CatalogueProduitPage() {
     page *produitsParPage
   )
  // Fonction pour récupérer les cartes depuis le backend
-  async function voirCartes() {
-    try {
-      const response = await fetch("http://localhost:4000/produits");
-      const data = await response.json();
-      console.log(data);
-      setCartes(data);
-    } catch (error) {
-      console.error("Erreur GET:", error);
-    }
-  }
-
+  
   return (
   <>
     <div className="container-fluid d-flex justify-content-start gap-3 flex-wrap py-3 bg-danger">

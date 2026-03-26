@@ -55,6 +55,17 @@ function PromoCard({ img, title }: PromoCardProps) {
 }
 
 export default function Accueil() {
+
+   async function voirCartes() {
+    try {
+      const response = await fetch("http://localhost:4000/produits");
+      const data = await response.json();
+      console.log(data);
+      setCartes(data);
+    } catch (error) {
+      console.error("Erreur GET:", error);
+    }
+  }
   // État qui contient toutes les cartes récupérées du backend
   const [cartes, setCartes] = useState<Carte[]>([]);
 
@@ -73,16 +84,7 @@ export default function Accueil() {
     page * produitsParPage,
   );
   // Fonction pour récupérer les cartes depuis le backend
-  async function voirCartes() {
-    try {
-      const response = await fetch("http://localhost:4000/produits");
-      const data = await response.json();
-      console.log(data);
-      setCartes(data);
-    } catch (error) {
-      console.error("Erreur GET:", error);
-    }
-  }
+ 
 
   return (
     <div className="container-fluid p-5">
