@@ -20,10 +20,10 @@ const router = createBrowserRouter([
       { path: "/", element: <Accueil /> },
       { path: "/Catalogue", element: <CatalogueProduitPage /> },
       { path: "/admin", element: <PageAdmin /> },
-      { path: "/connexion", element: <Connexion /> },
-      { path: "/inscription", element: <Inscription /> },
     ],
   },
+  { path: "/connexion", element: <Connexion /> },
+  { path: "/inscription", element: <Inscription /> },
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

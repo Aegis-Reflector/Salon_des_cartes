@@ -8,7 +8,7 @@ function Header() {
   return (
     <>
       {/* NAVBAR PRINCIPALE */}
-      <nav className="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
+      <nav className="navbar navbar-expand-lg bg-light border-bottom shadow-sm">
         <div className="container-fluid">
           {/* LOGO */}
           <Link to="/" className="navbar-brand">
@@ -77,37 +77,6 @@ function Header() {
               </li>
             </ul>
           </div>
-        </div>
-      </nav>
-
-      {/* MENU SECONDAIRE */}
-      <nav className="navbar navbar-expand bg-black">
-        <div className="container-fluid justify-content-center">
-          <ul className="navbar-nav gap-4">
-            <li className="nav-item">
-              <Link to="/" className="nav-link text-white fw-bold">
-                Accueil
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to="/Catalogue" className="nav-link text-white fw-bold">
-                Catalogue
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to="/populaire" className="nav-link text-white fw-bold">
-                Populaire
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to="/special" className="nav-link text-white fw-bold">
-                Spécial
-              </Link>
-            </li>
-          </ul>
         </div>
       </nav>
     </>
