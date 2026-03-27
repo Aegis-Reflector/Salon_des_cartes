@@ -23,11 +23,8 @@ export default function PageAdmin() {
   const [extension, setExtension] = useState("");
   const [image, setImage] = useState("");
 
-  useEffect(() => {
-    voirCartes();
-  }, []);
 
-  async function voirCartes() {
+   async function voirCartes() {
     try {
       const response = await fetch("http://localhost:4000/produits");
       const data = await response.json();
@@ -37,6 +34,13 @@ export default function PageAdmin() {
       console.error("Erreur GET:", error);
     }
   }
+
+  
+  useEffect(() => {
+    voirCartes();
+  }, []);
+
+ 
 
   function viderFormulaire() {
     setNom("");

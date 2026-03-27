@@ -10,14 +10,9 @@ function Header() {
       {/* NAVBAR PRINCIPALE */}
       <nav className="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
         <div className="container-fluid">
-
           {/* LOGO */}
           <Link to="/" className="navbar-brand">
-            <img
-              src={logo}
-              alt="Logo"
-              style={{ height: "100px" }}
-            />
+            <img src={logo} alt="Logo" style={{ height: "100px" }} />
           </Link>
 
           {/* BOUTON MOBILE */}
@@ -32,7 +27,6 @@ function Header() {
 
           {/* CONTENU NAVBAR */}
           <div className="collapse navbar-collapse" id="mainNavbar">
-
             {/* BARRE RECHERCHE CENTRÉE */}
             <form className="d-flex mx-auto w-50">
               <input
@@ -48,7 +42,6 @@ function Header() {
 
             {/* DROITE NAVBAR */}
             <ul className="navbar-nav align-items-center gap-3">
-
               <li className="nav-item">
                 <Link to="/connexion" className="nav-link fw-bold">
                   Se connecter
@@ -57,7 +50,6 @@ function Header() {
 
               {/* DROPDOWN PROFIL */}
               <li className="nav-item dropdown">
-
                 <button
                   className="btn nav-link dropdown-toggle"
                   data-bs-toggle="dropdown"
@@ -68,23 +60,13 @@ function Header() {
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
                     <Link to="/Profil" className="dropdown-item">
-                      Profil
+                      Mon compte
                     </Link>
                   </li>
-
                   <li>
-                    <Link to="/Parametres" className="dropdown-item">
-                      Paramètres
-                    </Link>
-                  </li>
-
-                  <li>
-                    <button className="dropdown-item">
-                      Déconnexion
-                    </button>
+                    <button className="dropdown-item">Déconnexion</button>
                   </li>
                 </ul>
-
               </li>
 
               {/* PANIER */}
@@ -93,9 +75,7 @@ function Header() {
                   <img src={panier} alt="Panier" width="28" />
                 </Link>
               </li>
-
             </ul>
-
           </div>
         </div>
       </nav>
@@ -103,9 +83,7 @@ function Header() {
       {/* MENU SECONDAIRE */}
       <nav className="navbar navbar-expand bg-black">
         <div className="container-fluid justify-content-center">
-
           <ul className="navbar-nav gap-4">
-
             <li className="nav-item">
               <Link to="/" className="nav-link text-white fw-bold">
                 Accueil
@@ -129,9 +107,7 @@ function Header() {
                 Spécial
               </Link>
             </li>
-
           </ul>
-
         </div>
       </nav>
     </>
