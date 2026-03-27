@@ -11,6 +11,8 @@ import Connexion from "./Pages/page_connexion.tsx";
 import Inscription from "./Pages/page_inscription.tsx";
 import Accueil from "./Pages/Accueil.tsx";
 import Layout from "./components/Layout.tsx";
+import Shipping from "./Pages/page_shipping.tsx";
+import Profil from "./Pages/page_profil.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +22,13 @@ const router = createBrowserRouter([
       { path: "/", element: <Accueil /> },
       { path: "/Catalogue", element: <CatalogueProduitPage /> },
       { path: "/admin", element: <PageAdmin /> },
-      { path: "/connexion", element: <Connexion /> },
-      { path: "/inscription", element: <Inscription /> },
     ],
   },
+
+  { path: "/connexion", element: <Connexion /> },
+  { path: "/inscription", element: <Inscription /> },
+  { path: "/shipping", element: <Shipping /> },
+  { path: "/Profil", element: <Profil /> },
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
