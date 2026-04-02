@@ -13,6 +13,8 @@ import Accueil from "./Pages/Accueil.tsx";
 import Layout from "./components/Layout.tsx";
 import Shipping from "./Pages/page_shipping.tsx";
 import Profil from "./Pages/page_profil.tsx";
+import Securite from "./Pages/page_securite.tsx"
+import Settings from "./Pages/page_settings.tsx"
 
 const router = createBrowserRouter([
   {
@@ -28,7 +30,11 @@ const router = createBrowserRouter([
   { path: "/connexion", element: <Connexion /> },
   { path: "/inscription", element: <Inscription /> },
   { path: "/shipping", element: <Shipping /> },
+
+  
   { path: "/Profil", element: <Profil /> },
+  { path: "/Settings", element: <Securite /> },
+  { path: "/Securite", element: <Settings /> },
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
