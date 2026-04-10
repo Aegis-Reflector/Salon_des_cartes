@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
-import { ReactNode } from "react";
 
-type DashboardLayoutProps = {
-  title: string;
-  children: ReactNode;
-};
-
-function DashboardLayout({ title, children }: DashboardLayoutProps) {
+function DashboardLayout() {
   return (
     <div className="container-fluid min-vh-100 px-0">
       <div className="row g-0 min-vh-100">
         {/* SIDEBAR */}
-        <aside className="col-2 col-sm-3 col-xl-2 bg-dark text-white d-flex flex-column min-vh-100">
+        <div className="col-2 col-sm-3 col-xl-2 bg-dark text-white d-flex flex-column min-vh-100">
           <div className="container py-2">
             <nav className="navbar navbar-dark bg-dark border-bottom border-white">
               <div className="container-fluid px-0">
@@ -124,18 +118,18 @@ function DashboardLayout({ title, children }: DashboardLayoutProps) {
               </Link>
             </nav>
           </div>
-        </aside>
+        </div>
 
         {/* MAIN */}
         <main className="col-10 col-sm-9 col-xl-10 bg-light">
           <div className="container-fluid px-0">
             <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom">
               <div className="container-fluid">
-                <span className="navbar-brand mb-0 h1">{title}</span>
+                <span className="navbar-brand mb-0 h1"></span>
               </div>
             </nav>
 
-            <div className="p-3">{children}</div>
+            <div className="p-3"></div>
           </div>
         </main>
       </div>
