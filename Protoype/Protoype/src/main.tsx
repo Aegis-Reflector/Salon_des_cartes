@@ -17,6 +17,7 @@ import Profil from "./Pages/page_profil.tsx";
 import Securite from "./Pages/page_securite.tsx";
 import Settings from "./Pages/page_settings.tsx";
 import Help from "./Pages/page_help_support.tsx";
+import Panier from "./Pages/page_panier.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
   { path: "/Settings", element: <Settings /> },
   { path: "/Securite", element: <Securite /> },
   { path: "/Support", element: <Help /> },
+  { path: "/Panier", element: <Panier /> },
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
