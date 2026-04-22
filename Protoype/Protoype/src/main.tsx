@@ -5,6 +5,7 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+
 import CatalogueProduitPage from "./Pages/CatalogueProduitPage.tsx";
 import PageAdmin from "./Pages/PageAdmin.tsx";
 import Connexion from "./Pages/page_connexion.tsx";

@@ -3,10 +3,11 @@ import promo1 from "../images/promo1.png";
 import promo2 from "../images/promo2.png";
 import promo3 from "../images/promo3.png";
 import promo4 from "../images/promo4.png";
-import arrowLeft from "..//images/flecheG.png";
+import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
 import { useState, useEffect } from "react";
-import CarteAccueil from "../components/CarteAccueil";
+import TCGdex from "@tcgdex/sdk";
+const tcgdex = new TCGdex("fr");
 
 type PromoCardProps = {
   img: string;
@@ -14,15 +15,25 @@ type PromoCardProps = {
 };
 
 type Carte = {
-  id_produit: number;
-  nom: string;
-  numero_carte: string;
-  rarete: string;
-  carte_texte: string;
-  prix: number;
-  extension: string;
-  image: string;
+  id: string;
+  name: string;
+  image?: string;
+  rarity?: string;
+  setName?: string;
+  number?: string;
+  marketPrice?: number | null;
 };
+
+function melangerTableau(tableau: Carte[]) {
+  const copie = [...tableau];
+
+  for (let i = copie.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copie[i], copie[j]] = [copie[j], copie[i]];
+  }
+
+  return copie;
+}
 
 function PromoCard({ img, title }: PromoCardProps) {
   return (
@@ -54,20 +65,68 @@ function PromoCard({ img, title }: PromoCardProps) {
   );
 }
 
-export default function Accueil() {
+const eurToUsd = (eur: number) => eur * 1.18;
 
-   async function voirCartes() {
+export default function CatalogueProduitPage() {
+  const [cartes, setCartes] = useState<Carte[]>([]);
+  const [page, setPage] = useState(1);
+
+  async function voirCartes() {
     try {
-      const response = await fetch("http://localhost:4000/produits");
-      const data = await response.json();
-      console.log(data);
-      setCartes(data);
+      const data = await tcgdex.card.list();
+
+      const cartesFormatees: Carte[] = data
+        .filter((carte: any) => carte.image && carte.name)
+        .map((carte: any) => ({
+          id: carte.id,
+          name: carte.name,
+          image: carte.image + "/low.png",
+          rarity: carte.rarity,
+          marketPrice: null,
+        }));
+const cartesMelangees = melangerTableau(cartesFormatees);
+const huitCartesRandom = cartesMelangees.slice(0, 8);
+
+const cartesCompletes: Carte[] = (
+  await Promise.all(
+    huitCartesRandom.map(async (carte) => {
+      const detail: any = await tcgdex.card.get(carte.id);
+
+      console.log(detail);
+
+      const cardmarket = detail.pricing?.cardmarket;
+
+      const marketPrice =
+        cardmarket?.avg ??
+        cardmarket?.trend ??
+        cardmarket?.low ??
+        cardmarket?.["avg-holo"] ??
+        cardmarket?.["trend-holo"] ??
+        cardmarket?.["low-holo"] ?? 
+        null;
+
+
+      console.log(carte.name, detail?.pricing?.cardmarket, marketPrice);
+
+      return {
+        id: detail.id,
+        name: detail.name,
+        image: detail.image ? detail.image + "/low.png" : undefined,
+        rarity: detail.rarity,
+        setName: detail.set?.name,
+        number: detail.localId,
+        marketPrice,
+      };
+    })
+  )
+);
+
+      setCartes(cartesCompletes);
+      setPage(1);
     } catch (error) {
-      console.error("Erreur GET:", error);
+      console.error("Erreur TCGdex :", error);
     }
   }
-  // État qui contient toutes les cartes récupérées du backend
-  const [cartes, setCartes] = useState<Carte[]>([]);
 
   // useEffect appelé au chargement de la page pour aller chercher les cartes
   useEffect(() => {
@@ -75,7 +134,6 @@ export default function Accueil() {
   }, []);
 
   const produitsParPage = 4;
-  const [page, setPage] = useState(1);
   const totalPages = Math.ceil(cartes.length / produitsParPage);
 
   // Produits affichés pour la page actuelle
@@ -84,7 +142,6 @@ export default function Accueil() {
     page * produitsParPage,
   );
   // Fonction pour récupérer les cartes depuis le backend
- 
 
   return (
     <div className="container-fluid p-5">
@@ -97,7 +154,7 @@ export default function Accueil() {
         />
 
         <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
-          <h1 className="text-white display-4 fw-bold text-center">Spéciale</h1>
+          <h1 className="text-white display-4 fw-bold text-center"></h1>
         </div>
       </div>
 
@@ -124,17 +181,47 @@ export default function Accueil() {
       <h2 className="text-uppercase mb-4 fw-normal">En vedette</h2>
 
       <div className="row g-4 mx-0">
-        {produitsAffiches.map((cartes) => (
-          <div
-            className="col-lg-3 col-md-4 col-sm-6 p-3"
-            key={cartes.id_produit}
-          >
-            <CarteAccueil
-              nom={cartes.nom}
-              prix={cartes.prix}
-              inventaire={25}
-              image={cartes.image}
-            />
+        {produitsAffiches.map((carte) => (
+          <div key={carte.id} className="col-md-3">
+            <div
+              className="card h-100 p-3"
+              style={{
+                borderRadius: "12px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+              }}
+            >
+              <div className="d-flex align-items-start gap-3">
+                {carte.image && (
+                  <img
+                    src={carte.image}
+                    alt={carte.name}
+                    className="card-img-top"
+                    style={{
+                      width: "130px",
+                      height: "180px",
+                      objectFit: "contain",
+                      borderRadius: "8px",
+                      flexShrink: 0,
+                    }}
+                  />
+                )}
+                <div className="d-flex flex-column justify-content-start">
+                  <h4 className="fw mb-2">{carte.name}</h4>
+
+                  <p className="text-muted mb-2">
+                    {carte.setName || "Set inconnu"}
+                    {carte.rarity ? ` • ${carte.rarity}` : ""}
+                    {carte.number ? `, #${carte.number}` : ""}
+                  </p>
+                  <h2 className="fw mb-1" style={{ fontSize: "38px" }}>
+                    {carte.marketPrice !== null &&
+                    carte.marketPrice !== undefined
+                      ? `$${eurToUsd(carte.marketPrice).toFixed(2)}`
+                      : "N/A"}
+                  </h2>
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>

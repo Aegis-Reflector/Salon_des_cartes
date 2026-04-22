@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import profile from "../images/profile.png";
 import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
-import logo from "../images/logo.png";
+import logo from "../images/LogoFull.png"
 
 function Header() {
   return (
@@ -12,7 +12,7 @@ function Header() {
         <div className="container-fluid">
           {/* LOGO */}
           <Link to="/" className="navbar-brand">
-            <img src={logo} alt="Logo" style={{ height: "100px" }} />
+            <img src={logo} alt="Logo" style={{ height: "60px" }} />
           </Link>
 
           {/* BOUTON MOBILE */}

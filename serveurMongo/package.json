@@ -7,11 +7,10 @@
   "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "dev": "tsx src/server.ts"
+    "dev": "tsx server.ts"
   },
-
   "dependencies": {
-    "dotenv": "^17.3.1",
+    "dotenv": "^17.4.0",
     "mongodb": "^7.1.1"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
 import { config } from "dotenv";
 import { connectToMongo, getUtilisateurs, getProduits, getCommandes } from "./db/mongo.js";
-import { createStudent } from "./Controller/utilisateurController.js";
 
 config();
 
@@ -11,5 +10,4 @@ if (!uri) {
 
 await connectToMongo(uri);
 
-const students = getStudents();
-createStudent(students);
+
