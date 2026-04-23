@@ -17,23 +17,23 @@ const saltRounds = 10;
 
 router.post("/signIn", async (req, res) => {
   try {
-    let { email, password, remember } = req.body;
+    let { courriel, motDePasse } = req.body;
 
-    const user = await getUtilisateurByCourriel(getUtilisateurs(), email);
+    const user = await getUtilisateurByCourriel(getUtilisateurs(), courriel);
 
     // Make sure the email exists
     if (user == null || user._id == null)
       return res.status(401).json({ message: "Email doesn't exist" });
 
     // Make sure the password matches
-    const match = await bcrypt.compare(password, user!.motDePasse);
+    const match = await bcrypt.compare(motDePasse, user!.motDePasse);
     if (!match)
       return res.status(401).json({ message: "Password doesn't match" });
 
     // Create and save refresh token in a safe cookie
     const refreshToken = await createAndSaveRefreshToken(user._id);
     if (refreshToken == null) {
-      res.status(500).json({ message: "Failed to add refresh token" });
+      return res.status(500).json({ message: "Failed to add refresh token" });
     }
     res.cookie("refresh", refreshToken, {
       httpOnly: true,
@@ -42,7 +42,7 @@ router.post("/signIn", async (req, res) => {
       secure: false,
     });
 
-    return res.status(201).json({ message: "Connected" });
+    return res.status(200).json({ message: "Connected" });
   } catch (error) {
     return res.status(500).json({ message: "Database error" });
   }
@@ -50,26 +50,25 @@ router.post("/signIn", async (req, res) => {
 
 router.post("/signUp", async (req, res) => {
   try {
-    const { email, password, passwordConfirm } = req.body;
-
-    // Make sure the received passwords are the same
-    if (password != passwordConfirm) {
-      return res.status(500).json({ message: "Passwords don t match" });
-    }
+    const { courriel, motDePasse } = req.body;
 
     // Make sure the email is not already used
-    const userExists = await getUtilisateurByCourriel(getUtilisateurs(), email);
+    const userExists = await getUtilisateurByCourriel(getUtilisateurs(), courriel);
     if (userExists != null) {
       return res.status(500).json({ message: "Email already used" });
     }
 
     // Create the user and hash the password
     const user: Utilisateur = {
-      courriel: email,
-      motDePasse: password,
+      courriel,
+      motDePasse,
       token: "",
+      panier:{
+        items:[],
+      }
+      
     };
-    user.motDePasse = await bcrypt.hash(password, saltRounds);
+    user.motDePasse = await bcrypt.hash(motDePasse, saltRounds);
 
     // Register the user in the BD
     const registerResult = await registerUtilisateur(getUtilisateurs(), user);
@@ -82,7 +81,7 @@ router.post("/signUp", async (req, res) => {
       registerResult.insertedId,
     );
     if (refreshToken == null) {
-      res.status(500).json({ message: "Failed to add refresh token" });
+      return res.status(500).json({ message: "Failed to add refresh token" });
     }
     res.cookie("refresh", refreshToken, {
       httpOnly: true,

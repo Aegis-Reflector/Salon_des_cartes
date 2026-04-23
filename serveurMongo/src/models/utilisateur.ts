@@ -11,14 +11,12 @@ export interface Utilisateur {
     ajouter: boolean,
     supprimer: boolean
   };
-  panier?: {
-
+  panier: {
     items: {
       produit: Produit;
       quantite: number;
     }[];
    
   };
-
-   token?: string;
+  token?: string;
 }

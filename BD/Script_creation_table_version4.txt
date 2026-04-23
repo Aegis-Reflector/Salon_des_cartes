@@ -1,5 +1,13 @@
 use("Salon")
 
+// 🔥 DELETE EVERYTHING
+db.produits.deleteMany({})
+db.utilisateurs.deleteMany({})
+db.commandes.deleteMany({})
+
+// =======================
+// 📦 PRODUITS
+// =======================
 db.produits.insertMany([
   {
     _id: 1,
@@ -12,9 +20,7 @@ db.produits.insertMany([
     rarete: "Ultra Rare",
     attaque: "Thunder Shock",
     description: "Electric mascot Pokemon card.",
-    inventaire: {
-      quantiteDisponible: 15
-    }
+    inventaire: { quantiteDisponible: 15 }
   },
   {
     _id: 2,
@@ -27,9 +33,7 @@ db.produits.insertMany([
     rarete: "Secret Rare",
     attaque: "Star Blaze",
     description: "One of the most iconic fire Pokemon cards.",
-    inventaire: {
-      quantiteDisponible: 8
-    }
+    inventaire: { quantiteDisponible: 8 }
   },
   {
     _id: 3,
@@ -42,9 +46,7 @@ db.produits.insertMany([
     rarete: "Rare",
     attaque: "Psydrive",
     description: "Legendary psychic Pokemon with immense power.",
-    inventaire: {
-      quantiteDisponible: 12
-    }
+    inventaire: { quantiteDisponible: 12 }
   },
   {
     _id: 4,
@@ -57,9 +59,7 @@ db.produits.insertMany([
     rarete: "Hyper Rare",
     attaque: "Dragon Break",
     description: "Legendary sky dragon Pokemon card.",
-    inventaire: {
-      quantiteDisponible: 5
-    }
+    inventaire: { quantiteDisponible: 5 }
   },
   {
     _id: 5,
@@ -72,13 +72,13 @@ db.produits.insertMany([
     rarete: "Alternate Art Rare",
     attaque: "Max Darkness",
     description: "Highly collectible dark-type Pokemon card.",
-    inventaire: {
-      quantiteDisponible: 20
-    }
+    inventaire: { quantiteDisponible: 20 }
   }
 ])
 
-
+// =======================
+// 👤 UTILISATEURS (EMPTY CARTS)
+// =======================
 db.utilisateurs.insertMany([
   {
     _id: 1,
@@ -90,11 +90,7 @@ db.utilisateurs.insertMany([
       ajouter: false,
       supprimer: false
     },
-    panier: {
-      items: [
-        { produitId: 1, quantite: 2 }
-      ]
-    }
+    panier: { items: [] }
   },
   {
     _id: 2,
@@ -106,11 +102,7 @@ db.utilisateurs.insertMany([
       ajouter: false,
       supprimer: false
     },
-    panier: {
-      items: [
-        { produitId: 2, quantite: 1 }
-      ]
-    }
+    panier: { items: [] }
   },
   {
     _id: 3,
@@ -122,11 +114,7 @@ db.utilisateurs.insertMany([
       ajouter: false,
       supprimer: false
     },
-    panier: {
-      items: [
-        { produitId: 3, quantite: 4 }
-      ]
-    }
+    panier: { items: [] }
   },
   {
     _id: 4,
@@ -138,11 +126,7 @@ db.utilisateurs.insertMany([
       ajouter: true,
       supprimer: false
     },
-    panier: {
-      items: [
-        { produitId: 4, quantite: 3 }
-      ]
-    }
+    panier: { items: [] }
   },
   {
     _id: 5,
@@ -154,11 +138,7 @@ db.utilisateurs.insertMany([
       ajouter: true,
       supprimer: false
     },
-    panier: {
-      items: [
-        { produitId: 5, quantite: 5 }
-      ]
-    }
+    panier: { items: [] }
   },
   {
     _id: 6,
@@ -170,15 +150,13 @@ db.utilisateurs.insertMany([
       ajouter: true,
       supprimer: true
     },
-    panier: {
-      items: [
-        { produitId: 2, quantite: 0 }
-      ]
-    }
+    panier: { items: [] }
   }
 ])
 
-
+// =======================
+// 🧾 COMMANDES
+// =======================
 db.commandes.insertMany([
   {
     _id: 1,
@@ -189,91 +167,8 @@ db.commandes.insertMany([
       ville: "Montreal",
       codePostal: "H1A1A1"
     },
-    items: [
-      {
-        produitId: 1,
-        nom: "Pikachu V",
-        prix: 19.99,
-        quantite: 1
-      }
-    ],
-    total: 19.99
-  },
-  {
-    _id: 2,
-    userId: 2,
-    dateCommande: new Date("2026-03-11"),
-    adresseLivraison: {
-      adresse: "456 Rue Starmie",
-      ville: "Laval",
-      codePostal: "H2B2B2"
-    },
-    items: [
-      {
-        produitId: 2,
-        nom: "Charizard VSTAR",
-        prix: 89.99,
-        quantite: 1
-      }
-    ],
-    total: 89.99
-  },
-  {
-    _id: 3,
-    userId: 3,
-    dateCommande: new Date("2026-03-12"),
-    adresseLivraison: {
-      adresse: "789 Rue Onix",
-      ville: "Quebec",
-      codePostal: "G1C3C3"
-    },
-    items: [
-      {
-        produitId: 3,
-        nom: "Mewtwo EX",
-        prix: 49.99,
-        quantite: 1
-      }
-    ],
-    total: 49.99
-  },
-  {
-    _id: 4,
-    userId: 4,
-    dateCommande: new Date("2026-03-13"),
-    adresseLivraison: {
-      adresse: "321 Rue Eevee",
-      ville: "Sherbrooke",
-      codePostal: "J1D4D4"
-    },
-    items: [
-      {
-        produitId: 4,
-        nom: "Rayquaza GX",
-        prix: 59.99,
-        quantite: 1
-      }
-    ],
-    total: 59.99
-  },
-  {
-    _id: 5,
-    userId: 5,
-    dateCommande: new Date("2026-03-14"),
-    adresseLivraison: {
-      adresse: "654 Rue Garchomp",
-      ville: "Longueuil",
-      codePostal: "J4E5E5"
-    },
-    items: [
-      {
-        produitId: 5,
-        nom: "Umbreon VMAX",
-        prix: 94.99,
-        quantite: 1
-      }
-    ],
-    total: 94.99
+    items: [],
+    total: 0
   }
 ])
 

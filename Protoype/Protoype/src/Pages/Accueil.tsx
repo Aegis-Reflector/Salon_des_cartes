@@ -7,6 +7,7 @@ import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
 import { useState, useEffect } from "react";
 import TCGdex from "@tcgdex/sdk";
+import { useNavigate } from "react-router";
 const tcgdex = new TCGdex("fr");
 
 type PromoCardProps = {
@@ -84,42 +85,39 @@ export default function CatalogueProduitPage() {
           rarity: carte.rarity,
           marketPrice: null,
         }));
-const cartesMelangees = melangerTableau(cartesFormatees);
-const huitCartesRandom = cartesMelangees.slice(0, 8);
+      const cartesMelangees = melangerTableau(cartesFormatees);
+      const huitCartesRandom = cartesMelangees.slice(0, 8);
 
-const cartesCompletes: Carte[] = (
-  await Promise.all(
-    huitCartesRandom.map(async (carte) => {
-      const detail: any = await tcgdex.card.get(carte.id);
+      const cartesCompletes: Carte[] = await Promise.all(
+        huitCartesRandom.map(async (carte) => {
+          const detail: any = await tcgdex.card.get(carte.id);
 
-      console.log(detail);
+          console.log(detail);
 
-      const cardmarket = detail.pricing?.cardmarket;
+          const cardmarket = detail.pricing?.cardmarket;
 
-      const marketPrice =
-        cardmarket?.avg ??
-        cardmarket?.trend ??
-        cardmarket?.low ??
-        cardmarket?.["avg-holo"] ??
-        cardmarket?.["trend-holo"] ??
-        cardmarket?.["low-holo"] ?? 
-        null;
+          const marketPrice =
+            cardmarket?.avg ??
+            cardmarket?.trend ??
+            cardmarket?.low ??
+            cardmarket?.["avg-holo"] ??
+            cardmarket?.["trend-holo"] ??
+            cardmarket?.["low-holo"] ??
+            null;
 
+          console.log(carte.name, detail?.pricing?.cardmarket, marketPrice);
 
-      console.log(carte.name, detail?.pricing?.cardmarket, marketPrice);
-
-      return {
-        id: detail.id,
-        name: detail.name,
-        image: detail.image ? detail.image + "/low.png" : undefined,
-        rarity: detail.rarity,
-        setName: detail.set?.name,
-        number: detail.localId,
-        marketPrice,
-      };
-    })
-  )
-);
+          return {
+            id: detail.id,
+            name: detail.name,
+            image: detail.image ? detail.image + "/low.png" : undefined,
+            rarity: detail.rarity,
+            setName: detail.set?.name,
+            number: detail.localId,
+            marketPrice,
+          };
+        }),
+      );
 
       setCartes(cartesCompletes);
       setPage(1);
@@ -142,6 +140,7 @@ const cartesCompletes: Carte[] = (
     page * produitsParPage,
   );
   // Fonction pour récupérer les cartes depuis le backend
+
 
   return (
     <div className="container-fluid p-5">

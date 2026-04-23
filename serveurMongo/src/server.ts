@@ -34,8 +34,8 @@ if (!uri) {
 await connectToMongo(uri);
 
 
-app.use("/", userRoutes);
-app.use("/", testRoutes);
+app.use("/auth", userRoutes);
+app.use("/test", testRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

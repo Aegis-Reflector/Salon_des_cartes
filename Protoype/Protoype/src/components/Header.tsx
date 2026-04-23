@@ -2,9 +2,28 @@ import { Link } from "react-router";
 import profile from "../images/profile.png";
 import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
-import logo from "../images/LogoFull.png"
+import logo from "../images/LogoFull.png";
+import { useNavigate } from "react-router";
 
 function Header() {
+  
+  const navigate = useNavigate();
+  async function deconnexion() {
+    try {
+      const res = await fetch("http://localhost:4000/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Pas possible");
+      }
+      navigate("/Connexion");
+    } catch (err: any) {
+      console.error("Erreur de déconnexion :", err.message);
+    }
+  }
   return (
     <>
       {/* NAVBAR PRINCIPALE */}
@@ -64,7 +83,7 @@ function Header() {
                     </Link>
                   </li>
                   <li>
-                    <button className="dropdown-item">Déconnexion</button>
+                    <button className="dropdown-item" onClick={deconnexion}>Déconnexion</button>
                   </li>
                 </ul>
               </li>
