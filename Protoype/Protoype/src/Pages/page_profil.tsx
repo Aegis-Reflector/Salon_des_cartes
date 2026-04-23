@@ -1,6 +1,8 @@
 import SidebarLayout from "../components/SidebarLayout";
 
 export default function PageProfil() {
+
+  
   return (
     <SidebarLayout title="Account Information">
       <div className="card mt-1 shadow-sm">

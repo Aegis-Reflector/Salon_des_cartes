@@ -24,23 +24,27 @@ export default function PageConnexion() {
     e.preventDefault();
 
     // Envoie une requête POST au serveur pour vérifier les informations de connexion
-    fetch("http://localhost:4000/connexion", {
+    fetch("http://localhost:4000/auth/signIn", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      credentials: "include",
+      body: JSON.stringify({
+        courriel: formData.email,
+        motDePasse: formData.password,
+      }),
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Pas possible");
+        }
+        return res.json();
+      })
+      .then(() => {
         //Si la connexion est un success
-        if (data.success) {
-          if (formData.email === "admin@pokemon.com") {
-            navigate("/admin"); //Redirection a la page admin
-          } else {
-            navigate("/."); //Redirection a la page accueil
-          }
+        if (formData.email === "admin@pokemon.com") {
+          navigate("/admin"); //Redirection a la page admin
         } else {
-          //Si les informations sont incorrects
-          alert("Email ou mot de passe incorrect");
+          navigate("/"); //Redirection a la page accueil
         }
       })
       .catch((err) => console.error(err));

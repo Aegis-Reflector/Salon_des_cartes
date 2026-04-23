@@ -26,24 +26,31 @@ export default function PageInscription() {
     }
 
     // Envoi des données au serveur pour créer le compte
-    fetch("http://localhost:4000/inscription", {
+    fetch("http://localhost:4000/auth/signUp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      credentials: "include",
+      body: JSON.stringify({
+        courriel: formData.email,
+        motDePasse: formData.password
+      }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        // Si le serveur confirme la création du compte
-        if (data.success) {
-          alert("Compte creer !");
-          navigate("/."); //Redirection au page d'accueil
-        } else {
-          alert("Erreur de creation");
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur de creation");
         }
+        return res.json();
       })
-      .catch((err) => console.error(err));
+      .then(() => {
+        alert("Compte créé !");
+        navigate("/");
+      })
+      .catch((err) => {
+        alert("Erreur de creation");
+        console.error(err);
+      });
   };
   return (
     <>

@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { Utilisateur } from "../models/utilisateur";
-import { Commande } from "../models/commande";
-import { Produit } from "../models/produit";
+import { Utilisateur } from "../models/utilisateur.js";
+import { Commande } from "../models/commande.js";
+import { Produit } from "../models/produit.js";
  
 
 
