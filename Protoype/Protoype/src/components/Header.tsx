@@ -4,10 +4,28 @@ import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
 import logo from "../images/LogoFull.png";
 import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 
 function Header() {
-  
   const navigate = useNavigate();
+  const [estConnecte, setEstConnecte] = useState(false);
+
+  useEffect(() => {
+    async function verifierConnexion() {
+      try {
+        const res = await fetch("http://localhost:4000/test/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        setEstConnecte(res.ok);
+      } catch (err) {
+        setEstConnecte(false);
+      }
+    }
+
+    verifierConnexion();
+  }, []);
   async function deconnexion() {
     try {
       const res = await fetch("http://localhost:4000/auth/logout", {
@@ -16,12 +34,15 @@ function Header() {
         credentials: "include",
       });
       const data = await res.json();
+
       if (!res.ok) {
         throw new Error(data.message || "Pas possible");
       }
+
       navigate("/Connexion");
-    } catch (err: any) {
-      console.error("Erreur de déconnexion :", err.message);
+      setEstConnecte(false);
+    } catch (err) {
+      console.error("Erreur de déconnexion :", err);
     }
   }
   return (
@@ -62,9 +83,15 @@ function Header() {
             {/* DROITE NAVBAR */}
             <ul className="navbar-nav align-items-center gap-3">
               <li className="nav-item">
-                <Link to="/connexion" className="nav-link fw-bold">
-                  Se connecter
-                </Link>
+                {estConnecte ? (
+                  <button className="btn nav-link fw-bold" onClick={deconnexion} type="button">
+                    Se déconnecter
+                  </button>
+                ) : (
+                  <Link to="/connexion" className="nav-link fw-bold">
+                    Se connecter
+                  </Link>
+                )}
               </li>
 
               {/* DROPDOWN PROFIL */}
@@ -83,7 +110,9 @@ function Header() {
                     </Link>
                   </li>
                   <li>
-                    <button className="dropdown-item" onClick={deconnexion}>Déconnexion</button>
+                    <button className="dropdown-item" onClick={deconnexion}>
+                      Déconnexion
+                    </button>
                   </li>
                 </ul>
               </li>
