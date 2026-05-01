@@ -50,7 +50,7 @@ router.post("/signIn", async (req, res) => {
 
 router.post("/signUp", async (req, res) => {
   try {
-    const { courriel, motDePasse } = req.body;
+    const { nomUtilisateur, telephone ,courriel, motDePasse } = req.body;
 
     // Make sure the email is not already used
     const userExists = await getUtilisateurByCourriel(getUtilisateurs(), courriel);
@@ -62,6 +62,19 @@ router.post("/signUp", async (req, res) => {
     const user: Utilisateur = {
       courriel,
       motDePasse,
+
+      nomUtilisateur: "",
+      telephone: "",
+      statutCompte: "Actif",
+
+      compteActive: true,
+      cookiesAccepted: false,
+
+      notificationEmail: false,
+      notificationSMS: false,
+
+      visibiliteProfil: false,
+      partageDonnees: false,
       token: "",
       panier:{
         items:[],

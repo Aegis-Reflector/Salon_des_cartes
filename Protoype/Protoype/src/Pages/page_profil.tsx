@@ -52,9 +52,6 @@ export default function PageProfil() {
         <div className="card-body">
           <div>
             <p>
-              <strong>Full name:</strong> {user.nomComplet}
-            </p>
-            <p>
               <strong>Username:</strong> {user.nomUtilisateur}
             </p>
             <p>

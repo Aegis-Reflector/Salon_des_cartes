@@ -11,6 +11,7 @@ export async function authenticateToken(
   next: NextFunction,
 ) {
   const refreshToken = req.cookies.refresh;
+  console.log("refreshToken:", refreshToken);
 
   if (!refreshToken) {
     return res.status(401).json({ message: "Unauthorized" });

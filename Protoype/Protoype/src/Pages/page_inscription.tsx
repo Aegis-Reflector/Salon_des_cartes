@@ -6,7 +6,7 @@ export default function PageInscription() {
   //pour naviguer vers une autre page après l'inscription
   const navigate = useNavigate();
   //Form État qui contient les données du formulaire de connexion
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", nomUtilisateur: "" , telephone: "" });
 
   //Champ pour confirmer le mot de passe
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -70,6 +70,31 @@ export default function PageInscription() {
                 className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
                 onSubmit={handleSubmit}
               >
+
+              <div className="form-group">
+                <label>Nom d'utilisateur</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nomUtilisateur"
+                  placeholder="Username"
+                  value={formData.nomUtilisateur}
+                  onChange={handleChange}
+                />
+              </div>
+
+            {/* Phone */}
+              <div className="form-group">
+                <label>Numéro de téléphone</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="telephone"
+                  placeholder="Téléphone"
+                  value={formData.telephone}
+                  onChange={handleChange}
+                />
+              </div>
                 {/* Champ email */}
                 <div className="form-group ">
                   <label htmlFor="exampleInputEmail1">Email address</label>

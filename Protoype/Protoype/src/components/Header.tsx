@@ -21,6 +21,7 @@ function Header() {
         setEstConnecte(res.ok);
       } catch (err) {
         setEstConnecte(false);
+        console.log(err)
       }
     }
 
@@ -88,33 +89,21 @@ function Header() {
                     Se déconnecter
                   </button>
                 ) : (
-                  <Link to="/connexion" className="nav-link fw-bold">
+                  <button className="btn nav-link fw-bold" onClick={() => navigate("/connexion")}type="button">
                     Se connecter
-                  </Link>
+                  </button>
                 )}
               </li>
 
-              {/* DROPDOWN PROFIL */}
-              <li className="nav-item dropdown">
-                <button
-                  className="btn nav-link dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                >
-                  <img src={profile} alt="Profil" width="28" />
-                </button>
 
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <Link to="/Profil" className="dropdown-item">
-                      Mon compte
-                    </Link>
-                  </li>
-                  <li>
-                    <button className="dropdown-item" onClick={deconnexion}>
-                      Déconnexion
-                    </button>
-                  </li>
-                </ul>
+              {/* PROFIL */}
+              <li className="nav-item">
+                <button
+                className="btn nav-link"
+                onClick={() => navigate("/Profil")}
+                type="button">
+                <img src={profile} alt="Profil" width="28" />
+                </button>
               </li>
 
               {/* PANIER */}

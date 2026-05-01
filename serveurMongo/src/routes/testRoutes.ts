@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticateToken } from "../middleware/jwtToken.js";4
+import { authenticateToken } from "../middleware/jwtToken.js";
 import { getUtilisateurs } from "../db/mongo.js";
 
 const router = Router();
@@ -16,6 +16,7 @@ router.post("/protected", authenticateToken, async (req, res) => {
 
 router.get("/me", authenticateToken, async (req, res) => {
   try {
+    console.log("cookies:", req.cookies);
     const userId = req.user?._id;
 
     if (!userId) {
