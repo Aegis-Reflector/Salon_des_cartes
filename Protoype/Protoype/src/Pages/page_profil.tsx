@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 
 type UtilisateurProfil = {
   courriel: string;
-  nomComplet?: string;
   nomUtilisateur?: string;
   telephone?: string;
   statutCompte?: string;
@@ -52,16 +51,16 @@ export default function PageProfil() {
         <div className="card-body">
           <div>
             <p>
-              <strong>Username:</strong> {user.nomUtilisateur}
+              <strong>Username:</strong> {user.nomUtilisateur || "N/A"}
             </p>
             <p>
-              <strong>Email:</strong> {user.courriel}
+              <strong>Email:</strong> {user.courriel || "N/A"}
             </p>
             <p>
-              <strong>Phone number:</strong> {user.telephone}
+              <strong>Phone number:</strong> {user.telephone || "N/A"}
             </p>
             <p>
-              <strong>Account status:</strong> {user.statutCompte}
+              <strong>Account status:</strong> {user.statutCompte || "Actif"}
             </p>
           </div>
 

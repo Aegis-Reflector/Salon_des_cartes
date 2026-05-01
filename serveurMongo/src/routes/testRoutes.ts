@@ -30,14 +30,24 @@ router.get("/me", authenticateToken, async (req, res) => {
     }
 
     return res.status(200).json({
-      _id: user._id,
-      courriel: user.courriel,
-      // nomComplet: user.nomComplet | null,
-      // nomUtilisateur: user.nomUtilisateur,
-      // telephone: user.telephone,
-      // statutCompte: user.statutCompte,
-      permissions: user.permissions,
-      panier: user.panier,
+       _id: user._id,
+        courriel: user.courriel,
+
+        nomUtilisateur: user.nomUtilisateur,
+        telephone: user.telephone,
+        statutCompte: user.statutCompte,
+
+        compteActive: user.compteActive,
+        cookiesAccepted: user.cookiesAccepted,
+
+        notificationEmail: user.notificationEmail,
+        notificationSMS: user.notificationSMS,
+
+        visibiliteProfil: user.visibiliteProfil,
+        partageDonnees: user.partageDonnees,
+
+        permissions: user.permissions,
+        panier: user.panier,
     });
   } catch (error) {
     return res.status(500).json({ message: "Database error" });
