@@ -5,11 +5,17 @@ import promo3 from "../images/promo3.png";
 import promo4 from "../images/promo4.png";
 import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
-
+import CarteUI from "../components/CarteUI";
 import { useState, useEffect } from "react";
 import TCGdex from "@tcgdex/sdk";
-
+import { Link } from "react-router-dom";
 const tcgdex = new TCGdex("fr");
+
+type PromoCardProps = {
+  img: string;
+  title: string;
+  to : string;
+};
 
 type Carte = {
   id: string;
@@ -19,21 +25,42 @@ type Carte = {
   setName?: string;
   number?: string;
   marketPrice?: number | null;
+  localId?: string;
+  category?: string;
+  illustrator?: string;
+  description?: string;
+  set?: {
+    name?: string;
+  };
+  pricing?: {
+    cardmarket?: {
+      avg?: number;
+      trend?: number;
+      low?: number;
+      "avg-holo"?: number;
+      "trend-holo"?: number;
+      "low-holo"?: number;
+    };
+  };
 };
-
-type PromoCardProps = {
-  img: string;
-  title: string;
-};
-
-const eurToUsd = (eur: number) => eur * 1.18;
 
 function melangerTableau(tableau: Carte[]) {
-  return [...tableau].sort(() => Math.random() - 0.5);
+  const copie = [...tableau];
+
+  for (let i = copie.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copie[i], copie[j]] = [copie[j], copie[i]];
+  }
+
+  return copie;
 }
 
-function PromoCard({ img, title }: PromoCardProps) {
+function PromoCard({ img, title, to }: PromoCardProps) {
   return (
+  <Link
+      to= {to}
+      className="text-decoration-none text-dark"
+      >
     <div className="position-relative overflow-hidden rounded border border-dark border-4">
       <img
         src={img}
@@ -43,8 +70,9 @@ function PromoCard({ img, title }: PromoCardProps) {
 
       <div className="position-absolute top-0 start-0 m-3">
         <h1
-          className="text-white fw-bold"
+          className="text-white fw-bold mb-4"
           style={{
+            lineHeight: "1.1",
             textShadow: "3px 3px 10px rgba(0,0,0,0.9)",
           }}
         >
@@ -52,166 +80,180 @@ function PromoCard({ img, title }: PromoCardProps) {
         </h1>
       </div>
 
-      <div className="position-absolute top-50 start-50 translate-middle">
-        <button className="btn btn-light btn-lg fw-semibold btn-outline-dark">
+      <div className="position-absolute top-50 start-50   translate-middle-x mt-5">
+        <button className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark">
           Parcourir
         </button>
       </div>
     </div>
+    </Link>
   );
 }
 
-export default function CatalogueProduitPage() {
-  const [loadingDetails, setLoadingDetails] = useState(false);
-
+export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [page, setPage] = useState(1);
 
-  async function fetchCartes() {
+  localStorage.clear();
+  sessionStorage.clear();
+
+  async function voirCartes() {
     try {
       const data = await tcgdex.card.list();
 
-      const cartesFiltrees: Carte[] = data
-        .filter((c: any) => c.image && c.name)
-        .map((c: any) => ({
-          id: c.id,
-          name: c.name,
-          image: c.image + "/low.png",
+      const cartesFormatees: Carte[] = data
+        .filter((carte: any) => carte.image && carte.name)
+        .map((carte: any) => ({
+          id: carte.id,
+          name: carte.name,
+          image: carte.image + "/low.png",
+          rarity: carte.rarity,
+          marketPrice: null,
         }));
+      const cartesMelangees = melangerTableau(cartesFormatees);
+      const huitCartesRandom = cartesMelangees.slice(0, 8);
+       
+        
+    setCartes(huitCartesRandom);
+    setPage(1);
+   const cartesCompletes: Carte[] = await Promise.all(
+      huitCartesRandom.map(async (carte) => {
+        try {
+          const res = await fetch(
+            `https://api.tcgdex.net/v2/fr/cards/${carte.id}`,
+          );
 
-      const randomCartes = melangerTableau(cartesFiltrees).slice(0, 8);
+          if (!res.ok) {
+            return carte;
+          }
 
-      const cartesCompletes = await Promise.all(
-        randomCartes.map(async (carte) => {
-          const detail: any = await tcgdex.card.get(carte.id);
+          const detail = await res.json();
 
-          const cm = detail.pricing?.cardmarket;
+          const cardmarket = detail.pricing?.cardmarket;
 
           const marketPrice =
-            cm?.avg ??
-            cm?.trend ??
-            cm?.low ??
-            cm?.["avg-holo"] ??
-            cm?.["trend-holo"] ??
-            cm?.["low-holo"] ??
+            cardmarket?.avg ??
+            cardmarket?.trend ??
+            cardmarket?.low ??
+            cardmarket?.["avg-holo"] ??
+            cardmarket?.["trend-holo"] ??
+            cardmarket?.["low-holo"] ??
             null;
 
           return {
             id: detail.id,
             name: detail.name,
-            image: detail.image ? detail.image + "/low.png" : undefined,
-            rarity: detail.rarity,
+            image: detail.image ? detail.image + "/low.png" : carte.image,
+            rarity: detail.rarity ?? carte.rarity,
             setName: detail.set?.name,
             number: detail.localId,
             marketPrice,
           };
-        }),
-      );
+        } catch (error) {
+          console.error("Erreur detail carte:", carte.id, error);
+          return carte;
+        }
+      }),
+    );
 
-      setCartes(cartesCompletes);
-      setPage(1);
-    } catch (err) {
-      console.error("Erreur TCGdex:", err);
-    }
+    setCartes(cartesCompletes);
+  } catch (error) {
+    console.error("Erreur TCGdex :", error);
   }
+}
 
+
+  // useEffect appelé au chargement de la page pour aller chercher les cartes
   useEffect(() => {
-    fetchCartes();
+    voirCartes();
   }, []);
 
   const produitsParPage = 4;
-  const totalPages = Math.ceil(cartes.length / produitsParPage);
+  const totalPages = Math.max(1, Math.ceil(cartes.length / produitsParPage));
 
+  // Produits affichés pour la page actuelle
   const produitsAffiches = cartes.slice(
     (page - 1) * produitsParPage,
     page * produitsParPage,
   );
+  // Fonction pour récupérer les cartes depuis le backend
 
   return (
     <div className="container-fluid p-5">
-      <div className="mb-4 position-relative">
+      {/* Grande section spéciale */}
+      <div className="position mb-4">
         <img
           src={special}
           className="w-100 rounded"
           style={{ height: "310px", objectFit: "cover" }}
         />
+
+        <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
+          <h1 className="text-white display-4 fw-bold text-center"></h1>
+        </div>
       </div>
 
+      {/* 4 blocs promo */}
       <div className="row g-4 mb-5">
         <div className="col-md-6">
-          <PromoCard img={promo1} title="Prix bas" />
+          <PromoCard img={promo1} title="Aquapolis" to={`/Catalogue?set=${encodeURIComponent("Aquapolis")}`}/>
         </div>
+
         <div className="col-md-6">
-          <PromoCard img={promo2} title="Incontournables" />
+          <PromoCard img={promo2} title="Neo Discovery" to={`/Catalogue?set=${encodeURIComponent("Neo Discovery")}`}/>
         </div>
+
         <div className="col-md-6">
-          <PromoCard img={promo3} title="Édition limitée" />
+          <PromoCard img={promo3} title="Faille Paradoxe" to={`/Catalogue?set=${encodeURIComponent("Faille Paradoxe")}`} />
         </div>
+
         <div className="col-md-6">
-          <PromoCard img={promo4} title="Les plus rares" />
+          <PromoCard img={promo4} title="Destinées de Paldea" to= {`/Catalogue?set=${encodeURIComponent("Destinées de Paldea")}`}/>
         </div>
       </div>
 
-      <h2 className="text-uppercase mb-4">En vedette</h2>
+      {/* Section Vedette */}
+      <h2 className="text-uppercase mb-4 fw-normal">En vedette</h2>
 
-      <div className="row g-4">
+      <div className="row g-4 mx-0">
         {produitsAffiches.map((carte) => (
-          <div key={carte.id} className="col-md-3">
-            <div className="card h-100 p-3 shadow-sm rounded">
-              <div className="d-flex gap-3">
-                {carte.image && (
-                  <img
-                    src={carte.image}
-                    alt={carte.name}
-                    style={{
-                      width: "120px",
-                      height: "170px",
-                      objectFit: "contain",
-                    }}
-                  />
-                )}
-
-                <div>
-                  <h5>{carte.name}</h5>
-
-                  <p className="text-muted small">
-                    {carte.setName || "Set inconnu"}
-                    {carte.rarity && ` • ${carte.rarity}`}
-                    {carte.number && ` #${carte.number}`}
-                  </p>
-
-                  <h4>
-                    {carte.marketPrice
-                      ? `$${eurToUsd(carte.marketPrice).toFixed(2)}`
-                      : "N/A"}
-                  </h4>
-                </div>
-              </div>
-            </div>
+          <div key={carte.id} className="col-lg-3 col-md-6 col">
+            <CarteUI carte={carte} />
           </div>
         ))}
       </div>
 
-      <div className="text-center mt-4">
-        <button
-          className="btn btn-outline-dark me-2"
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-        >
-          <img src={arrowLeft} style={{ width: "18px" }} />
-        </button>
+      {/* Pagination */}
+      <div className="row mt-4">
+        <div className="col text-center">
+          <button
+            className="btn btn-outline-dark me-2"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            <img
+              src={arrowLeft}
+              alt="page précédente"
+              style={{ width: "18px" }}
+            />
+          </button>
 
-        <span>
-          Page {page} / {totalPages}
-        </span>
+          <span className="mx-2">
+            Page {page} / {totalPages}
+          </span>
 
-        <button
-          className="btn btn-outline-dark ms-2"
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-        >
-          <img src={arrowRight} style={{ width: "18px" }} />
-        </button>
+          <button
+            className="btn btn-outline-dark ms-2"
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            <img
+              src={arrowRight}
+              alt="page suivante"
+              style={{ width: "18px" }}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

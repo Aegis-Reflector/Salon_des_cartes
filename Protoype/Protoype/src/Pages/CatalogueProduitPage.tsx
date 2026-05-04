@@ -3,24 +3,45 @@ import TCGdex from "@tcgdex/sdk";
 import CarteUI from "../components/CarteUI";
 import flecheG from "../images/flecheG.png";
 import flecheD from "../images/flecheD.png";
+import { useSearchParams } from "react-router-dom";
 
 const tcgdex = new TCGdex("fr");
+
+const eurToUsd = (eur: number) => eur * 1.18;
 
 type Carte = {
   id: string;
   name: string;
   image?: string;
   rarity?: string;
+  localId?: string;
+  category?: string;
   setName?: string;
-  number?: string;
+  illustrator?: string;
+  description?: string;
+  set?: {
+    name?: string;
+  };
   marketPrice?: number | null;
+  pricing?: {
+    cardmarket?: {
+      avg?: number;
+      trend?: number;
+      low?: number;
+      "avg-holo"?: number;
+      "trend-holo"?: number;
+      "low-holo"?: number;
+    };
+  };
 };
 
 export default function CatalogueProduitPage() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [chargement, setChargement] = useState(true);
+  const [searchParams] = useSearchParams();
+  const recherche = searchParams.get("recherche") || "";
 
-  
+
   const [rareteFiltre, setRareteFiltre] = useState("");
   const [setFiltre, setSetFiltre] = useState("");
   const [prixMin, setPrixMin] = useState("");
@@ -40,17 +61,20 @@ export default function CatalogueProduitPage() {
       const convertirCarte = async (carte: any): Promise<Carte | null> => {
         try {
           const detail: any = await tcgdex.card.get(carte.id);
+        
+           const cm = detail.pricing?.cardmarket;
 
-          const cm = detail.pricing?.cardmarket;
+          const marketPriceEur =
+          cm?.avg ??
+          cm?.trend ??
+          cm?.low ??
+          cm?.["avg-holo"] ??
+          cm?.["trend-holo"] ??
+          cm?.["low-holo"] ??
+          null;
 
-          const marketPrice =
-            cm?.avg ??
-            cm?.trend ??
-            cm?.low ??
-            cm?.["avg-holo"] ??
-            cm?.["trend-holo"] ??
-            cm?.["low-holo"] ??
-            null;
+        const marketPrice =
+          marketPriceEur == null ? null : eurToUsd(marketPriceEur);
 
           return {
             id: detail.id,
@@ -58,7 +82,7 @@ export default function CatalogueProduitPage() {
             image: detail.image ? detail.image + "/low.png" : undefined,
             rarity: detail.rarity,
             setName: detail.set?.name,
-            number: detail.localId,
+            localId: detail.localId,
             marketPrice,
           };
         } catch {
@@ -96,13 +120,23 @@ export default function CatalogueProduitPage() {
 
   useEffect(() => {
     chargerCartes();
-  }, []);
+     setRareteFiltre(searchParams.get("rarete") || "");
+    setSetFiltre(searchParams.get("set") || "");
+    setPrixMin(searchParams.get("prixMin") || "");
+    setPrixMax(searchParams.get("prixMax") || "");
+  }, [searchParams]);
 
   const raretes = [...new Set(cartes.map((c) => c.rarity).filter(Boolean))];
   const sets = [...new Set(cartes.map((c) => c.setName).filter(Boolean))];
+  console.log(sets);
+
 
   const cartesFiltrees = cartes.filter((carte) => {
-    
+
+      const matchRecherche =
+      recherche === "" ||
+      carte.name.toLowerCase().includes(recherche.toLowerCase());
+
     const matchRarete = rareteFiltre === "" || carte.rarity === rareteFiltre;
 
     const matchSet = setFiltre === "" || carte.setName === setFiltre;
@@ -117,9 +151,7 @@ export default function CatalogueProduitPage() {
       prixMax === "" ||
       (prix !== null && prix !== undefined && prix <= Number(prixMax));
 
-    return (
-       matchRarete && matchSet && matchPrixMin && matchPrixMax
-    );
+    return matchRecherche && matchRarete && matchSet && matchPrixMin && matchPrixMax;
   });
 
   const totalPages = Math.max(
@@ -131,7 +163,6 @@ export default function CatalogueProduitPage() {
     (page - 1) * cartesParPage,
     page * cartesParPage,
   );
-
 
   return (
     <>
@@ -194,7 +225,6 @@ export default function CatalogueProduitPage() {
           <button
             className="btn btn-light"
             onClick={() => {
-            
               setRareteFiltre("");
               setSetFiltre("");
               setPrixMin("");

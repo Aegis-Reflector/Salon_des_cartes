@@ -1,10 +1,25 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import profile from "../images/profile.png";
 import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
-import logo from "../images/LogoFull.png"
+import logo from "../images/LogoFull.png";
 
 function Header() {
+  const [recherche, setRecherche] = useState("");
+  const navigate = useNavigate();
+
+  function chercherCarte(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (recherche.trim() === "") {
+      navigate("/Catalogue");
+      return;
+    }
+
+    navigate(`/Catalogue?recherche=${encodeURIComponent(recherche.trim())}`);
+  }
+
   return (
     <>
       {/* NAVBAR PRINCIPALE */}
@@ -27,15 +42,18 @@ function Header() {
 
           {/* CONTENU NAVBAR */}
           <div className="collapse navbar-collapse" id="mainNavbar">
+
             {/* BARRE RECHERCHE CENTRÉE */}
-            <form className="d-flex mx-auto w-50">
+            <form className="d-flex mx-auto w-50" onSubmit={chercherCarte}>
               <input
                 className="form-control"
                 type="search"
                 placeholder="Rechercher une carte Pokémon"
+                value={recherche}
+                onChange={(e) => setRecherche(e.target.value)}
               />
 
-              <button className="btn btn-outline-secondary">
+              <button className="btn btn-outline-secondary" type="submit">
                 <img src={loupe} alt="Recherche" width="18" />
               </button>
             </form>

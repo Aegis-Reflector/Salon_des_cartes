@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 type Carte = {
   id: string;
   name: string;
@@ -15,7 +18,23 @@ type CarteUIProps = {
 const eurToUsd = (eur: number) => eur * 1.18;
 
 export default function CarteUI({ carte }: CarteUIProps) {
+  const [tempsDepasse, setTempsDepasse] = useState(false);
+
+  useEffect(() => {
+    setTempsDepasse(false);
+
+    const timer = setTimeout(() => {
+      setTempsDepasse(true);
+    }, 30000);
+
+    return () => clearTimeout(timer);
+  }, [carte.id]);
+
   return (
+    <Link
+    to={`/produit/${carte.id}`}
+    className="text-decoration-none text-dark"
+  >
     <div
       className="card h-100 p-3"
       style={{
@@ -52,6 +71,8 @@ export default function CarteUI({ carte }: CarteUIProps) {
           <h4>
             {carte.marketPrice !== null && carte.marketPrice !== undefined ? (
               `$${eurToUsd(carte.marketPrice).toFixed(2)}`
+            ) : tempsDepasse ? (
+              "N/A"
             ) : (
               <div
                 className="spinner-border spinner-border-sm text-dark"
@@ -64,5 +85,6 @@ export default function CarteUI({ carte }: CarteUIProps) {
         </div>
       </div>
     </div>
+    </Link>
   );
 }

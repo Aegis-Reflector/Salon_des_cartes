@@ -1,9 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 
 
 import CatalogueProduitPage from "./Pages/CatalogueProduitPage.tsx";
@@ -19,6 +20,11 @@ import Securite from "./Pages/page_securite.tsx";
 import Settings from "./Pages/page_settings.tsx";
 import Help from "./Pages/page_help_support.tsx";
 import Panier from "./Pages/page_panier.tsx";
+import ProduitDetail from "./Pages/produitdetail.tsx";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+
 
 const router = createBrowserRouter([
   {
@@ -28,6 +34,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Accueil /> },
       { path: "/Catalogue", element: <CatalogueProduitPage /> },
       { path: "/admin", element: <PageAdmin /> },
+      { path : "/produit/:id" , element : <ProduitDetail/>},
     ],
   },
 
