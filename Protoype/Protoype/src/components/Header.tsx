@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import profile from "../images/profile.png";
 import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
 import logo from "../images/LogoFull.png";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 
 function Header() {
@@ -28,6 +26,20 @@ function Header() {
 
     verifierConnexion();
   }, []);
+
+  const [recherche, setRecherche] = useState("");
+
+  function chercherCarte(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (recherche.trim() === "") {
+      navigate("/Catalogue");
+      return;
+    }
+
+    navigate(`/Catalogue?recherche=${encodeURIComponent(recherche.trim())}`);
+  }
+
   async function deconnexion() {
     try {
       const res = await fetch("http://localhost:4000/auth/logout", {
