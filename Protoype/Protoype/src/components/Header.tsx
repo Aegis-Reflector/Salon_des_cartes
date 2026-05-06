@@ -4,22 +4,49 @@ import profile from "../images/profile.png";
 import panier from "../images/grocery-store.png";
 import loupe from "../images/loupe.png";
 import logo from "../images/LogoFull.png";
+import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 
 function Header() {
-  const [recherche, setRecherche] = useState("");
   const navigate = useNavigate();
+  const [estConnecte, setEstConnecte] = useState(false);
 
-  function chercherCarte(e: React.FormEvent) {
-    e.preventDefault();
+  useEffect(() => {
+    async function verifierConnexion() {
+      try {
+        const res = await fetch("http://localhost:4000/test/me", {
+          method: "GET",
+          credentials: "include",
+        });
 
-    if (recherche.trim() === "") {
-      navigate("/Catalogue");
-      return;
+        setEstConnecte(res.ok);
+      } catch (err) {
+        setEstConnecte(false);
+        console.log(err)
+      }
     }
 
-    navigate(`/Catalogue?recherche=${encodeURIComponent(recherche.trim())}`);
-  }
+    verifierConnexion();
+  }, []);
+  async function deconnexion() {
+    try {
+      const res = await fetch("http://localhost:4000/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
 
+      if (!res.ok) {
+        throw new Error(data.message || "Pas possible");
+      }
+
+      navigate("/Connexion");
+      setEstConnecte(false);
+    } catch (err) {
+      console.error("Erreur de déconnexion :", err);
+    }
+  }
   return (
     <>
       {/* NAVBAR PRINCIPALE */}
@@ -61,30 +88,26 @@ function Header() {
             {/* DROITE NAVBAR */}
             <ul className="navbar-nav align-items-center gap-3">
               <li className="nav-item">
-                <Link to="/connexion" className="nav-link fw-bold">
-                  Se connecter
-                </Link>
+                {estConnecte ? (
+                  <button className="btn nav-link fw-bold" onClick={deconnexion} type="button">
+                    Se déconnecter
+                  </button>
+                ) : (
+                  <button className="btn nav-link fw-bold" onClick={() => navigate("/connexion")}type="button">
+                    Se connecter
+                  </button>
+                )}
               </li>
 
-              {/* DROPDOWN PROFIL */}
-              <li className="nav-item dropdown">
-                <button
-                  className="btn nav-link dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                >
-                  <img src={profile} alt="Profil" width="28" />
-                </button>
 
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <Link to="/Profil" className="dropdown-item">
-                      Mon compte
-                    </Link>
-                  </li>
-                  <li>
-                    <button className="dropdown-item">Déconnexion</button>
-                  </li>
-                </ul>
+              {/* PROFIL */}
+              <li className="nav-item">
+                <button
+                className="btn nav-link"
+                onClick={() => navigate("/Profil")}
+                type="button">
+                <img src={profile} alt="Profil" width="28" />
+                </button>
               </li>
 
               {/* PANIER */}

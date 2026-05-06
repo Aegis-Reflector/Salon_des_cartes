@@ -130,7 +130,16 @@ export default function Accueil() {
           const detail = await res.json();
 
           const cardmarket = detail.pricing?.cardmarket;
+          const cardmarket = detail.pricing?.cardmarket;
 
+          const marketPrice =
+            cardmarket?.avg ??
+            cardmarket?.trend ??
+            cardmarket?.low ??
+            cardmarket?.["avg-holo"] ??
+            cardmarket?.["trend-holo"] ??
+            cardmarket?.["low-holo"] ??
+            null;
           const marketPrice =
             cardmarket?.avg ??
             cardmarket?.trend ??
@@ -177,6 +186,7 @@ export default function Accueil() {
     page * produitsParPage,
   );
   // Fonction pour récupérer les cartes depuis le backend
+
 
   return (
     <div className="container-fluid p-5">

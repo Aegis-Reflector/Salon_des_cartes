@@ -6,7 +6,7 @@ export default function PageInscription() {
   //pour naviguer vers une autre page après l'inscription
   const navigate = useNavigate();
   //Form État qui contient les données du formulaire de connexion
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", nomUtilisateur: "" , telephone: "" });
 
   //Champ pour confirmer le mot de passe
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,24 +26,31 @@ export default function PageInscription() {
     }
 
     // Envoi des données au serveur pour créer le compte
-    fetch("http://localhost:4000/inscription", {
+    fetch("http://localhost:4000/auth/signUp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      credentials: "include",
+      body: JSON.stringify({
+        courriel: formData.email,
+        motDePasse: formData.password
+      }),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        // Si le serveur confirme la création du compte
-        if (data.success) {
-          alert("Compte creer !");
-          navigate("/."); //Redirection au page d'accueil
-        } else {
-          alert("Erreur de creation");
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur de creation");
         }
+        return res.json();
       })
-      .catch((err) => console.error(err));
+      .then(() => {
+        alert("Compte créé !");
+        navigate("/");
+      })
+      .catch((err) => {
+        alert("Erreur de creation");
+        console.error(err);
+      });
   };
   return (
     <>
@@ -63,6 +70,31 @@ export default function PageInscription() {
                 className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
                 onSubmit={handleSubmit}
               >
+
+              <div className="form-group">
+                <label>Nom d'utilisateur</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nomUtilisateur"
+                  placeholder="Username"
+                  value={formData.nomUtilisateur}
+                  onChange={handleChange}
+                />
+              </div>
+
+            {/* Phone */}
+              <div className="form-group">
+                <label>Numéro de téléphone</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="telephone"
+                  placeholder="Téléphone"
+                  value={formData.telephone}
+                  onChange={handleChange}
+                />
+              </div>
                 {/* Champ email */}
                 <div className="form-group ">
                   <label htmlFor="exampleInputEmail1">Email address</label>
