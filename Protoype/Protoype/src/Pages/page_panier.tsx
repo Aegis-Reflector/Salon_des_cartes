@@ -25,7 +25,7 @@ export default function PagePanier() {
       const results = await Promise.all(
         panier.map(async (item) => {
           const res = await fetch(
-            `http://localhost:4000/tests/produits/${item.produitId}`,
+            `http://localhost:4000/tests/getPanier`,
             {
               method: "GET",
               credentials: "include",

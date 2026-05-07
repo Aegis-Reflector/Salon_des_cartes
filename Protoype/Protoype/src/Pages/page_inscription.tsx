@@ -17,6 +17,13 @@ export default function PageInscription() {
   //Champ pour confirmer le mot de passe
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Define your requirements
+  const requirements = [
+    { label: 'At least 6 characters', test: formData.password.length >= 6 },
+    { label: 'At least one number', test: /\d/.test(formData.password) },
+    { label: 'At least one special character', test: /[!@#$%^&*]/.test(formData.password) },
+  ];
+
   // État pour afficher/cacher le popup
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -199,7 +206,7 @@ export default function PageInscription() {
         </Modal.Header>
 
         <Modal.Body>{modalMessage}</Modal.Body>
-        
+
         <Modal.Footer>
           <Button variant="danger" onClick={fermerModal}>
             Fermer

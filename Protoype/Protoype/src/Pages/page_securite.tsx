@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 type UtilisateurSecurite = {
   nomUtilisateur: string;
+  motDePasse: string;
   twoFactorEnabled: boolean;
   cookiesAccepted: boolean;
 };
@@ -10,6 +11,7 @@ type UtilisateurSecurite = {
 export default function PageProfil() {
   const [user, setUser] = useState<UtilisateurSecurite | null>(null);
   const [error, setError] = useState("");
+  const [password, ShowPassword] = useState("");
 
   useEffect(() => {
     async function prendreInformation() {
@@ -58,7 +60,7 @@ export default function PageProfil() {
           {/* Password */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">
-              <strong>Password:</strong> ********
+              <strong>Password:</strong> {user.motDePasse || "########" }
             </p>
             <button className="btn btn-primary">Change </button>
           </div>

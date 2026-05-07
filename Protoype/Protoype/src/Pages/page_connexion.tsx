@@ -99,6 +99,11 @@ export default function PageConnexion() {
                     onChange={handleChange}
                   />
                 </div>
+
+                {/* <div hidden>
+
+
+                </div> */}
                 {/* Champ pour le mot de passe  */}
                 <div className="form-group pb-3">
                   <label htmlFor="exampleInputPassword1">Password</label>
