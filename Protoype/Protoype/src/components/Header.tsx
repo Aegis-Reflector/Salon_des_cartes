@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 function Header() {
   const navigate = useNavigate();
   const [estConnecte, setEstConnecte] = useState(false);
+  const [nomUtilisateur, setNomUtilisateur] = useState("");
 
   useEffect(() => {
     async function verifierConnexion() {
@@ -17,6 +18,8 @@ function Header() {
           credentials: "include",
         });
 
+        const data = await res.json();
+        setNomUtilisateur(data.nomUtilisateur ?? "");
         setEstConnecte(res.ok);
       } catch (err) {
         setEstConnecte(false);
@@ -99,11 +102,20 @@ function Header() {
 
             {/* DROITE NAVBAR */}
             <ul className="navbar-nav align-items-center gap-3">
+
               <li className="nav-item">
                 {estConnecte ? (
-                  <button className="btn nav-link fw-bold" onClick={deconnexion} type="button">
-                    Se déconnecter
-                  </button>
+                  <div>
+
+                    <span className="fw-bold mb-0">
+                      {nomUtilisateur}
+                    </span>
+
+                    <button className="btn nav-link fw-bold" onClick={deconnexion} type="button">
+                       Se déconnecter
+                    </button>
+                  </div>
+                  
                 ) : (
                   <button className="btn nav-link fw-bold" onClick={() => navigate("/connexion")}type="button">
                     Se connecter

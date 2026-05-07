@@ -54,4 +54,29 @@ router.get("/me", authenticateToken, async (req, res) => {
   }
 });
 
+
+router.delete("/deletePanier", authenticateToken, async(req , res) =>{
+try {
+    const userId = req.user?._id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Utilisateur not logged in" })
+    }
+    const result = await getUtilisateurs().updateOne(
+      { _id: userId },
+      { $set: { "panier.items": [] } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
+    }
+
+    return res.status(200).json({ message: "Panier vidé" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Database error" });
+
+  }
+})
+
 export default router;

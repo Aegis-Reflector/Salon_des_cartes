@@ -25,14 +25,18 @@ export default function PagePanier() {
       const results = await Promise.all(
         panier.map(async (item) => {
           const res = await fetch(
-            `https://api.tcgdex.net/v2/en/cards/${item.produitId}`,
+            `http://localhost:4000/tests/produits/${item.produitId}`,
+            {
+              method: "GET",
+              credentials: "include",
+            },
           );
-          const data = await res.json();
+
+          const produit = await res.json();
 
           return {
-            ...data,
+            ...produit,
             quantite: item.quantite,
-            prix: data.pricing?.cardmarket?.avg30 ?? "0",
           };
         }),
       );
@@ -61,6 +65,31 @@ export default function PagePanier() {
       ),
     );
   }
+
+  function calculerPrixTotal() {
+    return cards.reduce((total, card) => total + card.prix * card.quantite, 0);
+  }
+
+  async function clearPanierUtilisateur() {
+    try {
+      const res = await fetch(
+        "http://localhost:4000/utilisateurs/deletePanier",
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error("Impossible de vider le panier");
+      }
+
+      setCards([]);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
     <div>
       <div
@@ -73,6 +102,7 @@ export default function PagePanier() {
       <div className="card shadow">
         <div className="card-body p-4">
           {/* SECTION CARTE */}
+
           <div className="d-flex flex-column gap-3">
             {cards.map((card) => (
               <div key={card.id} className="card shadow-sm">
@@ -126,7 +156,7 @@ export default function PagePanier() {
         {/* SECTION BAS */}
         <div className="fixed-bottom bg-white px-5 py-4 shadow-lg">
           <div className="d-flex justify-content-between align-items-center px-4">
-            <h5 className="mb-0">Total: 99.99$</h5>
+            <h5 className="mb-0">Total: {calculerPrixTotal().toFixed(2)}$ </h5>
 
             <div className="d-flex gap-3">
               <button
@@ -138,7 +168,10 @@ export default function PagePanier() {
 
               <button
                 className="btn btn-outline-primary btn-lg rounded-pill px-5"
-                onClick={() => navigate("/")}
+                onClick={() => {
+                  clearPanierUtilisateur();
+                  navigate("/");
+                }}
               >
                 Commander
               </button>

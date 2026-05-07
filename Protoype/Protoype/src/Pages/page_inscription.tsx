@@ -1,15 +1,40 @@
 import { Link } from "react-router";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Modal, Button } from "react-bootstrap";
 
 export default function PageInscription() {
   //pour naviguer vers une autre page après l'inscription
   const navigate = useNavigate();
   //Form État qui contient les données du formulaire de connexion
-  const [formData, setFormData] = useState({ email: "", password: "", nomUtilisateur: "" , telephone: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    nomUtilisateur: "",
+    telephone: "",
+  });
 
   //Champ pour confirmer le mot de passe
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // État pour afficher/cacher le popup
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
+  const afficherModal = (title: string, message: string) => {
+    setModalTitle(title);
+    setModalMessage(message);
+    setShowModal(true);
+  };
+  // Fonction pour ouvrir le popup d'erreur
+  const afficherErreurConnexion = () => {
+    setShowModal(true);
+  };
+  // Fonction pour fermer le popup d'erreur
+  const fermerModal = () => {
+    setShowModal(false);
+  };
 
   // Fonction qui met à jour le state à chaque changement dans un input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +46,10 @@ export default function PageInscription() {
 
     // Vérifie si le mot de passe correspond à sa confirmation
     if (formData.password != confirmPassword) {
-      alert("Les mot de passes ne correspondent pas");
+      afficherModal(
+        "Mot de passe invalide",
+        "Les mots de passe ne correspondent pas.",
+      );
       return;
     }
 
@@ -34,7 +62,7 @@ export default function PageInscription() {
       credentials: "include",
       body: JSON.stringify({
         courriel: formData.email,
-        motDePasse: formData.password
+        motDePasse: formData.password,
       }),
     })
       .then((res) => {
@@ -44,12 +72,12 @@ export default function PageInscription() {
         return res.json();
       })
       .then(() => {
-        alert("Compte créé !");
+        afficherModal("Compte créé", "Votre compte a été créé avec succès!");
         navigate("/");
       })
       .catch((err) => {
-        alert("Erreur de creation");
         console.error(err);
+        afficherErreurConnexion();
       });
   };
   return (
@@ -70,31 +98,30 @@ export default function PageInscription() {
                 className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
                 onSubmit={handleSubmit}
               >
+                <div className="form-group">
+                  <label>Nom d'utilisateur</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="nomUtilisateur"
+                    placeholder="Username"
+                    value={formData.nomUtilisateur}
+                    onChange={handleChange}
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Nom d'utilisateur</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="nomUtilisateur"
-                  placeholder="Username"
-                  value={formData.nomUtilisateur}
-                  onChange={handleChange}
-                />
-              </div>
-
-            {/* Phone */}
-              <div className="form-group">
-                <label>Numéro de téléphone</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="telephone"
-                  placeholder="Téléphone"
-                  value={formData.telephone}
-                  onChange={handleChange}
-                />
-              </div>
+                {/* Phone */}
+                <div className="form-group">
+                  <label>Numéro de téléphone</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="telephone"
+                    placeholder="Téléphone"
+                    value={formData.telephone}
+                    onChange={handleChange}
+                  />
+                </div>
                 {/* Champ email */}
                 <div className="form-group ">
                   <label htmlFor="exampleInputEmail1">Email address</label>
@@ -164,6 +191,21 @@ export default function PageInscription() {
           </div>
         </div>
       </div>
+
+      {/* Popup erreur connexion */}
+      <Modal show={showModal} onHide={fermerModal} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>{modalTitle}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>{modalMessage}</Modal.Body>
+        
+        <Modal.Footer>
+          <Button variant="danger" onClick={fermerModal}>
+            Fermer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

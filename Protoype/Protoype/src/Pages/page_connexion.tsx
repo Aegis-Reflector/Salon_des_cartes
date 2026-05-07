@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Modal, Button } from "react-bootstrap";
 
 export default function PageConnexion() {
   const navigate = useNavigate();
@@ -17,6 +18,19 @@ export default function PageConnexion() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  // État pour afficher/cacher le popup
+  const [showModal, setShowModal] = useState(false);
+
+  // Fonction pour ouvrir le popup d'erreur
+  const afficherErreurConnexion = () => {
+    setShowModal(true);
+  };
+
+  // Fonction pour fermer le popup d'erreur
+  const fermerErreurConnexion = () => {
+    setShowModal(false);
   };
 
   //Fonction appelée lors de la soumission du forms
@@ -47,7 +61,10 @@ export default function PageConnexion() {
           navigate("/"); //Redirection a la page accueil
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        afficherErreurConnexion();
+      });
   };
 
   return (
@@ -122,6 +139,23 @@ export default function PageConnexion() {
           </div>
         </div>
       </div>
+
+      {/* Popup erreur connexion */}
+      <Modal show={showModal} onHide={fermerErreurConnexion} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Connexion impossible</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          Courriel ou mot de passe incorrect. Veuillez réessayer.
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="danger" onClick={fermerErreurConnexion}>
+            Fermer
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
