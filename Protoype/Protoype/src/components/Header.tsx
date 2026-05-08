@@ -105,9 +105,9 @@ function Header() {
 
               <li className="nav-item">
                 {estConnecte ? (
-                  <div>
+                  <div className="d-flex align-items-center gap-2">
 
-                    <span className="fw-bold mb-0">
+                    <span className="fw-bold ">
                       {nomUtilisateur}
                     </span>
 

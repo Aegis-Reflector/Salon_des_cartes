@@ -6,7 +6,8 @@ import promo4 from "../images/promo4.png";
 import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
 import CarteUI from "../components/CarteUI";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import backgroundMusic from "../music/Pokemon Black & White Music Driftveil City Music.mp3"
 import TCGdex from "@tcgdex/sdk";
 import { Link } from "react-router-dom";
 const tcgdex = new TCGdex("fr");
@@ -93,6 +94,21 @@ function PromoCard({ img, title, to }: PromoCardProps) {
 export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [page, setPage] = useState(1);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+
+  function toggleMusic() {
+    if (!audioRef.current) return;
+
+    if (musicPlaying) {
+      audioRef.current.pause();
+      setMusicPlaying(false);
+    } else {
+      audioRef.current.play();
+      setMusicPlaying(true);
+    }
+  }
+
 
   localStorage.clear();
   sessionStorage.clear();
@@ -180,7 +196,10 @@ export default function Accueil() {
 
 
   return (
+    
     <div className="container-fluid p-5">
+      <audio ref={audioRef} src={backgroundMusic} loop />
+      
       {/* Grande section spéciale */}
       <div className="position mb-4">
         <img
@@ -191,6 +210,14 @@ export default function Accueil() {
 
         <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
           <h1 className="text-white display-4 fw-bold text-center"></h1>
+           <button
+          className="btn btn-sm btn-outline-secondary position-fixed bottom-0 end-0 m-3"
+          style={{ zIndex: 9999 }}
+          type="button"
+          onClick={toggleMusic}
+        >
+          {musicPlaying ? " Pause" : " Play"}
+      </button>
         </div>
       </div>
 

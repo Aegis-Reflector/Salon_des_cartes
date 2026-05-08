@@ -11,7 +11,8 @@ type UtilisateurSecurite = {
 export default function PageProfil() {
   const [user, setUser] = useState<UtilisateurSecurite | null>(null);
   const [error, setError] = useState("");
-  const [password, ShowPassword] = useState("");
+  const [showPasswordField, setShowPasswordField] = useState(false);
+  const [nouveauMotDePasse, setNouveauMotDePasse] = useState("");
 
   useEffect(() => {
     async function prendreInformation() {

@@ -29,8 +29,9 @@ export default function PageProfil() {
         }
 
         setUser(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (error) {
+         console.log(error)
+         setError("Erreur lors du chargement du profil");
       }
     }
 

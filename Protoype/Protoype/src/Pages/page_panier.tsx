@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-
+import SidebarLayout from "../components/SidebarLayout";
 export default function PagePanier() {
   const navigate = useNavigate();
-
-  // DELETE THIS LATER
-  const panier = [
-    { produitId: "swsh3-136", quantite: 2 },
-    { produitId: "swsh1-1", quantite: 1 },
-  ];
 
   type Card = {
     id: string;
@@ -18,31 +12,39 @@ export default function PagePanier() {
     prix: number;
   };
 
+  type PanierItem = {
+    produit: Card;
+    quantite: number;
+  };
+
   const [cards, setCards] = useState<Card[]>([]);
 
   useEffect(() => {
     async function fetchCards() {
-      const results = await Promise.all(
-        panier.map(async (item) => {
-          const res = await fetch(
-            `http://localhost:4000/tests/getPanier`,
-            {
-              method: "GET",
-              credentials: "include",
-            },
-          );
+      try {
+      const res = await fetch("http://localhost:4000/tests/getPanier", {
+        method: "GET",
+        credentials: "include",
+      });
 
-          const produit = await res.json();
+      if (!res.ok) {
+        throw new Error("Impossible de charger le panier");
+      }
 
-          return {
-            ...produit,
-            quantite: item.quantite,
-          };
-        }),
-      );
+      const data = await res.json();
 
-      setCards(results);
+      const panier: PanierItem[] = data.panier?.items ?? [];
+
+      const cardsPanier = panier.map((item: PanierItem) => ({
+        ...item.produit,
+        quantite: item.quantite,
+      }));
+
+      setCards(cardsPanier);
+    } catch (err) {
+      console.error(err);
     }
+  }
     fetchCards();
   }, []);
 
@@ -58,12 +60,12 @@ export default function PagePanier() {
 
   function augmenterQuantite(id: string) {
     setCards((prevCards) =>
-      prevCards.map((card) =>
-        card.id === id && card.quantite > 1
-          ? { ...card, quantite: card.quantite + 1 }
-          : card,
-      ),
-    );
+    prevCards.map((card) =>
+      card.id === id
+        ? { ...card, quantite: card.quantite + 1 }
+        : card
+    )
+  );
   }
 
   function calculerPrixTotal() {
@@ -91,6 +93,7 @@ export default function PagePanier() {
     }
   }
   return (
+    <SidebarLayout title="Panier">
     <div>
       <div
         className="sticky-top bg-white px-4 py-3 shadow-sm"
@@ -154,7 +157,8 @@ export default function PagePanier() {
         </div>
 
         {/* SECTION BAS */}
-        <div className="fixed-bottom bg-white px-5 py-4 shadow-lg">
+        <div className="position-fixed bottom-0 end-0 bg-white px-5 py-4 shadow-lg"
+        style={{ zIndex: 1020, left: "246px" }}>
           <div className="d-flex justify-content-between align-items-center px-4">
             <h5 className="mb-0">Total: {calculerPrixTotal().toFixed(2)}$ </h5>
 
@@ -170,7 +174,6 @@ export default function PagePanier() {
                 className="btn btn-outline-primary btn-lg rounded-pill px-5"
                 onClick={() => {
                   clearPanierUtilisateur();
-                  navigate("/");
                 }}
               >
                 Commander
@@ -180,5 +183,6 @@ export default function PagePanier() {
         </div>
       </div>
     </div>
+    </SidebarLayout>
   );
 }

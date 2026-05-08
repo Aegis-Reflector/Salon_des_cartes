@@ -28,8 +28,9 @@ export default function PageProfil() {
         }
 
         setUser(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        console.log(err)
+        setError("Erreur d'authentification");
       }
     }
 

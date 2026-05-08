@@ -19,9 +19,12 @@ export default function PageInscription() {
 
   // Define your requirements
   const requirements = [
-    { label: 'At least 6 characters', test: formData.password.length >= 6 },
-    { label: 'At least one number', test: /\d/.test(formData.password) },
-    { label: 'At least one special character', test: /[!@#$%^&*]/.test(formData.password) },
+    { label: "At least 6 characters", test: formData.password.length >= 6 },
+    { label: "At least one number", test: /\d/.test(formData.password) },
+    {
+      label: "At least one special character",
+      test: /[!@#$%^&*]/.test(formData.password),
+    },
   ];
 
   // État pour afficher/cacher le popup
@@ -34,10 +37,7 @@ export default function PageInscription() {
     setModalMessage(message);
     setShowModal(true);
   };
-  // Fonction pour ouvrir le popup d'erreur
-  const afficherErreurConnexion = () => {
-    setShowModal(true);
-  };
+
   // Fonction pour fermer le popup d'erreur
   const fermerModal = () => {
     setShowModal(false);
@@ -51,8 +51,11 @@ export default function PageInscription() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const passwordValide = requirements.every(
+      (requirement) => requirement.test,
+    );
     // Vérifie si le mot de passe correspond à sa confirmation
-    if (formData.password != confirmPassword) {
+    if (formData.password != confirmPassword && !passwordValide) {
       afficherModal(
         "Mot de passe invalide",
         "Les mots de passe ne correspondent pas.",
@@ -70,6 +73,8 @@ export default function PageInscription() {
       body: JSON.stringify({
         courriel: formData.email,
         motDePasse: formData.password,
+        nomUtilisateur: formData.nomUtilisateur,
+        telephone: formData.telephone,
       }),
     })
       .then((res) => {
@@ -79,12 +84,11 @@ export default function PageInscription() {
         return res.json();
       })
       .then(() => {
-        afficherModal("Compte créé", "Votre compte a été créé avec succès!");
         navigate("/");
       })
       .catch((err) => {
         console.error(err);
-        afficherErreurConnexion();
+        afficherModal("Erreur de creation", err);
       });
   };
   return (
@@ -92,7 +96,7 @@ export default function PageInscription() {
       <div className="container-fluid bg-light min-vh-100 p-0">
         <div className="row min-vh-100 g-0">
           {/* Colonne rouge gauche */}
-          <div className="col-3 bg-danger"></div>
+          <div className="col-3 bg-dark"></div>
 
           {/* Colonne gauche décorative */}
           <div className="col-9  bg-light d-flex justify-content-center align-items-center">

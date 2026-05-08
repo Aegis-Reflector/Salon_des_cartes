@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Logo from "../images/LogoFull.png"
 
 function Sidebar() {
   return (
@@ -6,9 +7,9 @@ function Sidebar() {
       <div className="container py-2">
         <nav className="navbar navbar-dark bg-dark border-bottom border-white">
           <div className="container-fluid px-0">
-            <Link className="navbar-brand" to="/">
-              Salon Des Cartes
-            </Link>
+            <Link to="/" className="navbar-brand">
+            <img src={Logo} alt="Logo" style={{ height: "50px", width: "100px" }} />
+          </Link>
           </div>
         </nav>
 
