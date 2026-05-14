@@ -1,5 +1,5 @@
-import { use, useEffect, useState } from "react";
-import TCGdex, { Query } from "@tcgdex/sdk";
+import { useEffect, useState } from "react";
+import TCGdex from "@tcgdex/sdk";
 import CarteUI from "../components/CarteUI";
 import flecheG from "../images/flecheG.png";
 import flecheD from "../images/flecheD.png";
@@ -50,28 +50,21 @@ export default function CatalogueProduitPage() {
   const [page, setPage] = useState(1);
   const cartesParPage = 9;
 
- async function chargerCartes() {
-  try {
-    setChargement(true);
+  async function chargerCartes() {
+    try {
+      setChargement(true);
 
-    let query = Query.create()
-      .sort("name", "ASC")
-      .paginate(page, 20);
+      const data = await tcgdex.card.list();
 
-        if (recherche !== "") {
-      query = query.contains("name", recherche);
-    }
-    const data = await tcgdex.card.list(query);
+      const cartesBase = data.filter((c: any) => c.image && c.name);
 
-    const cartesBase = data.filter((c: any) => c.image).slice(0,cartesParPage);
+      const convertirCarte = async (carte: any): Promise<Carte | null> => {
+        try {
+          const detail: any = await tcgdex.card.get(carte.id);
+        
+           const cm = detail.pricing?.cardmarket;
 
-    const convertirCarte = async (carte: any): Promise<Carte | null> => {
-      try {
-        const detail: any = await tcgdex.card.get(carte.id);
-
-        const cm = detail.pricing?.cardmarket;
-
-        const marketPriceEur =
+          const marketPriceEur =
           cm?.avg ??
           cm?.trend ??
           cm?.low ??
@@ -83,47 +76,55 @@ export default function CatalogueProduitPage() {
         const marketPrice =
           marketPriceEur == null ? null : eurToUsd(marketPriceEur);
 
-        return {
-          id: detail.id,
-          name: detail.name,
-          image: detail.image ? detail.image + "/low.png" : undefined,
-          rarity: detail.rarity,
-          setName: detail.set?.name,
-          localId: detail.localId,
-          marketPrice,
-        };
-      } catch {
-        return null;
+          return {
+            id: detail.id,
+            name: detail.name,
+            image: detail.image ? detail.image + "/low.png" : undefined,
+            rarity: detail.rarity,
+            setName: detail.set?.name,
+            localId: detail.localId,
+            marketPrice,
+          };
+        } catch {
+          return null;
+        }
+      };
+
+      const tailleLot = 50;
+      const toutesLesCartes: Carte[] = [];
+
+      for (let i = 0; i < cartesBase.length; i += tailleLot) {
+        const lot = cartesBase.slice(i, i + tailleLot);
+
+        const cartesLot = await Promise.all(
+          lot.map((carte: any) => convertirCarte(carte)),
+        );
+
+        const cartesValides = cartesLot.filter(
+          (carte): carte is Carte => carte !== null,
+        );
+
+        toutesLesCartes.push(...cartesValides);
+        setCartes([...toutesLesCartes]);
+
+        if (i === 0) {
+          setChargement(false);
+        }
       }
-    };
-
-    const cartesLot = await Promise.all(
-      cartesBase.map((carte: any) => convertirCarte(carte)),
-    );
-
-    const cartesValides = cartesLot.filter(
-      (carte): carte is Carte => carte !== null,
-    );
-
-    setCartes(cartesValides);
-  } catch (error) {
-    console.error("Erreur TCGdex:", error);
-  } finally {
-    setChargement(false);
+    } catch (error) {
+      console.error("Erreur TCGdex:", error);
+    } finally {
+      setChargement(false);
+    }
   }
-}
 
   useEffect(() => {
-    setRareteFiltre(searchParams.get("rarete") || "");
+    chargerCartes();
+     setRareteFiltre(searchParams.get("rarete") || "");
     setSetFiltre(searchParams.get("set") || "");
     setPrixMin(searchParams.get("prixMin") || "");
     setPrixMax(searchParams.get("prixMax") || "");
-    setPage(1)
-  },  [searchParams]);
-
-  useEffect(()=>{
-    chargerCartes();
-  }, [page , recherche]);
+  }, [searchParams]);
 
   const raretes = [...new Set(cartes.map((c) => c.rarity).filter(Boolean))];
   const sets = [...new Set(cartes.map((c) => c.setName).filter(Boolean))];
@@ -131,6 +132,10 @@ export default function CatalogueProduitPage() {
 
 
   const cartesFiltrees = cartes.filter((carte) => {
+
+      const matchRecherche =
+      recherche === "" ||
+      carte.name.toLowerCase().includes(recherche.toLowerCase());
 
     const matchRarete = rareteFiltre === "" || carte.rarity === rareteFiltre;
 
@@ -146,11 +151,18 @@ export default function CatalogueProduitPage() {
       prixMax === "" ||
       (prix !== null && prix !== undefined && prix <= Number(prixMax));
 
-    return matchRarete && matchSet && matchPrixMin && matchPrixMax;
+    return matchRecherche && matchRarete && matchSet && matchPrixMin && matchPrixMax;
   });
 
-const totalPages = 12;
-const cartesAffichees = cartesFiltrees;
+  const totalPages = Math.max(
+    1,
+    Math.ceil(cartesFiltrees.length / cartesParPage),
+  );
+
+  const cartesAffichees = cartesFiltrees.slice(
+    (page - 1) * cartesParPage,
+    page * cartesParPage,
+  );
 
   return (
     <>
@@ -257,20 +269,21 @@ const cartesAffichees = cartesFiltrees;
                 />
               </button>
 
-             <span className="mx-2">Page {page}/{totalPages}</span>
+              <span className="mx-2">
+                Page {page} / {totalPages}
+              </span>
 
-            <button
-              className="btn btn-outline-dark ms-2"
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              <img
-                src={flecheD}
-                alt="page suivante"
-                style={{ width: "18px" }}
-              />
-            </button>
-
+              <button
+                className="btn btn-outline-dark ms-2"
+                disabled={page === totalPages}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                <img
+                  src={flecheD}
+                  alt="page suivante"
+                  style={{ width: "18px" }}
+                />
+              </button>
             </div>
           </>
         )}
