@@ -235,6 +235,7 @@ export default function Accueil() {
               className="w-100"
               style={{ height: "310px", objectFit: "cover" }}
             />
+          
 
         <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
           <h1 className="text-white display-4 fw-bold text-center"></h1>
