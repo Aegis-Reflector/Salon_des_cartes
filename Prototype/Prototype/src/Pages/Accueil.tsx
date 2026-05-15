@@ -1,3 +1,7 @@
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import TCGdex from "@tcgdex/sdk";
+
 import special from "../images/Special.png";
 import promo1 from "../images/promo1.png";
 import promo2 from "../images/promo2.png";
@@ -5,17 +9,16 @@ import promo3 from "../images/promo3.png";
 import promo4 from "../images/promo4.png";
 import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
+import backgroundMusic from "../music/Pokemon Black & White Music Driftveil City Music.mp3";
+
 import CarteUI from "../components/CarteUI";
-import { useState, useEffect, useRef } from "react";
-import backgroundMusic from "../music/Pokemon Black & White Music Driftveil City Music.mp3"
-import TCGdex from "@tcgdex/sdk";
-import { Link } from "react-router-dom";
+
 const tcgdex = new TCGdex("fr");
 
 type PromoCardProps = {
   img: string;
   title: string;
-  to : string;
+  to: string;
 };
 
 type PromoSet = {
@@ -33,23 +36,6 @@ type Carte = {
   setName?: string;
   number?: string;
   marketPrice?: number | null;
-  localId?: string;
-  category?: string;
-  illustrator?: string;
-  description?: string;
-  set?: {
-    name?: string;
-  };
-  pricing?: {
-    cardmarket?: {
-      avg?: number;
-      trend?: number;
-      low?: number;
-      "avg-holo"?: number;
-      "trend-holo"?: number;
-      "low-holo"?: number;
-    };
-  };
 };
 
 function melangerTableau(tableau: Carte[]) {
@@ -65,42 +51,47 @@ function melangerTableau(tableau: Carte[]) {
 
 function PromoCard({ img, title, to }: PromoCardProps) {
   return (
-  <Link
-      to= {to}
-      className="text-decoration-none text-dark"
-      >
-    <div className="position-relative overflow-hidden rounded border border-dark border-4">
-      <img
-        src={img}
-        className="w-100"
-        style={{ height: "250px", objectFit: "cover" , objectPosition: "center 40%"}}
-      />
-
-      <div className="position-absolute top-0 start-0 m-3">
-        <h1
-          className="text-white fw-bold mb-4"
+    <Link to={to} className="text-decoration-none text-dark">
+      <div className="position-relative overflow-hidden rounded border border-dark border-4">
+        <img
+          src={img}
+          className="w-100"
+          alt={title}
           style={{
-            lineHeight: "1.1",
-            textShadow: "3px 3px 10px rgba(0,0,0,0.9)",
+            height: "250px",
+            objectFit: "cover",
+            objectPosition: "center 40%",
+          }}
+        />
+
+        <div className="position-absolute top-0 start-0 m-3">
+          <h1
+            className="text-white fw-bold mb-4"
+            style={{
+              lineHeight: "1.1",
+              textShadow: "3px 3px 10px rgba(0,0,0,0.9)",
+            }}
+          >
+            {title}
+          </h1>
+        </div>
+
+        <div
+          className="position-absolute bottom-0 start-0 end-0 text-center pb-3 pt-5"
+          style={{
+            zIndex: 3,
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0))",
           }}
         >
-          {title}
-        </h1>
+          <button
+            type="button"
+            className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark"
+          >
+            Parcourir
+          </button>
+        </div>
       </div>
-
-      <div
-        className="position-absolute bottom-0 start-0 end-0 text-center pb-3 pt-5"
-        style={{
-          zIndex: 3,
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0))",
-        }}
-      >
-        <button className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark">
-          Parcourir
-        </button>
-      </div>
-    </div>
     </Link>
   );
 }
@@ -108,19 +99,21 @@ function PromoCard({ img, title, to }: PromoCardProps) {
 const lienSerie = (setId: string) =>
   `/Catalogue?set=${encodeURIComponent(setId)}`;
 
-const lienCarte = (carteId: string) => `/produit/${encodeURIComponent(carteId)}`;
+const lienCarte = (carteId: string) =>
+  `/produit/${encodeURIComponent(carteId)}`;
 
 export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
+  const [page, setPage] = useState(1);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   const promoSets: PromoSet[] = [
     { id: "sv05", title: "Forces Temporelles", img: promo1 },
     { id: "sv06", title: "Mascarade Crépusculaire", img: promo2 },
     { id: "sv04", title: "Faille Paradoxe", img: promo3 },
     { id: "sv04.5", title: "Destinées de Paldea", img: promo4 },
   ];
-  const [page, setPage] = useState(1);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [musicPlaying, setMusicPlaying] = useState(false);
 
   function toggleMusic() {
     if (!audioRef.current) return;
@@ -133,10 +126,6 @@ export default function Accueil() {
       setMusicPlaying(true);
     }
   }
-
-
-  localStorage.clear();
-  sessionStorage.clear();
 
   async function voirCartes() {
     try {
@@ -151,61 +140,56 @@ export default function Accueil() {
           rarity: carte.rarity,
           marketPrice: null,
         }));
-      const cartesMelangees = melangerTableau(cartesFormatees);
-      const huitCartesRandom = cartesMelangees.slice(0, 8);
-       
-        
-    setCartes(huitCartesRandom);
-    setPage(1);
-   const cartesCompletes: Carte[] = await Promise.all(
-      huitCartesRandom.map(async (carte) => {
-        try {
-          const res = await fetch(
-            `https://api.tcgdex.net/v2/fr/cards/${carte.id}`,
-          );
 
-          if (!res.ok) {
+      const huitCartesRandom = melangerTableau(cartesFormatees).slice(0, 8);
+
+      setCartes(huitCartesRandom);
+      setPage(1);
+
+      const cartesCompletes: Carte[] = await Promise.all(
+        huitCartesRandom.map(async (carte) => {
+          try {
+            const res = await fetch(
+              `https://api.tcgdex.net/v2/fr/cards/${carte.id}`,
+            );
+
+            if (!res.ok) return carte;
+
+            const detail = await res.json();
+            const cardmarket = detail.pricing?.cardmarket;
+
+            const marketPrice =
+              cardmarket?.avg ??
+              cardmarket?.trend ??
+              cardmarket?.low ??
+              cardmarket?.["avg-holo"] ??
+              cardmarket?.["trend-holo"] ??
+              cardmarket?.["low-holo"] ??
+              null;
+
+            return {
+              id: detail.id,
+              name: detail.name,
+              image: detail.image ? detail.image + "/low.png" : carte.image,
+              rarity: detail.rarity ?? carte.rarity,
+              setId: detail.set?.id,
+              setName: detail.set?.name,
+              number: detail.localId,
+              marketPrice,
+            };
+          } catch (error) {
+            console.error("Erreur detail carte:", carte.id, error);
             return carte;
           }
+        }),
+      );
 
-          const detail = await res.json();
-
-          const cardmarket = detail.pricing?.cardmarket;
-
-          const marketPrice =
-            cardmarket?.avg ??
-            cardmarket?.trend ??
-            cardmarket?.low ??
-            cardmarket?.["avg-holo"] ??
-            cardmarket?.["trend-holo"] ??
-            cardmarket?.["low-holo"] ??
-            null;
-
-          return {
-            id: detail.id,
-            name: detail.name,
-            image: detail.image ? detail.image + "/low.png" : carte.image,
-            rarity: detail.rarity ?? carte.rarity,
-            setId: detail.set?.id,
-            setName: detail.set?.name,
-            number: detail.localId,
-            marketPrice,
-          };
-        } catch (error) {
-          console.error("Erreur detail carte:", carte.id, error);
-          return carte;
-        }
-      }),
-    );
-
-    setCartes(cartesCompletes);
-  } catch (error) {
-    console.error("Erreur TCGdex :", error);
+      setCartes(cartesCompletes);
+    } catch (error) {
+      console.error("Erreur TCGdex :", error);
+    }
   }
-}
 
-
-  // useEffect appelé au chargement de la page pour aller chercher les cartes
   useEffect(() => {
     voirCartes();
   }, []);
@@ -213,44 +197,53 @@ export default function Accueil() {
   const produitsParPage = 4;
   const totalPages = Math.max(1, Math.ceil(cartes.length / produitsParPage));
 
-  // Produits affichés pour la page actuelle
   const produitsAffiches = cartes.slice(
     (page - 1) * produitsParPage,
     page * produitsParPage,
   );
-  // Fonction pour récupérer les cartes depuis le backend
-
 
   return (
-    
     <div className="container-fluid p-5">
       <audio ref={audioRef} src={backgroundMusic} loop />
-      
-      {/* Grande section spéciale */}
-      <div className="position mb-4">
+
+      <button
+        className="btn btn-sm btn-outline-secondary position-fixed bottom-0 end-0 m-3"
+        style={{ zIndex: 9999 }}
+        type="button"
+        onClick={toggleMusic}
+      >
+        {musicPlaying ? "Pause" : "Play"}
+      </button>
+
+      <div className="mb-4">
         <Link to="/Catalogue" className="text-decoration-none">
           <div className="position-relative overflow-hidden rounded">
             <img
               src={special}
               className="w-100"
+              alt="Ascended Heroes"
               style={{ height: "310px", objectFit: "cover" }}
             />
-          
 
-        <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
-          <h1 className="text-white display-4 fw-bold text-center"></h1>
-           <button
-          className="btn btn-sm btn-outline-secondary position-fixed bottom-0 end-0 m-3"
-          style={{ zIndex: 9999 }}
-          type="button"
-          onClick={toggleMusic}
-        >
-          {musicPlaying ? " Pause" : " Play"}
-      </button>
-        </div>
+            <div
+              className="position-absolute bottom-0 start-0 end-0 text-center pb-3 pt-5"
+              style={{
+                zIndex: 3,
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0))",
+              }}
+            >
+              <button
+                type="button"
+                className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark"
+              >
+                Parcourir
+              </button>
+            </div>
+          </div>
+        </Link>
       </div>
 
-      {/* 4 blocs promo */}
       <div className="row g-4 mb-5">
         {promoSets.map((promo) => (
           <div className="col-md-6" key={promo.id}>
@@ -263,7 +256,6 @@ export default function Accueil() {
         ))}
       </div>
 
-      {/* Section Vedette */}
       <h2 className="text-uppercase mb-4 fw-normal">En vedette</h2>
 
       <div className="row g-4 mx-0">
@@ -274,13 +266,13 @@ export default function Accueil() {
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="row mt-4">
         <div className="col text-center">
           <button
             className="btn btn-outline-dark me-2"
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
+            type="button"
           >
             <img
               src={arrowLeft}
@@ -297,6 +289,7 @@ export default function Accueil() {
             className="btn btn-outline-dark ms-2"
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
+            type="button"
           >
             <img
               src={arrowRight}

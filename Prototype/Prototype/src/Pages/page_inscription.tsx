@@ -83,8 +83,7 @@ export default function PageInscription() {
         telephone: formData.telephone,
         courriel: formData.email,
         motDePasse: formData.password,
-        nomUtilisateur: formData.nomUtilisateur,
-        telephone: formData.telephone,
+      
       }),
     })
       .then((res) => {
