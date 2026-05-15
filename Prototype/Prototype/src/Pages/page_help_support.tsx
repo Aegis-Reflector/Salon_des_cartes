@@ -1,6 +1,6 @@
 import SidebarLayout from "../components/SidebarLayout";
-import BrockDance from "../gif/Brock_Dancing_Meme_GREEN_SCREEN-ezgif.com-resize.gif"
-import HitmontopDance from "../gif/hitmontop_v2.mp4"
+import BrockDance from "../gif/Brock_Dancing_Meme_GREEN_SCREEN-ezgif.com-resize.gif";
+import HitmontopDance from "../gif/hitmontop_v2.mp4";
 export default function PageProfil() {
   return (
     <SidebarLayout title="Help & Support">
@@ -10,31 +10,36 @@ export default function PageProfil() {
             <strong>Contact Email:</strong> support@salondecarte.com
           </p>
           <p className="mt-3">
-            <strong>Contact Phone:</strong> 1-800-273-8255  
+            <strong>Contact Phone:</strong> 1-800-273-8255
           </p>
-
-          
         </div>
-        
       </div>
 
-    <div className="text-center mt-4">
-      <img
-            src={BrockDance}
-            alt="Brock Dance "
-            style={{ width: "250px", borderRadius: "10px" }}
-            className="align-self-center"
-          />
-
-          <video
+      <div className="d-flex justify-content-center align-items-center gap-4 mt-4">
+        <video
           src={HitmontopDance}
           autoPlay
           loop
           muted
           playsInline
           style={{ width: "250px" }}
-          />
-    </div>
+        />
+        <img
+          src={BrockDance}
+          alt="Brock Dance "
+          style={{ width: "250px", borderRadius: "10px" }}
+          className="align-self-center"
+        />
+
+        <video
+          src={HitmontopDance}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{ width: "250px" }}
+        />
+      </div>
     </SidebarLayout>
   );
 }

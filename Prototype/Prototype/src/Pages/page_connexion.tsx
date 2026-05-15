@@ -97,6 +97,7 @@ export default function PageConnexion() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -115,6 +116,7 @@ export default function PageConnexion() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 {/* Button pour envoyer le formulaire  */}

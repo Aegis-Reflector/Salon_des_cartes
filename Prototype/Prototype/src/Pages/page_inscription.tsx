@@ -55,10 +55,18 @@ export default function PageInscription() {
       (requirement) => requirement.test,
     );
     // Vérifie si le mot de passe correspond à sa confirmation
-    if (formData.password != confirmPassword && !passwordValide) {
+    if (formData.password != confirmPassword ) {
       afficherModal(
         "Mot de passe invalide",
         "Les mots de passe ne correspondent pas.",
+      );
+      return;
+    }
+
+    if (!passwordValide ) {
+      afficherModal(
+        "Mot de passe invalide",
+        "Les mots de passe doivent respecter tous les conditions.",
       );
       return;
     }
@@ -118,6 +126,7 @@ export default function PageInscription() {
                     placeholder="Username"
                     value={formData.nomUtilisateur}
                     onChange={handleChange}
+                    required
                   />
                 </div>
 
@@ -131,6 +140,7 @@ export default function PageInscription() {
                     placeholder="Téléphone"
                     value={formData.telephone}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 {/* Champ email */}
@@ -145,6 +155,7 @@ export default function PageInscription() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 {/* Champ mot de passe */}
@@ -158,7 +169,24 @@ export default function PageInscription() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    required
                   />
+
+                  {/* Test de password pour voir si il suit les requirements */}
+                  {formData.password.length > 0 && (
+                    <div className="mt-2">
+                      {requirements.map((requirement) =>
+                        !requirement.test ? (
+                          <small
+                            key={requirement.label}
+                            className="text-danger d-block"
+                          >
+                            {requirement.label}
+                          </small>
+                        ) : null,
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Champ confirmation de mot de passe */}
@@ -173,7 +201,14 @@ export default function PageInscription() {
                     placeholder="Confirmer mot de passe"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)} //Mettre a jour dependant du changement du champ mot de passe
+                    required
                   />
+                  {confirmPassword.length > 0 &&
+                    formData.password !== confirmPassword && (
+                      <small className="text-danger mt-2 d-block">
+                        Les mots de passe ne correspondent pas.
+                      </small>
+                    )}
                 </div>
 
                 <button

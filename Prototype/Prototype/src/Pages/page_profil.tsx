@@ -8,11 +8,13 @@ type UtilisateurProfil = {
   statutCompte?: string;
 };
 
-
 export default function PageProfil() {
-
   const [user, setUser] = useState<UtilisateurProfil | null>(null);
   const [error, setError] = useState("");
+
+  const [utilisateurModifie, setUtilisateurModifie] =
+    useState<UtilisateurProfil | null>(null);
+  const [modeModification, setModeModification] = useState(false);
 
   useEffect(() => {
     async function prendreInformation() {
@@ -29,19 +31,42 @@ export default function PageProfil() {
         }
 
         setUser(data);
+        setUtilisateurModifie(data);
       } catch (error) {
-         console.log(error)
-         setError("Erreur lors du chargement du profil");
+        console.log(error);
+        setError("Erreur lors du chargement du profil");
       }
     }
 
     prendreInformation();
   }, []);
+
+  function gererChangement(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!utilisateurModifie) return;
+
+    setUtilisateurModifie({
+      ...utilisateurModifie,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function confirmerModification() {
+  if (!utilisateurModifie) return;
+
+  setUtilisateur(utilisateurModifie);
+  setModeModification(false);
+}
+
+function annulerModification() {
+  setUtilisateurModifie(utilisateur);
+  setModeModification(false);
+}
+
   if (error) {
     return <SidebarLayout title="Account Information">{error}</SidebarLayout>;
   }
 
-  if (!user) {
+  if (!user || !utilisateurModifie) {
     return (
       <SidebarLayout title="Account Information">Loading...</SidebarLayout>
     );
