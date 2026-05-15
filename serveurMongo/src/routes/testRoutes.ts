@@ -130,7 +130,7 @@ router.patch("/updateProfil", authenticateToken, async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Profil modifié avec succès",
+      message: "succès",
     });
   } catch (error) {
     console.error(error);
