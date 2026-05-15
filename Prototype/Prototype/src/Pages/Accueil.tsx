@@ -17,11 +17,18 @@ type PromoCardProps = {
   to : string;
 };
 
+type PromoSet = {
+  id: string;
+  title: string;
+  img: string;
+};
+
 type Carte = {
   id: string;
   name: string;
   image?: string;
   rarity?: string;
+  setId?: string;
   setName?: string;
   number?: string;
   marketPrice?: number | null;
@@ -65,7 +72,7 @@ function PromoCard({ img, title, to }: PromoCardProps) {
       <img
         src={img}
         className="w-100"
-        style={{ height: "250px", objectFit: "cover" }}
+        style={{ height: "250px", objectFit: "cover" , objectPosition: "center 40%"}}
       />
 
       <div className="position-absolute top-0 start-0 m-3">
@@ -80,7 +87,14 @@ function PromoCard({ img, title, to }: PromoCardProps) {
         </h1>
       </div>
 
-      <div className="position-absolute top-50 start-50   translate-middle-x mt-5">
+      <div
+        className="position-absolute bottom-0 start-0 end-0 text-center pb-3 pt-5"
+        style={{
+          zIndex: 3,
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0))",
+        }}
+      >
         <button className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark">
           Parcourir
         </button>
@@ -90,12 +104,20 @@ function PromoCard({ img, title, to }: PromoCardProps) {
   );
 }
 
+const lienSerie = (setId: string) =>
+  `/Catalogue?set=${encodeURIComponent(setId)}`;
+
+const lienCarte = (carteId: string) => `/produit/${encodeURIComponent(carteId)}`;
+
 export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
+  const promoSets: PromoSet[] = [
+    { id: "sv05", title: "Forces Temporelles", img: promo1 },
+    { id: "sv06", title: "Mascarade Crépusculaire", img: promo2 },
+    { id: "sv04", title: "Faille Paradoxe", img: promo3 },
+    { id: "sv04.5", title: "Destinées de Paldea", img: promo4 },
+  ];
   const [page, setPage] = useState(1);
-
-  localStorage.clear();
-  sessionStorage.clear();
 
   async function voirCartes() {
     try {
@@ -145,6 +167,7 @@ export default function Accueil() {
             name: detail.name,
             image: detail.image ? detail.image + "/low.png" : carte.image,
             rarity: detail.rarity ?? carte.rarity,
+            setId: detail.set?.id,
             setName: detail.set?.name,
             number: detail.localId,
             marketPrice,
@@ -183,34 +206,41 @@ export default function Accueil() {
     <div className="container-fluid p-5">
       {/* Grande section spéciale */}
       <div className="position mb-4">
-        <img
-          src={special}
-          className="w-100 rounded"
-          style={{ height: "310px", objectFit: "cover" }}
-        />
+        <Link to="/Catalogue" className="text-decoration-none">
+          <div className="position-relative overflow-hidden rounded">
+            <img
+              src={special}
+              className="w-100"
+              style={{ height: "310px", objectFit: "cover" }}
+            />
 
-        <div className="position-absolute top-50 start-0 translate-middle-y ms-5">
-          <h1 className="text-white display-4 fw-bold text-center"></h1>
-        </div>
+            <div
+              className="position-absolute bottom-0 start-0 end-0 text-center pb-3 pt-5"
+              style={{
+                zIndex: 3,
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0))",
+              }}
+            >
+              <button className="btn btn-light btn-lg px-4 py-2 fw-semibold btn-outline-dark">
+                Parcourir
+              </button>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* 4 blocs promo */}
       <div className="row g-4 mb-5">
-        <div className="col-md-6">
-          <PromoCard img={promo1} title="Aquapolis" to={`/Catalogue?set=${encodeURIComponent("Aquapolis")}`}/>
-        </div>
-
-        <div className="col-md-6">
-          <PromoCard img={promo2} title="Neo Discovery" to={`/Catalogue?set=${encodeURIComponent("Neo Discovery")}`}/>
-        </div>
-
-        <div className="col-md-6">
-          <PromoCard img={promo3} title="Faille Paradoxe" to={`/Catalogue?set=${encodeURIComponent("Faille Paradoxe")}`} />
-        </div>
-
-        <div className="col-md-6">
-          <PromoCard img={promo4} title="Destinées de Paldea" to= {`/Catalogue?set=${encodeURIComponent("Destinées de Paldea")}`}/>
-        </div>
+        {promoSets.map((promo) => (
+          <div className="col-md-6" key={promo.id}>
+            <PromoCard
+              img={promo.img}
+              title={promo.title}
+              to={lienSerie(promo.id)}
+            />
+          </div>
+        ))}
       </div>
 
       {/* Section Vedette */}
@@ -219,7 +249,7 @@ export default function Accueil() {
       <div className="row g-4 mx-0">
         {produitsAffiches.map((carte) => (
           <div key={carte.id} className="col-lg-3 col-md-6 col">
-            <CarteUI carte={carte} />
+            <CarteUI carte={carte} lien={lienCarte(carte.id)} />
           </div>
         ))}
       </div>

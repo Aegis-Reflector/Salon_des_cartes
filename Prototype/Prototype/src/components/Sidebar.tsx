@@ -1,6 +1,31 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Sidebar() {
+  const [courriel, setCourriel] = useState("");
+
+  useEffect(() => {
+    async function chargerUtilisateur() {
+      try {
+        const res = await fetch("http://localhost:4000/test/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        setCourriel(data.courriel || "");
+      } catch {
+        setCourriel("");
+      }
+    }
+
+    chargerUtilisateur();
+  }, []);
+
+  const estAdmin = courriel === "admin1@pokemon.com";
+
   return (
     <div className="col-2 col-sm-3 col-xl-2 bg-dark text-white d-flex flex-column min-vh-100">
       <div className="container py-2">
@@ -88,6 +113,26 @@ function Sidebar() {
             </svg>
             <span className="d-none d-sm-inline ms-2">Help & Support</span>
           </Link>
+
+          {estAdmin && (
+            <Link className="nav-link text-white" to="/admin">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="bi bi-speedometer2"
+                viewBox="0 0 16 16"
+              >
+                <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5-.5a.5.5 0 0 0 0 1h1.586a.5.5 0 0 0 0-1zm.754-4.268a.5.5 0 0 0-.707 0l-.915.914a.5.5 0 1 0 .708.708l.914-.915a.5.5 0 0 0 0-.707" />
+                <path
+                  fillRule="evenodd"
+                  d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.839-3.035 1.467a19 19 0 0 0-9.024 0c-1.19.372-2.593-.214-3.035-1.467A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.594.666a20 20 0 0 1 10.018 0c.67.21 1.39-.091 1.594-.666A7 7 0 0 0 8 3"
+                />
+              </svg>
+              <span className="d-none d-sm-inline ms-2">Admin</span>
+            </Link>
+          )}
         </nav>
       </div>
 

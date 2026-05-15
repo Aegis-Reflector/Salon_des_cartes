@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TCGdex, { Query } from "@tcgdex/sdk";
 import CarteUI from "../components/CarteUI";
 import flecheG from "../images/flecheG.png";
@@ -16,6 +16,7 @@ type Carte = {
   rarity?: string;
   localId?: string;
   category?: string;
+  setId?: string;
   setName?: string;
   illustrator?: string;
   description?: string;
@@ -35,35 +36,54 @@ type Carte = {
   };
 };
 
+type SetOption = {
+  id: string;
+  name: string;
+};
+
 export default function CatalogueProduitPage() {
   const [cartes, setCartes] = useState<Carte[]>([]);
+  const [raretesOptions, setRaretesOptions] = useState<string[]>([]);
+  const [setsOptions, setSetsOptions] = useState<SetOption[]>([]);
+  const [totalPages, setTotalPages] = useState(12);
   const [chargement, setChargement] = useState(true);
   const [searchParams] = useSearchParams();
   const recherche = searchParams.get("recherche") || "";
 
 
-  const [rareteFiltre, setRareteFiltre] = useState("");
-  const [setFiltre, setSetFiltre] = useState("");
-  const [prixMin, setPrixMin] = useState("");
-  const [prixMax, setPrixMax] = useState("");
+  const [rareteFiltre, setRareteFiltre] = useState(
+    searchParams.get("rarete") || "",
+  );
+  const [setFiltre, setSetFiltre] = useState(searchParams.get("set") || "");
+  const [prixMin, setPrixMin] = useState(searchParams.get("prixMin") || "");
+  const [prixMax, setPrixMax] = useState(searchParams.get("prixMax") || "");
+  const [triPrix, setTriPrix] = useState("");
 
   const [page, setPage] = useState(1);
   const cartesParPage = 9;
+  const pagesMaxParFiltre = 4;
+
+ async function chargerSets() {
+  try {
+    const data = await tcgdex.set.list(Query.create().sort("name", "ASC"));
+    setSetsOptions(data.map((set: any) => ({ id: set.id, name: set.name })));
+  } catch (error) {
+    console.error("Erreur séries TCGdex:", error);
+  }
+}
+
+ async function chargerRaretes() {
+  try {
+    const data = await tcgdex.rarity.list();
+    setRaretesOptions(data.map(String).sort());
+  } catch (error) {
+    console.error("Erreur raretés TCGdex:", error);
+  }
+}
 
  async function chargerCartes() {
   try {
     setChargement(true);
-
-    let query = Query.create()
-      .sort("name", "ASC")
-      .paginate(page, 20);
-
-        if (recherche !== "") {
-      query = query.contains("name", recherche);
-    }
-    const data = await tcgdex.card.list(query);
-
-    const cartesBase = data.filter((c: any) => c.image).slice(0,cartesParPage);
 
     const convertirCarte = async (carte: any): Promise<Carte | null> => {
       try {
@@ -88,6 +108,7 @@ export default function CatalogueProduitPage() {
           name: detail.name,
           image: detail.image ? detail.image + "/low.png" : undefined,
           rarity: detail.rarity,
+          setId: detail.set?.id,
           setName: detail.set?.name,
           localId: detail.localId,
           marketPrice,
@@ -97,14 +118,88 @@ export default function CatalogueProduitPage() {
       }
     };
 
-    const cartesLot = await Promise.all(
-      cartesBase.map((carte: any) => convertirCarte(carte)),
+    const remplirPage = async (
+      cartesCandidates: any[],
+      garderCarte: (carte: Carte) => boolean = () => true,
+    ) => {
+      const cartesValides: Carte[] = [];
+
+      for (const carte of cartesCandidates) {
+        const carteConvertie = await convertirCarte(carte);
+
+        if (carteConvertie?.image && garderCarte(carteConvertie)) {
+          cartesValides.push(carteConvertie);
+        }
+
+        if (cartesValides.length === cartesParPage) {
+          break;
+        }
+      }
+
+      return cartesValides;
+    };
+
+    let cartesBase: any[] = [];
+    let nouveauTotalPages = 12;
+
+    if (setFiltre !== "") {
+      const setDetail: any = await tcgdex.set.get(setFiltre);
+      const cartesDuSet = setDetail?.cards ?? [];
+      const cartesRecherchees =
+        recherche === ""
+          ? cartesDuSet
+          : cartesDuSet.filter((c: any) =>
+              c.name?.toLowerCase().includes(recherche.toLowerCase()),
+            );
+      nouveauTotalPages = Math.max(
+        1,
+        Math.min(
+          pagesMaxParFiltre,
+          Math.ceil(cartesRecherchees.length / cartesParPage),
+        ),
+      );
+      cartesBase = cartesRecherchees.slice(
+        (page - 1) * cartesParPage,
+      );
+    } else if (rareteFiltre !== "") {
+      const rareteDetail: any = await tcgdex.rarity.get(rareteFiltre);
+      const cartesParRarete = rareteDetail?.cards ?? [];
+      const cartesRecherchees =
+        recherche === ""
+          ? cartesParRarete
+          : cartesParRarete.filter((c: any) =>
+              c.name?.toLowerCase().includes(recherche.toLowerCase()),
+            );
+
+      nouveauTotalPages = Math.max(
+        1,
+        Math.min(
+          pagesMaxParFiltre,
+          Math.ceil(cartesRecherchees.length / cartesParPage),
+        ),
+      );
+      cartesBase = cartesRecherchees.slice(
+        (page - 1) * cartesParPage,
+      );
+    } else {
+      let query = Query.create()
+        .sort("name", "ASC")
+        .paginate(page, cartesParPage * 4);
+
+      if (recherche !== "") {
+        query = query.contains("name", recherche);
+      }
+
+      const data = await tcgdex.card.list(query);
+      cartesBase = data;
+    }
+
+    const cartesValides = await remplirPage(
+      cartesBase,
+      (carte) => rareteFiltre === "" || carte.rarity === rareteFiltre,
     );
 
-    const cartesValides = cartesLot.filter(
-      (carte): carte is Carte => carte !== null,
-    );
-
+    setTotalPages(nouveauTotalPages);
     setCartes(cartesValides);
   } catch (error) {
     console.error("Erreur TCGdex:", error);
@@ -114,27 +209,27 @@ export default function CatalogueProduitPage() {
 }
 
   useEffect(() => {
+    chargerRaretes();
+    chargerSets();
+  }, []);
+
+  useEffect(() => {
     setRareteFiltre(searchParams.get("rarete") || "");
     setSetFiltre(searchParams.get("set") || "");
     setPrixMin(searchParams.get("prixMin") || "");
     setPrixMax(searchParams.get("prixMax") || "");
+    setTriPrix(searchParams.get("triPrix") || "");
     setPage(1)
   },  [searchParams]);
 
   useEffect(()=>{
     chargerCartes();
-  }, [page , recherche]);
-
-  const raretes = [...new Set(cartes.map((c) => c.rarity).filter(Boolean))];
-  const sets = [...new Set(cartes.map((c) => c.setName).filter(Boolean))];
-  console.log(sets);
+  }, [page, recherche, rareteFiltre, setFiltre]);
 
 
   const cartesFiltrees = cartes.filter((carte) => {
 
     const matchRarete = rareteFiltre === "" || carte.rarity === rareteFiltre;
-
-    const matchSet = setFiltre === "" || carte.setName === setFiltre;
 
     const prix = carte.marketPrice;
 
@@ -146,11 +241,19 @@ export default function CatalogueProduitPage() {
       prixMax === "" ||
       (prix !== null && prix !== undefined && prix <= Number(prixMax));
 
-    return matchRarete && matchSet && matchPrixMin && matchPrixMax;
+    return matchRarete && matchPrixMin && matchPrixMax;
   });
 
-const totalPages = 12;
-const cartesAffichees = cartesFiltrees;
+const cartesAffichees = [...cartesFiltrees].sort((a, b) => {
+  if (triPrix === "") {
+    return 0;
+  }
+
+  const prixA = a.marketPrice ?? Number.POSITIVE_INFINITY;
+  const prixB = b.marketPrice ?? Number.POSITIVE_INFINITY;
+
+  return triPrix === "asc" ? prixA - prixB : prixB - prixA;
+});
 
   return (
     <>
@@ -165,7 +268,7 @@ const cartesAffichees = cartesFiltrees;
             }}
           >
             <option value="">Toutes les raretés</option>
-            {raretes.map((rarete) => (
+            {raretesOptions.map((rarete) => (
               <option key={rarete} value={rarete}>
                 {rarete}
               </option>
@@ -181,9 +284,9 @@ const cartesAffichees = cartesFiltrees;
             }}
           >
             <option value="">Toutes les séries</option>
-            {sets.map((set) => (
-              <option key={set} value={set}>
-                {set}
+            {setsOptions.map((set) => (
+              <option key={set.id} value={set.id}>
+                {set.name}
               </option>
             ))}
           </select>
@@ -210,6 +313,19 @@ const cartesAffichees = cartesFiltrees;
             }}
           />
 
+          <select
+            className="form-select w-auto"
+            value={triPrix}
+            onChange={(e) => {
+              setTriPrix(e.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">Trier par prix</option>
+            <option value="asc">Prix croissant</option>
+            <option value="desc">Prix décroissant</option>
+          </select>
+
           <button
             className="btn btn-light"
             onClick={() => {
@@ -217,6 +333,7 @@ const cartesAffichees = cartesFiltrees;
               setSetFiltre("");
               setPrixMin("");
               setPrixMax("");
+              setTriPrix("");
               setPage(1);
             }}
           >
