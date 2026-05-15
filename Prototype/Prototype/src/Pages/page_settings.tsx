@@ -37,6 +37,41 @@ export default function PageProfil() {
     prendreInformation();
   }, []);
 
+   function changerEmailNotif() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      notificationEmail: !user.notificationEmail,
+    });
+  }
+
+  function changerSMSNotif() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      notificationSMS: !user.notificationSMS,
+    });
+  }
+
+   function changerProfileVisibilite() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      visibiliteProfil: !user.visibiliteProfil,
+    });
+  }
+
+  function changerDataSharing() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      partageDonnees: !user.partageDonnees,
+    });
+  }
   if (error) {
     return <SidebarLayout title="Settings">{error}</SidebarLayout>;
   }
@@ -70,6 +105,7 @@ export default function PageProfil() {
                 type="checkbox"
                 checked={user.notificationEmail}
                 id="twoFactorSwitch"
+                onChange={changerEmailNotif}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
@@ -84,6 +120,7 @@ export default function PageProfil() {
                 type="checkbox"
                 checked={user.notificationSMS}
                 id="twoFactorSwitch"
+                onChange={changerSMSNotif}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
@@ -103,6 +140,7 @@ export default function PageProfil() {
                 type="checkbox"
                 checked={user.visibiliteProfil}
                 id="twoFactorSwitch"
+                onChange={changerProfileVisibilite}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
@@ -117,6 +155,7 @@ export default function PageProfil() {
                 type="checkbox"
                 checked={user.partageDonnees}
                 id="twoFactorSwitch"
+                onChange={changerDataSharing}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>

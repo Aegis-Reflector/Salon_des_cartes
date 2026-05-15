@@ -1,5 +1,6 @@
 import SidebarLayout from "../components/SidebarLayout";
 import { useState, useEffect } from "react";
+import ChampModifiable from "../components/ChampModifiable.tsx";
 
 type UtilisateurSecurite = {
   nomUtilisateur: string;
@@ -11,8 +12,6 @@ type UtilisateurSecurite = {
 export default function PageProfil() {
   const [user, setUser] = useState<UtilisateurSecurite | null>(null);
   const [error, setError] = useState("");
-  const [showPasswordField, setShowPasswordField] = useState(false);
-  const [nouveauMotDePasse, setNouveauMotDePasse] = useState("");
 
   useEffect(() => {
     async function prendreInformation() {
@@ -37,7 +36,25 @@ export default function PageProfil() {
     prendreInformation();
   }, []);
 
-   if (error) {
+  function changerTwoFactor() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      twoFactorEnabled: !user.twoFactorEnabled,
+    });
+  }
+
+  function changerCookies() {
+    if (!user) return;
+
+    setUser({
+      ...user,
+      cookiesAccepted: !user.cookiesAccepted,
+    });
+  }
+
+  if (error) {
     return <SidebarLayout title="Securite">{error}</SidebarLayout>;
   }
 
@@ -45,27 +62,38 @@ export default function PageProfil() {
     return <SidebarLayout title="Securite">Loading...</SidebarLayout>;
   }
 
-
   return (
     <SidebarLayout title="Securite">
       <div className="card mt-1 shadow-sm">
         <div className="card-body">
           {/* Username */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <p className="mb-0">
-              <strong>Username:</strong> {user.nomUtilisateur || "N/A"}
-            </p>
-            <button className="btn btn-primary">Change</button>
+          <div className="d-flex justify-content-between align-items-center mb-0">
+            <ChampModifiable
+              label="Username"
+              valeurAffichee={user.nomUtilisateur || "N/A"}
+              placeholder="New username"
+              onConfirm={(nouveauNom) => {
+                setUser({
+                  ...user,
+                  nomUtilisateur: nouveauNom,
+                });
+              }}
+            />
           </div>
 
           {/* Password */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <p className="mb-0">
-              <strong>Password:</strong> {user.motDePasse || "########" }
-            </p>
-            <button className="btn btn-primary">Change </button>
+          <div className="d-flex justify-content-between align-items-center mb-0">
+            <ChampModifiable
+              label="Password"
+              valeurAffichee="*************"
+              placeholder="New password"
+              type="password"
+              onConfirm={(nouveauMotDePasse) => {
+                console.log("Nouveau mot de passe:", nouveauMotDePasse);
+              }}
+            />
           </div>
- 
+
           {/* 2FA */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">
@@ -77,7 +105,7 @@ export default function PageProfil() {
                 type="checkbox"
                 id="twoFactorSwitch"
                 checked={user.twoFactorEnabled}
-
+                onChange={changerTwoFactor}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
@@ -94,6 +122,7 @@ export default function PageProfil() {
                 type="checkbox"
                 id="cookieSwitch"
                 checked={user.cookiesAccepted}
+                onChange={changerCookies}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>

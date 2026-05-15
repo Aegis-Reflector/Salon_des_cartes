@@ -1,14 +1,16 @@
 import SidebarLayout from "../components/SidebarLayout";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 type UtilisateurProfil = {
   courriel: string;
   nomUtilisateur?: string;
   telephone?: string;
-  statutCompte?: string;
+  compteActive?: boolean;
 };
 
 export default function PageProfil() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<UtilisateurProfil | null>(null);
   const [error, setError] = useState("");
 
@@ -51,16 +53,16 @@ export default function PageProfil() {
   }
 
   function confirmerModification() {
-  if (!utilisateurModifie) return;
+    if (!utilisateurModifie) return;
 
-  setUtilisateur(utilisateurModifie);
-  setModeModification(false);
-}
+    setUser(utilisateurModifie);
+    setModeModification(false);
+  }
 
-function annulerModification() {
-  setUtilisateurModifie(utilisateur);
-  setModeModification(false);
-}
+  function annulerModification() {
+    setUtilisateurModifie(user);
+    setModeModification(false);
+  }
 
   if (error) {
     return <SidebarLayout title="Account Information">{error}</SidebarLayout>;
@@ -76,24 +78,104 @@ function annulerModification() {
       <div className="card mt-1 shadow-sm">
         <div className="card-body">
           <div>
-            <p>
-              <strong>Username:</strong> {user.nomUtilisateur || "N/A"}
-            </p>
-            <p>
-              <strong>Email:</strong> {user.courriel || "N/A"}
-            </p>
-            <p>
-              <strong>Phone number:</strong> {user.telephone || "N/A"}
-            </p>
-            <p>
-              <strong>Account status:</strong> {user.statutCompte || "Actif"}
-            </p>
+            {/* Username */}
+            <div className="d-flex align-items-center mb-3 gap-2">
+              <label className="form-label mb-0">
+                <strong>Username:</strong>
+              </label>
+
+              {modeModification ? (
+                <input
+                  type="text"
+                  className="form-control"
+                  name="nomUtilisateur"
+                  value={utilisateurModifie.nomUtilisateur || ""}
+                  onChange={gererChangement}
+                />
+              ) : (
+                <p className="mb-0">{user.nomUtilisateur || "N/A"}</p>
+              )}
+            </div>
+            {/* Email */}
+            <div className="d-flex align-items-center mb-3 gap-2">
+              <label className="form-label mb-0">
+                <strong>Courriel:</strong>
+              </label>
+
+              {modeModification ? (
+                <input
+                  type="text"
+                  className="form-control"
+                  name="Courriel"
+                  value={utilisateurModifie.courriel || ""}
+                  onChange={gererChangement}
+                />
+              ) : (
+                <p className="mb-0">{user.courriel || "N/A"}</p>
+              )}
+            </div>
+            {/*Telephone*/}
+            <div className="d-flex align-items-center mb-3 gap-2">
+              <label className="form-label mb-0">
+                <strong>Telephone:</strong>
+              </label>
+
+              {modeModification ? (
+                <input
+                  type="text"
+                  className="form-control"
+                  name="Telephone"
+                  value={utilisateurModifie.telephone || ""}
+                  onChange={gererChangement}
+                />
+              ) : (
+                <p className="mb-0">{user.telephone || "N/A"}</p>
+              )}
+            </div>
+
+            {/* Status du compte */}
+            <div className="d-flex align-items-center mb-3 gap-2">
+              <p className="mb-0">
+                <strong>Account status:</strong>
+              </p>
+
+              <p className="mb-0">{user.compteActive ? "Actif" : "Inactif"}</p>
+            </div>
           </div>
 
-          <button className="btn btn-primary mt-3">Edit Profile</button>
-          <button className="btn btn-outline-secondary mt-3 ms-2">
-            Change Password
-          </button>
+          {!modeModification ? (
+            <>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={() => setModeModification(true)}
+              >
+                Edit Profile
+              </button>
+
+              <button
+                className="btn btn-outline-secondary mt-3 ms-2"
+                onClick={() => navigate("/Securite")}
+              >
+                Change Password
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="btn btn-success mt-3"
+                onClick={confirmerModification}
+              >
+                Confirm
+              </button>
+
+              <button
+                className="btn btn-outline-danger mt-3 ms-2"
+                onClick={annulerModification}
+              >
+                Cancel
+              </button>
+            </>
+          )}
         </div>
       </div>
     </SidebarLayout>

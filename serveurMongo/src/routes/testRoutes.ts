@@ -104,4 +104,38 @@ router.get("/getPanier", authenticateToken, async(req, res) =>{
 
 })
 
+
+router.patch("/updateProfil", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user?._id;
+    const { nomUtilisateur, courriel, telephone } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Utilisateur not logged in" });
+    }
+
+    const result = await getUtilisateurs().updateOne(
+      { _id: userId },
+      {
+        $set: {
+          nomUtilisateur,
+          courriel,
+          telephone,
+        },
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
+    }
+
+    return res.status(200).json({
+      message: "Profil modifié avec succès",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Database error" });
+  }
+});
+
 export default router;
