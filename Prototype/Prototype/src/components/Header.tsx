@@ -4,11 +4,23 @@ import loupe from "../images/loupe.png";
 import logo from "../images/LogoFull.png";
 import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+import { EVENEMENT_PANIER, lirePanier } from "../utils/panier";
 
 function Header() {
   const navigate = useNavigate();
   const [estConnecte, setEstConnecte] = useState(false);
-  const [nomUtilisateur, setNomUtilisateur] = useState("");
+  const [nombrePanier, setNombrePanier] = useState(0);
+
+  async function chargerNombrePanier() {
+    try {
+      const panier = await lirePanier();
+      setNombrePanier(
+        panier.reduce((total, item) => total + item.quantite, 0),
+      );
+    } catch {
+      setNombrePanier(0);
+    }
+  }
 
   useEffect(() => {
     async function verifierConnexion() {
@@ -21,13 +33,23 @@ function Header() {
         const data = await res.json();
         setNomUtilisateur(data.nomUtilisateur ?? "");
         setEstConnecte(res.ok);
+        if (res.ok) {
+          chargerNombrePanier();
+        }
       } catch (err) {
         setEstConnecte(false);
+        setNombrePanier(0);
         console.log(err)
       }
     }
 
     verifierConnexion();
+
+    window.addEventListener(EVENEMENT_PANIER, chargerNombrePanier);
+
+    return () => {
+      window.removeEventListener(EVENEMENT_PANIER, chargerNombrePanier);
+    };
   }, []);
 
   const [recherche, setRecherche] = useState("");
@@ -58,6 +80,7 @@ function Header() {
 
       navigate("/Connexion");
       setEstConnecte(false);
+      setNombrePanier(0);
     } catch (err) {
       console.error("Erreur de déconnexion :", err);
     }
@@ -136,8 +159,13 @@ function Header() {
 
               {/* PANIER */}
               <li className="nav-item">
-                <Link to="/Panier" className="nav-link">
+                <Link to="/Panier" className="nav-link position-relative">
                   <img src={panier} alt="Panier" width="28" />
+                  {nombrePanier > 0 && (
+                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {nombrePanier}
+                    </span>
+                  )}
                 </Link>
               </li>
             </ul>

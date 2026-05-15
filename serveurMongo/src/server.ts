@@ -7,6 +7,7 @@ import { connectToMongo, getUtilisateurs, getProduits, getCommandes } from "./db
 
 import userRoutes from "./routes/userRoutes.js"
 import testRoutes from "./routes/testRoutes.js"
+import panierRoutes from "./routes/panierRoutes.js"
 
 
 config();
@@ -36,6 +37,7 @@ await connectToMongo(uri);
 
 app.use("/auth", userRoutes);
 app.use("/test", testRoutes);
+app.use("/panier", panierRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

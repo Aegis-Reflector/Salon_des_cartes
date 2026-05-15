@@ -55,7 +55,7 @@ export default function PageConnexion() {
       })
       .then(() => {
         //Si la connexion est un success
-        if (formData.email === "admin@pokemon.com") {
+        if (formData.email === "admin1@pokemon.com") {
           navigate("/admin"); //Redirection a la page admin
         } else {
           navigate("/"); //Redirection a la page accueil

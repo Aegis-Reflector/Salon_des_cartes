@@ -1,8 +1,11 @@
 import bcrypt from "bcrypt";
 import { Router } from "express";
 import {
+  deleteUtilisateur,
+  getAllUtilisateurs,
   getUtilisateurByCourriel,
   registerUtilisateur,
+  updateUtilisateurCompte,
   updateUtilisateurToken,
 } from "../Controller/utilisateurController.js";
 import { getUtilisateurs } from "../db/mongo.js";
@@ -15,6 +18,15 @@ import { Utilisateur } from "../models/utilisateur.js";
 const router = Router();
 const saltRounds = 10;
 
+function verifierAdmin(req: any, res: any) {
+  if (req.user?.courriel !== "admin1@pokemon.com") {
+    res.status(403).json({ message: "Admin only" });
+    return false;
+  }
+
+  return true;
+}
+
 router.post("/signIn", async (req, res) => {
   try {
     let { courriel, motDePasse } = req.body;
@@ -24,6 +36,10 @@ router.post("/signIn", async (req, res) => {
     // Make sure the email exists
     if (user == null || user._id == null)
       return res.status(401).json({ message: "Email doesn't exist" });
+
+    if (user.compteActive === false) {
+      return res.status(403).json({ message: "Account disabled" });
+    }
 
     // Make sure the password matches
     const match = await bcrypt.compare(motDePasse, user!.motDePasse);
@@ -63,8 +79,9 @@ router.post("/signUp", async (req, res) => {
       courriel,
       motDePasse,
 
-      nomUtilisateur,
-      telephone,
+      nomUtilisateur: nomUtilisateur || "",
+      telephone: telephone || "",
+
       statutCompte: "Actif",
 
       compteActive: true,
@@ -131,6 +148,58 @@ router.post("/logout", authenticateToken, async (req, res) => {
     return res.status(200).json({ message: "Logged out" });
   } catch (error) {
     console.error("Logout Error:", error);
+    return res.status(500).json({ message: "Database error" });
+  }
+});
+
+router.get("/users", authenticateToken, async (req, res) => {
+  try {
+    if (!verifierAdmin(req, res)) return;
+
+    const users = await getAllUtilisateurs(getUtilisateurs());
+    return res.status(200).json(
+      users.map((user) => ({
+        _id: user._id,
+        courriel: user.courriel,
+        nomUtilisateur: user.nomUtilisateur,
+        telephone: user.telephone,
+        statutCompte: user.statutCompte,
+        compteActive: user.compteActive,
+      })),
+    );
+  } catch {
+    return res.status(500).json({ message: "Database error" });
+  }
+});
+
+router.patch("/users/:id", authenticateToken, async (req, res) => {
+  try {
+    if (!verifierAdmin(req, res)) return;
+
+    const id = String(req.params.id);
+    const compteActive = Boolean(req.body.compteActive);
+    const statutCompte = compteActive ? "Actif" : "Inactif";
+
+    await updateUtilisateurCompte(
+      getUtilisateurs(),
+      id,
+      compteActive,
+      statutCompte,
+    );
+
+    return res.status(200).json({ message: "Utilisateur modifié" });
+  } catch {
+    return res.status(500).json({ message: "Database error" });
+  }
+});
+
+router.delete("/users/:id", authenticateToken, async (req, res) => {
+  try {
+    if (!verifierAdmin(req, res)) return;
+
+    await deleteUtilisateur(getUtilisateurs(), String(req.params.id));
+    return res.status(200).json({ message: "Utilisateur supprimé" });
+  } catch {
     return res.status(500).json({ message: "Database error" });
   }
 });

@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import type{Produit} from "./produit.js"
 
 export interface Utilisateur {
   _id?: ObjectId;
@@ -32,10 +31,9 @@ export interface Utilisateur {
 
   panier: {
     items: {
-      produit: Produit;
+      produitId: string;
       quantite: number;
     }[];
-   
   };
   token?: string;
 }

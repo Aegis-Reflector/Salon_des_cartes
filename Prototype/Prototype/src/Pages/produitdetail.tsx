@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TCGdex from "@tcgdex/sdk";
+import { ErreurPanier, ajouterAuPanier } from "../utils/panier";
 import CarteUI from "../components/CarteUI";
+import flecheG from "../images/flecheG.png";
+import flecheD from "../images/flecheD.png";
 
 
 const tcgdex = new TCGdex("fr");
@@ -12,10 +15,14 @@ type Carte = {
   image?: string;
   rarity?: string;
   localId?: string;
+  number?: string;
   category?: string;
   illustrator?: string;
   description?: string;
+  setName?: string;
+  marketPrice?: number | null;
   set?: {
+    id?: string;
     name?: string;
   };
   pricing?: {
@@ -32,10 +39,25 @@ type Carte = {
 
 const eurToUsd = (eur: number) => eur * 1.18;
 
+function melangerTableau(tableau: Carte[]) {
+  const copie = [...tableau];
+
+  for (let i = copie.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copie[i], copie[j]] = [copie[j], copie[i]];
+  }
+
+  return copie;
+}
+
 export default function ProductDetail() {
     
   const { id } = useParams();
+  const navigate = useNavigate();
   const [carte, setCarte] = useState<Carte | null>(null);
+  const [cartesSuggerees, setCartesSuggerees] = useState<Carte[]>([]);
+  const [pageSuggestions, setPageSuggestions] = useState(1);
+  const [messagePanier, setMessagePanier] = useState("");
 
   
 
@@ -46,6 +68,54 @@ export default function ProductDetail() {
       try {
         const data: any = await tcgdex.card.get(id);
         setCarte(data);
+
+        const cartesListe: any[] = await tcgdex.card.list();
+        const cartesFormatees: Carte[] = cartesListe
+          .filter((card: any) => card.id !== id && card.image && card.name)
+          .map((card: any) => ({
+            id: card.id,
+            name: card.name,
+            image: `${card.image}/low.png`,
+            rarity: card.rarity,
+            marketPrice: null,
+          }));
+
+        const cartesMelangees = melangerTableau(cartesFormatees);
+        const huitCartesRandom = cartesMelangees.slice(0, 8);
+
+        setPageSuggestions(1);
+        setCartesSuggerees(huitCartesRandom);
+
+        const suggestions = await Promise.all(
+          huitCartesRandom.map(async (card) => {
+            try {
+              const detail: any = await tcgdex.card.get(card.id);
+              const cm = detail.pricing?.cardmarket;
+              const marketPrice =
+                cm?.avg ??
+                cm?.trend ??
+                cm?.low ??
+                cm?.["avg-holo"] ??
+                cm?.["trend-holo"] ??
+                cm?.["low-holo"] ??
+                null;
+
+              return {
+                id: detail.id,
+                name: detail.name,
+                image: detail.image ? `${detail.image}/low.png` : undefined,
+                rarity: detail.rarity,
+                number: detail.localId,
+                setName: detail.set?.name,
+                marketPrice,
+              };
+            } catch {
+              return card;
+            }
+          }),
+        );
+
+        setCartesSuggerees(suggestions);
       } catch (error) {
         console.error("Erreur detail carte:", error);
       }
@@ -68,6 +138,15 @@ export default function ProductDetail() {
     cm?.["trend-holo"] ??
     cm?.["low-holo"] ??
     null;
+  const suggestionsParPage = 4;
+  const totalPagesSuggestions = Math.max(
+    1,
+    Math.ceil(cartesSuggerees.length / suggestionsParPage),
+  );
+  const suggestionsAffichees = cartesSuggerees.slice(
+    (pageSuggestions - 1) * suggestionsParPage,
+    pageSuggestions * suggestionsParPage,
+  );
 
   return (
     <div className="container py-5">
@@ -124,11 +203,68 @@ export default function ProductDetail() {
             </>
           )}
 
-          <button className="btn btn-primary btn-lg mt-3">
+          <button
+            className="btn btn-primary btn-lg mt-3"
+            type="button"
+            onClick={async () => {
+              if (!id) return;
+
+              try {
+                await ajouterAuPanier(id);
+                setMessagePanier("Carte ajoutée au panier");
+              } catch (error) {
+                if (error instanceof ErreurPanier && error.status === 401) {
+                  navigate("/connexion");
+                  return;
+                }
+
+                setMessagePanier("Impossible d'ajouter la carte au panier");
+              }
+            }}
+          >
             Ajouter au panier
           </button>
+          {messagePanier && <p className="mt-2">{messagePanier}</p>}
         </div>
       </div>
+
+      {cartesSuggerees.length > 0 && (
+        <div className="mt-5">
+          <h3 className="mb-4">Cartes suggérées</h3>
+          <div className="row g-4">
+            {suggestionsAffichees.map((suggestion) => (
+              <div key={suggestion.id} className="col-lg-3 col-md-6 col-sm-12">
+                <CarteUI
+                  carte={suggestion}
+                  lien={`/produit/${encodeURIComponent(suggestion.id)}`}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-4">
+            <button
+              className="btn btn-outline-dark me-2"
+              disabled={pageSuggestions === 1}
+              onClick={() => setPageSuggestions((page) => page - 1)}
+            >
+              <img src={flecheG} alt="page précédente" style={{ width: "18px" }} />
+            </button>
+
+            <span className="mx-2">
+              Page {pageSuggestions} / {totalPagesSuggestions}
+            </span>
+
+            <button
+              className="btn btn-outline-dark ms-2"
+              disabled={pageSuggestions === totalPagesSuggestions}
+              onClick={() => setPageSuggestions((page) => page + 1)}
+            >
+              <img src={flecheD} alt="page suivante" style={{ width: "18px" }} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

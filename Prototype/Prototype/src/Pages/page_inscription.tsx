@@ -79,6 +79,8 @@ export default function PageInscription() {
       },
       credentials: "include",
       body: JSON.stringify({
+        nomUtilisateur: formData.nomUtilisateur,
+        telephone: formData.telephone,
         courriel: formData.email,
         motDePasse: formData.password,
         nomUtilisateur: formData.nomUtilisateur,
