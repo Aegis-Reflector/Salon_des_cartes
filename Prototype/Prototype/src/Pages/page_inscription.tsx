@@ -17,7 +17,7 @@ export default function PageInscription() {
   //Champ pour confirmer le mot de passe
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Define your requirements
+  // Liste des conditions que le mot de passe doit respecter
   const requirements = [
     { label: "At least 6 characters", test: formData.password.length >= 6 },
     { label: "At least one number", test: /\d/.test(formData.password) },
@@ -161,11 +161,11 @@ export default function PageInscription() {
                 </div>
                 {/* Champ mot de passe */}
                 <div className="form-group pb-3">
-                  <label htmlFor="exampleInputPassword1">Password</label>
+                  <label htmlFor="exampleInputPassword">Password</label>
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword"
                     placeholder="Password"
                     name="password"
                     value={formData.password}
@@ -192,13 +192,13 @@ export default function PageInscription() {
 
                 {/* Champ confirmation de mot de passe */}
                 <div className="form-group ">
-                  <label htmlFor="exampleInputPassword1">
+                  <label htmlFor="exampleInputPassword">
                     Confirmation mot de passe
                   </label>
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword"
                     placeholder="Confirmer mot de passe"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)} //Mettre a jour dependant du changement du champ mot de passe

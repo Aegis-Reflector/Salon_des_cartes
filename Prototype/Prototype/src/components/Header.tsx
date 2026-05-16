@@ -10,7 +10,7 @@ function Header() {
   const navigate = useNavigate();
   const [estConnecte, setEstConnecte] = useState(false);
   const [nombrePanier, setNombrePanier] = useState(0);
-
+const [nomUtilisateur, setNomUtilisateur] = useState("");
   async function chargerNombrePanier() {
     try {
       const panier = await lirePanier();

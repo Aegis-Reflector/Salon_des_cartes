@@ -4,7 +4,6 @@ import ChampModifiable from "../components/ChampModifiable.tsx";
 
 type UtilisateurSecurite = {
   nomUtilisateur: string;
-  motDePasse: string;
   twoFactorEnabled: boolean;
   cookiesAccepted: boolean;
 };
@@ -36,22 +35,68 @@ export default function PageProfil() {
     prendreInformation();
   }, []);
 
-  function changerTwoFactor() {
+  async function changerTwoFactor() {
     if (!user) return;
 
-    setUser({
-      ...user,
-      twoFactorEnabled: !user.twoFactorEnabled,
-    });
+    const nouvelEtat = !user.twoFactorEnabled;
+
+    try {
+      const res = await fetch("http://localhost:4000/test/updateSecurite", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          twoFactorEnabled: nouvelEtat,
+          cookiesAccepted: user.cookiesAccepted,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de la modification");
+      }
+
+      setUser({
+        ...user,
+        twoFactorEnabled: nouvelEtat,
+      });
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la modification de la sécurité");
+    }
   }
 
-  function changerCookies() {
+  async function changerCookies() {
     if (!user) return;
 
-    setUser({
-      ...user,
-      cookiesAccepted: !user.cookiesAccepted,
-    });
+    const nouvelEtat = !user.cookiesAccepted;
+
+    try {
+      const res = await fetch("http://localhost:4000/test/updateSecurite", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          twoFactorEnabled: user.twoFactorEnabled,
+          cookiesAccepted: nouvelEtat,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de la modification");
+      }
+
+      setUser({
+        ...user,
+        cookiesAccepted: nouvelEtat,
+      });
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la modification des cookies");
+    }
   }
 
   if (error) {
@@ -72,11 +117,36 @@ export default function PageProfil() {
               label="Username"
               valeurAffichee={user.nomUtilisateur || "N/A"}
               placeholder="New username"
-              onConfirm={(nouveauNom) => {
-                setUser({
-                  ...user,
-                  nomUtilisateur: nouveauNom,
-                });
+              onConfirm={async (nouveauNom) => {
+                try {
+                  const res = await fetch(
+                    "http://localhost:4000/test/updateProfil",
+                    {
+                      method: "PATCH",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify({
+                        nomUtilisateur: nouveauNom,
+                      }),
+                    },
+                  );
+
+                  const data = await res.json();
+
+                  if (!res.ok) {
+                    throw new Error(data.message || "Erreur");
+                  }
+
+                  setUser({
+                    ...user,
+                    nomUtilisateur: nouveauNom,
+                  });
+                } catch (err) {
+                  console.error(err);
+                  setError("Erreur lors de la modification du nom utilisateur");
+                }
               }}
             />
           </div>
@@ -88,8 +158,33 @@ export default function PageProfil() {
               valeurAffichee="*************"
               placeholder="New password"
               type="password"
-              onConfirm={(nouveauMotDePasse) => {
-                console.log("Nouveau mot de passe:", nouveauMotDePasse);
+              onConfirm={async (nouveauMotDePasse) => {
+                try {
+                  const res = await fetch(
+                    "http://localhost:4000/test/changePassword",
+                    {
+                      method: "PATCH",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      credentials: "include",
+                      body: JSON.stringify({
+                        nouveauMotDePasse,
+                      }),
+                    },
+                  );
+
+                  const data = await res.json();
+
+                  if (!res.ok) {
+                    throw new Error(data.message || "Erreur");
+                  }
+
+                  alert("Mot de passe modifié avec succès");
+                } catch (err) {
+                  console.error(err);
+                  setError("Erreur lors de la modification du mot de passe");
+                }
               }}
             />
           </div>

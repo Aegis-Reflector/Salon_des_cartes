@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import Logo from "../images/LogoBlanc.png"
 function Sidebar() {
   const [courriel, setCourriel] = useState("");
 

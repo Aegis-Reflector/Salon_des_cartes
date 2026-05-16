@@ -176,7 +176,8 @@ export default function PagePanier() {
             </div>
           </div>
 
-          <div className="fixed-bottom bg-white px-5 py-4 shadow-lg">
+          <div className="position-fixed bottom-0 end-0 bg-white px-5 py-4 shadow-lg"
+               style={{ zIndex: 1020, left: "246px" }}>
             <div className="d-flex justify-content-between align-items-center px-4">
               <h5 className="mb-0">Total: {total.toFixed(2)}$</h5>
 

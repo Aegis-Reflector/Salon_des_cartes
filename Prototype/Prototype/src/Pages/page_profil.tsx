@@ -43,6 +43,8 @@ export default function PageProfil() {
     prendreInformation();
   }, []);
 
+  
+
   function gererChangement(e: React.ChangeEvent<HTMLInputElement>) {
     if (!utilisateurModifie) return;
 
@@ -52,12 +54,36 @@ export default function PageProfil() {
     });
   }
 
-  function confirmerModification() {
-    if (!utilisateurModifie) return;
+  async function confirmerModification() {
+  if (!utilisateurModifie) return;
+
+  try {
+    const res = await fetch("http://localhost:4000/test/updateProfil", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        nomUtilisateur: utilisateurModifie.nomUtilisateur,
+        courriel: utilisateurModifie.courriel,
+        telephone: utilisateurModifie.telephone,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Erreur lors de la modification");
+    }
 
     setUser(utilisateurModifie);
     setModeModification(false);
+  } catch (error) {
+    console.log(error);
+    setError("Erreur lors de la modification du profil");
   }
+}
 
   function annulerModification() {
     setUtilisateurModifie(user);
@@ -106,7 +132,7 @@ export default function PageProfil() {
                 <input
                   type="text"
                   className="form-control"
-                  name="Courriel"
+                  name="courriel"
                   value={utilisateurModifie.courriel || ""}
                   onChange={gererChangement}
                 />
@@ -124,7 +150,7 @@ export default function PageProfil() {
                 <input
                   type="text"
                   className="form-control"
-                  name="Telephone"
+                  name="telephone"
                   value={utilisateurModifie.telephone || ""}
                   onChange={gererChangement}
                 />
