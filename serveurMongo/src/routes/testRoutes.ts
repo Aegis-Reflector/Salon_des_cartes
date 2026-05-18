@@ -5,211 +5,258 @@ import bcrypt from "bcrypt";
 
 const router = Router();
 
+// Route protégée utilisée pour tester si l'utilisateur est authentifié
 router.post("/protected", authenticateToken, async (req, res) => {
   try {
-    const user = req.user;
-    return res.status(201).json({ message: `You are allowed: ${user?.courriel}` });
-  } catch (error) {
+    // Récupère l'utilisateur connecté à partir du token
+    const utilisateur = req.user;
+
+    return res.status(201).json({
+      message: `You are allowed: ${utilisateur?.courriel}`,
+    });
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
-
+// Route qui retourne les informations de l'utilisateur connecté
 router.get("/me", authenticateToken, async (req, res) => {
   try {
     console.log("cookies:", req.cookies);
-    const userId = req.user?._id;
 
-    if (!userId) {
+    // Récupère l'identifiant de l'utilisateur à partir du token
+    const idUtilisateur = req.user?._id;
+
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
-    const user = await getUtilisateurs().findOne({ _id: userId });
+    // Recherche l'utilisateur dans la base de données
+    const utilisateur = await getUtilisateurs().findOne({
+      _id: idUtilisateur,
+    });
 
-    if (!user) {
+    // Vérifie si l'utilisateur existe
+    if (!utilisateur) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Retourne seulement les informations nécessaires au frontend
     return res.status(200).json({
-       _id: user._id,
-        courriel: user.courriel,
+      _id: utilisateur._id,
+      courriel: utilisateur.courriel,
 
-        nomUtilisateur: user.nomUtilisateur,
-        telephone: user.telephone,
-        statutCompte: user.statutCompte,
+      nomUtilisateur: utilisateur.nomUtilisateur,
+      telephone: utilisateur.telephone,
+      statutCompte: utilisateur.statutCompte,
 
-        compteActive: user.compteActive,
-        cookiesAccepted: user.cookiesAccepted,
+      compteActive: utilisateur.compteActive,
+      cookiesAccepted: utilisateur.cookiesAccepted,
 
-        notificationEmail: user.notificationEmail,
-        notificationSMS: user.notificationSMS,
+      notificationEmail: utilisateur.notificationEmail,
+      notificationSMS: utilisateur.notificationSMS,
 
-        visibiliteProfil: user.visibiliteProfil,
-        partageDonnees: user.partageDonnees,
+      visibiliteProfil: utilisateur.visibiliteProfil,
+      partageDonnees: utilisateur.partageDonnees,
 
-        permissions: user.permissions,
-        panier: user.panier,
+      permissions: utilisateur.permissions,
+      panier: utilisateur.panier,
     });
-  } catch (error) {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route qui vide le panier de l'utilisateur connecté
+router.delete("/deletePanier", authenticateToken, async (req, res) => {
+  try {
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
 
-router.delete("/deletePanier", authenticateToken, async(req , res) =>{
-try {
-    const userId = req.user?._id;
-
-    if (!userId) {
-      return res.status(401).json({ message: "Utilisateur not logged in" })
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
+      return res.status(401).json({ message: "Utilisateur not logged in" });
     }
-    const result = await getUtilisateurs().updateOne(
-      { _id: userId },
-      { $set: { "panier.items": [] } }
+
+    // Remplace les items du panier par un tableau vide
+    const resultat = await getUtilisateurs().updateOne(
+      { _id: idUtilisateur },
+      { $set: { "panier.items": [] } },
     );
 
-    if (result.matchedCount === 0) {
+    // Vérifie si un utilisateur correspondant a été trouvé
+    if (resultat.matchedCount === 0) {
       return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
     }
 
     return res.status(200).json({ message: "Panier vidé" });
-  } catch (error) {
-    console.error(error);
+  } catch (erreur) {
+    console.error(erreur);
     return res.status(500).json({ message: "Database error" });
-
   }
-})
+});
 
-router.get("/getPanier", authenticateToken, async(req, res) =>{
+// Route qui retourne le panier de l'utilisateur connecté
+router.get("/getPanier", authenticateToken, async (req, res) => {
+  try {
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
 
-  try{
-
-    const userId = req.user?._id;
-
-    if(!userId){
-      return res.status(401).json({message: " Utilisateur not logged in"})
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
+      return res.status(401).json({ message: " Utilisateur not logged in" });
     }
-      const user = await getUtilisateurs().findOne({ _id: userId });
 
-      if(user?.panier){
-        return res.status(200).json({panier: user?.panier})
-      }
-    }catch(error){
-    console.log(error)
-    return res.status(500).json({ message: "Database error"})
+    // Recherche l'utilisateur dans la base de données
+    const utilisateur = await getUtilisateurs().findOne({
+      _id: idUtilisateur,
+    });
 
+    // Retourne le panier si celui-ci existe
+    if (utilisateur?.panier) {
+      return res.status(200).json({ panier: utilisateur.panier });
+    }
+
+    return res.status(404).json({ message: "Panier introuvable" });
+  } catch (erreur) {
+    console.log(erreur);
+    return res.status(500).json({ message: "Database error" });
   }
+});
 
-
-})
-
-
+// Route qui modifie les informations du profil utilisateur
 router.patch("/updateProfil", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user?._id;
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
+
+    // Récupère les nouvelles valeurs envoyées par le frontend
     const { nomUtilisateur, courriel, telephone } = req.body;
 
-    if (!userId) {
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "Utilisateur not logged in" });
     }
 
-    const result = await getUtilisateurs().updateOne(
-      { _id: userId },
+    // Met à jour le profil dans la base de données
+    const resultat = await getUtilisateurs().updateOne(
+      { _id: idUtilisateur },
       {
         $set: {
           nomUtilisateur,
           courriel,
           telephone,
         },
-      }
+      },
     );
 
-    if (result.matchedCount === 0) {
+    // Vérifie si un utilisateur correspondant a été trouvé
+    if (resultat.matchedCount === 0) {
       return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
     }
 
     return res.status(200).json({
       message: "succès",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (erreur) {
+    console.error(erreur);
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route qui permet de modifier le mot de passe de l'utilisateur connecté
 router.patch("/changePassword", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user?._id;
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
+
+    // Récupère le nouveau mot de passe envoyé par le frontend
     const { nouveauMotDePasse } = req.body;
 
-    if (!userId) {
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "Utilisateur not logged in" });
     }
 
+    // Vérifie si un nouveau mot de passe a été fourni
     if (!nouveauMotDePasse) {
       return res.status(400).json({ message: "Nouveau mot de passe requis" });
     }
 
+    // Hash le nouveau mot de passe avant de l'enregistrer
     const motDePasseHash = await bcrypt.hash(nouveauMotDePasse, 10);
 
-    const result = await getUtilisateurs().updateOne(
-      { _id: userId },
+    // Met à jour le mot de passe dans la base de données
+    const resultat = await getUtilisateurs().updateOne(
+      { _id: idUtilisateur },
       {
         $set: {
           motDePasse: motDePasseHash,
         },
-      }
+      },
     );
 
-    if (result.matchedCount === 0) {
+    // Vérifie si un utilisateur correspondant a été trouvé
+    if (resultat.matchedCount === 0) {
       return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
     }
 
     return res.status(200).json({
       message: "Mot de passe modifié avec succès",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (erreur) {
+    console.error(erreur);
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route qui met à jour les paramètres de sécurité
 router.patch("/updateSecurite", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user?._id;
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
+
+    // Récupère les nouveaux paramètres de sécurité
     const { twoFactorEnabled, cookiesAccepted } = req.body;
 
-    if (!userId) {
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "Utilisateur not logged in" });
     }
 
-    const result = await getUtilisateurs().updateOne(
-      { _id: userId },
+    // Met à jour les paramètres de sécurité dans la base de données
+    const resultat = await getUtilisateurs().updateOne(
+      { _id: idUtilisateur },
       {
         $set: {
           twoFactorEnabled,
           cookiesAccepted,
         },
-      }
+      },
     );
 
-    if (result.matchedCount === 0) {
+    // Vérifie si un utilisateur correspondant a été trouvé
+    if (resultat.matchedCount === 0) {
       return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
     }
 
     return res.status(200).json({
       message: "Sécurité modifiée avec succès",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (erreur) {
+    console.error(erreur);
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route qui met à jour les paramètres utilisateur
 router.patch("/updateSettings", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user?._id;
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
 
+    // Récupère les paramètres envoyés par le frontend
     const {
       notificationEmail,
       notificationSMS,
@@ -217,12 +264,14 @@ router.patch("/updateSettings", authenticateToken, async (req, res) => {
       partageDonnees,
     } = req.body;
 
-    if (!userId) {
+    // Vérifie si l'utilisateur est connecté
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "Utilisateur not logged in" });
     }
 
-    const result = await getUtilisateurs().updateOne(
-      { _id: userId },
+    // Met à jour les paramètres dans la base de données
+    const resultat = await getUtilisateurs().updateOne(
+      { _id: idUtilisateur },
       {
         $set: {
           notificationEmail,
@@ -230,21 +279,21 @@ router.patch("/updateSettings", authenticateToken, async (req, res) => {
           visibiliteProfil,
           partageDonnees,
         },
-      }
+      },
     );
 
-    if (result.matchedCount === 0) {
+    // Vérifie si un utilisateur correspondant a été trouvé
+    if (resultat.matchedCount === 0) {
       return res.status(404).json({ message: "Aucun utilisateur avec ce id" });
     }
 
     return res.status(200).json({
       message: "Paramètres sauvegardés avec succès",
     });
-  } catch (error) {
-    console.error(error);
+  } catch (erreur) {
+    console.error(erreur);
     return res.status(500).json({ message: "Database error" });
   }
 });
-
 
 export default router;

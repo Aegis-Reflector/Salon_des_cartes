@@ -4,74 +4,91 @@ import { useNavigate } from "react-router";
 import { Modal, Button } from "react-bootstrap";
 
 export default function PageInscription() {
-  //pour naviguer vers une autre page après l'inscription
-  const navigate = useNavigate();
-  //Form État qui contient les données du formulaire de connexion
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+  // Hook utilisé pour rediriger l'utilisateur vers une autre page
+  const naviguer = useNavigate();
+
+  // État qui contient les valeurs du formulaire d'inscription
+  const [donneesFormulaire, setDonneesFormulaire] = useState({
+    courriel: "",
+    motDePasse: "",
     nomUtilisateur: "",
     telephone: "",
   });
 
-  //Champ pour confirmer le mot de passe
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // État qui contient la confirmation du mot de passe
+  const [confirmationMotDePasse, setConfirmationMotDePasse] = useState("");
 
   // Liste des conditions que le mot de passe doit respecter
-  const requirements = [
-    { label: "At least 6 characters", test: formData.password.length >= 6 },
-    { label: "At least one number", test: /\d/.test(formData.password) },
+  const conditionsMotDePasse = [
     {
-      label: "At least one special character",
-      test: /[!@#$%^&*]/.test(formData.password),
+      label: "Au moins 6 caractères",
+      test: donneesFormulaire.motDePasse.length >= 6,
+    },
+    {
+      label: "Au moins un chiffre",
+      test: /\d/.test(donneesFormulaire.motDePasse),
+    },
+    {
+      label: "Au moins un caractère spécial",
+      test: /[!@#$%^&*]/.test(donneesFormulaire.motDePasse),
     },
   ];
 
-  // État pour afficher/cacher le popup
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalTitle, setModalTitle] = useState("");
+  // État qui contrôle l'affichage du popup
+  const [afficherPopup, setAfficherPopup] = useState(false);
 
-  const afficherModal = (title: string, message: string) => {
-    setModalTitle(title);
-    setModalMessage(message);
-    setShowModal(true);
+  // États qui contiennent le titre et le message du popup
+  const [messagePopup, setMessagePopup] = useState("");
+  const [titrePopup, setTitrePopup] = useState("");
+
+  // Fonction utilisée pour afficher le popup avec un titre et un message
+  const ouvrirPopup = (titre: string, message: string) => {
+    setTitrePopup(titre);
+    setMessagePopup(message);
+    setAfficherPopup(true);
   };
 
-  // Fonction pour fermer le popup d'erreur
-  const fermerModal = () => {
-    setShowModal(false);
+  // Fonction utilisée pour fermer le popup
+  const fermerPopup = () => {
+    setAfficherPopup(false);
   };
 
-  // Fonction qui met à jour le state à chaque changement dans un input
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Fonction appelée lorsqu'un champ du formulaire change
+  const gererChangement = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDonneesFormulaire({
+      ...donneesFormulaire,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Fonction appelée lorsque l'utilisateur soumet le formulaire
+  const gererSoumission = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const passwordValide = requirements.every(
-      (requirement) => requirement.test,
+    // Vérifie si toutes les conditions du mot de passe sont respectées
+    const motDePasseValide = conditionsMotDePasse.every(
+      (condition) => condition.test,
     );
-    // Vérifie si le mot de passe correspond à sa confirmation
-    if (formData.password != confirmPassword ) {
-      afficherModal(
+
+    // Vérifie si le mot de passe et sa confirmation sont identiques
+    if (donneesFormulaire.motDePasse !== confirmationMotDePasse) {
+      ouvrirPopup(
         "Mot de passe invalide",
         "Les mots de passe ne correspondent pas.",
       );
       return;
     }
 
-    if (!passwordValide ) {
-      afficherModal(
+    // Vérifie si le mot de passe respecte toutes les conditions
+    if (!motDePasseValide) {
+      ouvrirPopup(
         "Mot de passe invalide",
-        "Les mots de passe doivent respecter tous les conditions.",
+        "Le mot de passe doit respecter toutes les conditions.",
       );
       return;
     }
 
-    // Envoi des données au serveur pour créer le compte
+    // Envoie les informations du formulaire au backend pour créer un compte
     fetch("http://localhost:4000/auth/signUp", {
       method: "POST",
       headers: {
@@ -79,36 +96,42 @@ export default function PageInscription() {
       },
       credentials: "include",
       body: JSON.stringify({
-        nomUtilisateur: formData.nomUtilisateur,
-        telephone: formData.telephone,
-        courriel: formData.email,
-        motDePasse: formData.password,
-      
+        nomUtilisateur: donneesFormulaire.nomUtilisateur,
+        telephone: donneesFormulaire.telephone,
+        courriel: donneesFormulaire.courriel,
+        motDePasse: donneesFormulaire.motDePasse,
       }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erreur de creation");
+      .then((reponse) => {
+        if (!reponse.ok) {
+          throw new Error("Erreur de création");
         }
-        return res.json();
+
+        return reponse.json();
       })
       .then(() => {
-        navigate("/");
+        naviguer("/");
       })
-      .catch((err) => {
-        console.error(err);
-        afficherModal("Erreur de creation", err);
+      .catch((erreur) => {
+        console.error(erreur);
+
+        if (erreur instanceof Error) {
+          ouvrirPopup("Erreur de création", erreur.message);
+        } else {
+          ouvrirPopup("Erreur de création", "Une erreur inconnue est survenue.");
+        }
       });
   };
+
   return (
     <>
       <div className="container-fluid bg-light min-vh-100 p-0">
         <div className="row min-vh-100 g-0">
-          {/* Colonne rouge gauche */}
+          {/* Colonne décorative à gauche */}
           <div className="col-3 bg-dark"></div>
 
-          {/* Colonne gauche décorative */}
-          <div className="col-9  bg-light d-flex justify-content-center align-items-center">
+          {/* Colonne principale contenant le formulaire */}
+          <div className="col-9 bg-light d-flex justify-content-center align-items-center">
             <div>
               {/* Titre de la page */}
               <h3>Inscrivez-vous à Salon de Carte</h3>
@@ -116,8 +139,9 @@ export default function PageInscription() {
               {/* Formulaire d'inscription */}
               <form
                 className="bg-light border border-dark rounded p-5 text-secondary d-flex flex-column gap-3"
-                onSubmit={handleSubmit}
+                onSubmit={gererSoumission}
               >
+                {/* Champ pour le nom d'utilisateur */}
                 <div className="form-group">
                   <label>Nom d'utilisateur</label>
                   <input
@@ -125,13 +149,13 @@ export default function PageInscription() {
                     className="form-control"
                     name="nomUtilisateur"
                     placeholder="Username"
-                    value={formData.nomUtilisateur}
-                    onChange={handleChange}
+                    value={donneesFormulaire.nomUtilisateur}
+                    onChange={gererChangement}
                     required
                   />
                 </div>
 
-                {/* Phone */}
+                {/* Champ pour le numéro de téléphone */}
                 <div className="form-group">
                   <label>Numéro de téléphone</label>
                   <input
@@ -139,50 +163,52 @@ export default function PageInscription() {
                     className="form-control"
                     name="telephone"
                     placeholder="Téléphone"
-                    value={formData.telephone}
-                    onChange={handleChange}
+                    value={donneesFormulaire.telephone}
+                    onChange={gererChangement}
                     required
                   />
                 </div>
-                {/* Champ email */}
-                <div className="form-group ">
-                  <label htmlFor="exampleInputEmail1">Email address</label>
+
+                {/* Champ pour le courriel */}
+                <div className="form-group">
+                  <label htmlFor="champCourriel">Email address</label>
                   <input
                     type="email"
                     className="form-control"
-                    id="exampleInputEmail1"
+                    id="champCourriel"
                     aria-describedby="emailHelp"
                     placeholder="Enter email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    name="courriel"
+                    value={donneesFormulaire.courriel}
+                    onChange={gererChangement}
                     required
                   />
                 </div>
-                {/* Champ mot de passe */}
+
+                {/* Champ pour le mot de passe */}
                 <div className="form-group pb-3">
-                  <label htmlFor="exampleInputPassword">Password</label>
+                  <label htmlFor="champMotDePasse">Password</label>
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword"
+                    id="champMotDePasse"
                     placeholder="Password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    name="motDePasse"
+                    value={donneesFormulaire.motDePasse}
+                    onChange={gererChangement}
                     required
                   />
 
-                  {/* Test de password pour voir si il suit les requirements */}
-                  {formData.password.length > 0 && (
+                  {/* Affiche les conditions non respectées du mot de passe */}
+                  {donneesFormulaire.motDePasse.length > 0 && (
                     <div className="mt-2">
-                      {requirements.map((requirement) =>
-                        !requirement.test ? (
+                      {conditionsMotDePasse.map((condition) =>
+                        !condition.test ? (
                           <small
-                            key={requirement.label}
+                            key={condition.label}
                             className="text-danger d-block"
                           >
-                            {requirement.label}
+                            {condition.label}
                           </small>
                         ) : null,
                       )}
@@ -190,28 +216,31 @@ export default function PageInscription() {
                   )}
                 </div>
 
-                {/* Champ confirmation de mot de passe */}
-                <div className="form-group ">
-                  <label htmlFor="exampleInputPassword">
+                {/* Champ pour confirmer le mot de passe */}
+                <div className="form-group">
+                  <label htmlFor="champConfirmationMotDePasse">
                     Confirmation mot de passe
                   </label>
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword"
+                    id="champConfirmationMotDePasse"
                     placeholder="Confirmer mot de passe"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)} //Mettre a jour dependant du changement du champ mot de passe
+                    value={confirmationMotDePasse}
+                    onChange={(e) => setConfirmationMotDePasse(e.target.value)}
                     required
                   />
-                  {confirmPassword.length > 0 &&
-                    formData.password !== confirmPassword && (
+
+                  {/* Affiche un message si les deux mots de passe ne correspondent pas */}
+                  {confirmationMotDePasse.length > 0 &&
+                    donneesFormulaire.motDePasse !== confirmationMotDePasse && (
                       <small className="text-danger mt-2 d-block">
                         Les mots de passe ne correspondent pas.
                       </small>
                     )}
                 </div>
 
+                {/* Bouton pour envoyer le formulaire */}
                 <button
                   type="submit"
                   className="btn btn-light border border-dark align-self-center px-4"
@@ -220,18 +249,17 @@ export default function PageInscription() {
                 </button>
               </form>
 
+              {/* Texte informatif sur la protection du site */}
               <p className="pt-4">
                 Ce site est protege par hCaptcha et sa politique de
                 confidentialite et ses conditions d'utilisations s'appliquent
               </p>
 
-              {/* Lien vers la page de connecion */}
+              {/* Lien vers la page de connexion */}
               <div className="d-flex flex-column align-items-center gap-2 mt-3">
                 <p>
-                  Avez-vous déja un compte? {""}
-                  <Link to="/Connexion" className="">
-                    Connectez-vous ici
-                  </Link>
+                  Avez-vous déja un compte?{" "}
+                  <Link to="/Connexion">Connectez-vous ici</Link>
                 </p>
               </div>
             </div>
@@ -239,16 +267,16 @@ export default function PageInscription() {
         </div>
       </div>
 
-      {/* Popup erreur connexion */}
-      <Modal show={showModal} onHide={fermerModal} centered size="lg">
+      {/* Popup affiché lorsqu'une erreur survient */}
+      <Modal show={afficherPopup} onHide={fermerPopup} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>{modalTitle}</Modal.Title>
+          <Modal.Title>{titrePopup}</Modal.Title>
         </Modal.Header>
 
-        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Body>{messagePopup}</Modal.Body>
 
         <Modal.Footer>
-          <Button variant="danger" onClick={fermerModal}>
+          <Button variant="danger" onClick={fermerPopup}>
             Fermer
           </Button>
         </Modal.Footer>

@@ -2,46 +2,64 @@ import SidebarLayout from "../components/SidebarLayout";
 import { useState, useEffect } from "react";
 import ChampModifiable from "../components/ChampModifiable.tsx";
 
-type UtilisateurSecurite = {
+// Type représentant les informations de sécurité de l'utilisateur
+type SecuriteUtilisateur = {
   nomUtilisateur: string;
   twoFactorEnabled: boolean;
   cookiesAccepted: boolean;
 };
 
 export default function PageProfil() {
-  const [user, setUser] = useState<UtilisateurSecurite | null>(null);
-  const [error, setError] = useState("");
+  // État contenant les informations de l'utilisateur connecté
+  const [utilisateur, setUtilisateur] = useState<SecuriteUtilisateur | null>(
+    null,
+  );
 
+  // État contenant le message d'erreur
+  const [erreur, setErreur] = useState("");
+
+  // Charge les informations de sécurité de l'utilisateur au chargement de la page
   useEffect(() => {
     async function prendreInformation() {
       try {
-        const res = await fetch("http://localhost:4000/test/me", {
+        // Requête pour récupérer les informations de l'utilisateur connecté
+        const reponse = await fetch("http://localhost:4000/test/me", {
           method: "GET",
           credentials: "include",
         });
 
-        const data = await res.json();
+        // Convertit la réponse en objet JavaScript
+        const donnees = await reponse.json();
 
-        if (!res.ok) {
-          throw new Error(data.message || "Erreur");
+        // Si la requête échoue, on lance une erreur
+        if (!reponse.ok) {
+          throw new Error(donnees.message || "Erreur");
         }
 
-        setUser(data);
-      } catch (err: any) {
-        setError(err.message);
+        // Enregistre les informations de l'utilisateur dans le state
+        setUtilisateur(donnees);
+      } catch (erreur) {
+        if (erreur instanceof Error) {
+          setErreur(erreur.message);
+        } else {
+          setErreur("Erreur inconnue");
+        }
       }
     }
 
     prendreInformation();
   }, []);
 
-  async function changerTwoFactor() {
-    if (!user) return;
+  // Fonction appelée lorsque l'utilisateur active ou désactive le 2FA
+  async function changerDoubleAuthentification() {
+    if (!utilisateur) return;
 
-    const nouvelEtat = !user.twoFactorEnabled;
+    // Inverse l'état actuel du 2FA
+    const nouvelEtat = !utilisateur.twoFactorEnabled;
 
     try {
-      const res = await fetch("http://localhost:4000/test/updateSecurite", {
+      // Envoie le nouvel état de sécurité au backend
+      const reponse = await fetch("http://localhost:4000/test/updateSecurite", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -49,61 +67,70 @@ export default function PageProfil() {
         credentials: "include",
         body: JSON.stringify({
           twoFactorEnabled: nouvelEtat,
-          cookiesAccepted: user.cookiesAccepted,
+          cookiesAccepted: utilisateur.cookiesAccepted,
         }),
       });
 
-      if (!res.ok) {
+      // Si la modification échoue, on lance une erreur
+      if (!reponse.ok) {
         throw new Error("Erreur lors de la modification");
       }
 
-      setUser({
-        ...user,
+      // Met à jour l'affichage avec le nouvel état du 2FA
+      setUtilisateur({
+        ...utilisateur,
         twoFactorEnabled: nouvelEtat,
       });
-    } catch (err) {
-      console.error(err);
-      setError("Erreur lors de la modification de la sécurité");
+    } catch (erreur) {
+      console.error(erreur);
+      setErreur("Erreur lors de la modification de la sécurité");
     }
   }
 
+  // Fonction appelée lorsque l'utilisateur accepte ou refuse les cookies
   async function changerCookies() {
-    if (!user) return;
+    if (!utilisateur) return;
 
-    const nouvelEtat = !user.cookiesAccepted;
+    // Inverse l'état actuel des cookies
+    const nouvelEtat = !utilisateur.cookiesAccepted;
 
     try {
-      const res = await fetch("http://localhost:4000/test/updateSecurite", {
+      // Envoie le nouvel état des cookies au backend
+      const reponse = await fetch("http://localhost:4000/test/updateSecurite", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify({
-          twoFactorEnabled: user.twoFactorEnabled,
+          twoFactorEnabled: utilisateur.twoFactorEnabled,
           cookiesAccepted: nouvelEtat,
         }),
       });
 
-      if (!res.ok) {
+      // Si la modification échoue, on lance une erreur
+      if (!reponse.ok) {
         throw new Error("Erreur lors de la modification");
       }
 
-      setUser({
-        ...user,
+      // Met à jour l'affichage avec le nouvel état des cookies
+      setUtilisateur({
+        ...utilisateur,
         cookiesAccepted: nouvelEtat,
       });
-    } catch (err) {
-      console.error(err);
-      setError("Erreur lors de la modification des cookies");
+    } catch (erreur) {
+      console.error(erreur);
+      setErreur("Erreur lors de la modification des cookies");
     }
   }
 
-  if (error) {
-    return <SidebarLayout title="Securite">{error}</SidebarLayout>;
+  // Affiche un message d'erreur si une erreur est présente
+  if (erreur) {
+    return <SidebarLayout title="Securite">{erreur}</SidebarLayout>;
   }
 
-  if (!user) {
+  // Affiche un message de chargement pendant la récupération des données
+  if (!utilisateur) {
     return <SidebarLayout title="Securite">Loading...</SidebarLayout>;
   }
 
@@ -111,15 +138,16 @@ export default function PageProfil() {
     <SidebarLayout title="Securite">
       <div className="card mt-1 shadow-sm">
         <div className="card-body">
-          {/* Username */}
+          {/* Champ pour modifier le nom d'utilisateur */}
           <div className="d-flex justify-content-between align-items-center mb-0">
             <ChampModifiable
               label="Username"
-              valeurAffichee={user.nomUtilisateur || "N/A"}
+              valeurAffichee={utilisateur.nomUtilisateur || "N/A"}
               placeholder="New username"
               onConfirm={async (nouveauNom) => {
                 try {
-                  const res = await fetch(
+                  // Envoie le nouveau nom d'utilisateur au backend
+                  const reponse = await fetch(
                     "http://localhost:4000/test/updateProfil",
                     {
                       method: "PATCH",
@@ -133,25 +161,28 @@ export default function PageProfil() {
                     },
                   );
 
-                  const data = await res.json();
+                  // Convertit la réponse en objet JavaScript
+                  const donnees = await reponse.json();
 
-                  if (!res.ok) {
-                    throw new Error(data.message || "Erreur");
+                  // Si la modification échoue, on lance une erreur
+                  if (!reponse.ok) {
+                    throw new Error(donnees.message || "Erreur");
                   }
 
-                  setUser({
-                    ...user,
+                  // Met à jour l'affichage avec le nouveau nom
+                  setUtilisateur({
+                    ...utilisateur,
                     nomUtilisateur: nouveauNom,
                   });
-                } catch (err) {
-                  console.error(err);
-                  setError("Erreur lors de la modification du nom utilisateur");
+                } catch (erreur) {
+                  console.error(erreur);
+                  setErreur("Erreur lors de la modification du nom utilisateur");
                 }
               }}
             />
           </div>
 
-          {/* Password */}
+          {/* Champ pour modifier le mot de passe */}
           <div className="d-flex justify-content-between align-items-center mb-0">
             <ChampModifiable
               label="Password"
@@ -160,7 +191,8 @@ export default function PageProfil() {
               type="password"
               onConfirm={async (nouveauMotDePasse) => {
                 try {
-                  const res = await fetch(
+                  // Envoie le nouveau mot de passe au backend
+                  const reponse = await fetch(
                     "http://localhost:4000/test/changePassword",
                     {
                       method: "PATCH",
@@ -174,49 +206,53 @@ export default function PageProfil() {
                     },
                   );
 
-                  const data = await res.json();
+                  // Convertit la réponse en objet JavaScript
+                  const donnees = await reponse.json();
 
-                  if (!res.ok) {
-                    throw new Error(data.message || "Erreur");
+                  // Si la modification échoue, on lance une erreur
+                  if (!reponse.ok) {
+                    throw new Error(donnees.message || "Erreur");
                   }
 
                   alert("Mot de passe modifié avec succès");
-                } catch (err) {
-                  console.error(err);
-                  setError("Erreur lors de la modification du mot de passe");
+                } catch (erreur) {
+                  console.error(erreur);
+                  setErreur("Erreur lors de la modification du mot de passe");
                 }
               }}
             />
           </div>
 
-          {/* 2FA */}
+          {/* Interrupteur pour la double authentification */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">
               <strong>Two-Factor Authentication:</strong>
             </p>
+
             <div className="form-check form-switch me-3">
               <input
                 className="form-check-input"
                 type="checkbox"
                 id="twoFactorSwitch"
-                checked={user.twoFactorEnabled}
-                onChange={changerTwoFactor}
+                checked={utilisateur.twoFactorEnabled}
+                onChange={changerDoubleAuthentification}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
           </div>
 
-          {/* Cookies */}
+          {/* Interrupteur pour accepter ou refuser les cookies */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">
               <strong>Delete Cookies:</strong>
             </p>
+
             <div className="form-check form-switch me-3">
               <input
                 className="form-check-input"
                 type="checkbox"
                 id="cookieSwitch"
-                checked={user.cookiesAccepted}
+                checked={utilisateur.cookiesAccepted}
                 onChange={changerCookies}
                 style={{ transform: "scale(1.5)" }}
               />

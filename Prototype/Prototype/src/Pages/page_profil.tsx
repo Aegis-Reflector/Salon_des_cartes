@@ -2,7 +2,8 @@ import SidebarLayout from "../components/SidebarLayout";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
-type UtilisateurProfil = {
+// Type représentant les informations du profil utilisateur
+type ProfilUtilisateur = {
   courriel: string;
   nomUtilisateur?: string;
   telephone?: string;
@@ -10,41 +11,57 @@ type UtilisateurProfil = {
 };
 
 export default function PageProfil() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<UtilisateurProfil | null>(null);
-  const [error, setError] = useState("");
+  // Hook utilisé pour rediriger l'utilisateur vers une autre page
+  const naviguer = useNavigate();
 
+  // État qui contient les informations actuelles de l'utilisateur
+  const [utilisateur, setUtilisateur] = useState<ProfilUtilisateur | null>(
+    null,
+  );
+
+  // État qui contient le message d'erreur, s'il y en a un
+  const [erreur, setErreur] = useState("");
+
+  // État qui contient les informations modifiées temporairement
   const [utilisateurModifie, setUtilisateurModifie] =
-    useState<UtilisateurProfil | null>(null);
+    useState<ProfilUtilisateur | null>(null);
+
+  // État qui indique si le mode modification est activé ou non
   const [modeModification, setModeModification] = useState(false);
 
+  // Charge les informations du profil lorsque la page est affichée
   useEffect(() => {
     async function prendreInformation() {
       try {
-        const res = await fetch("http://localhost:4000/test/me", {
+        // Envoie une requête au backend pour obtenir les informations de l'utilisateur connecté
+        const reponse = await fetch("http://localhost:4000/test/me", {
           method: "GET",
           credentials: "include",
         });
 
-        const data = await res.json();
+        // Convertit la réponse en objet JavaScript
+        const donnees = await reponse.json();
 
-        if (!res.ok) {
-          throw new Error(data.message || "Erreur");
+        // Si la requête échoue, on lance une erreur
+        if (!reponse.ok) {
+          throw new Error(donnees.message || "Erreur");
         }
 
-        setUser(data);
-        setUtilisateurModifie(data);
-      } catch (error) {
-        console.log(error);
-        setError("Erreur lors du chargement du profil");
+        // Stocke les données originales de l'utilisateur
+        setUtilisateur(donnees);
+
+        // Stocke aussi une copie modifiable des données
+        setUtilisateurModifie(donnees);
+      } catch (erreur) {
+        console.log(erreur);
+        setErreur("Erreur lors du chargement du profil");
       }
     }
 
     prendreInformation();
   }, []);
 
-  
-
+  // Fonction appelée quand l'utilisateur modifie un champ du formulaire
   function gererChangement(e: React.ChangeEvent<HTMLInputElement>) {
     if (!utilisateurModifie) return;
 
@@ -54,57 +71,71 @@ export default function PageProfil() {
     });
   }
 
+  // Fonction appelée lorsque l'utilisateur confirme les modifications
   async function confirmerModification() {
-  if (!utilisateurModifie) return;
+    if (!utilisateurModifie) return;
 
-  try {
-    const res = await fetch("http://localhost:4000/test/updateProfil", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        nomUtilisateur: utilisateurModifie.nomUtilisateur,
-        courriel: utilisateurModifie.courriel,
-        telephone: utilisateurModifie.telephone,
-      }),
-    });
+    try {
+      // Envoie les nouvelles informations du profil au backend
+      const reponse = await fetch("http://localhost:4000/test/updateProfil", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          nomUtilisateur: utilisateurModifie.nomUtilisateur,
+          courriel: utilisateurModifie.courriel,
+          telephone: utilisateurModifie.telephone,
+        }),
+      });
 
-    const data = await res.json();
+      // Convertit la réponse en objet JavaScript
+      const donnees = await reponse.json();
 
-    if (!res.ok) {
-      throw new Error(data.message || "Erreur lors de la modification");
+      // Si la modification échoue, on lance une erreur
+      if (!reponse.ok) {
+        throw new Error(donnees.message || "Erreur lors de la modification");
+      }
+
+      // Met à jour les données affichées avec les nouvelles informations
+      setUtilisateur(utilisateurModifie);
+
+      // Désactive le mode modification
+      setModeModification(false);
+    } catch (erreur) {
+      console.log(erreur);
+      setErreur("Erreur lors de la modification du profil");
     }
-
-    setUser(utilisateurModifie);
-    setModeModification(false);
-  } catch (error) {
-    console.log(error);
-    setError("Erreur lors de la modification du profil");
   }
-}
 
+  // Fonction appelée lorsque l'utilisateur annule les modifications
   function annulerModification() {
-    setUtilisateurModifie(user);
+    // Remet les valeurs modifiées aux anciennes valeurs de l'utilisateur
+    setUtilisateurModifie(utilisateur);
+
+    // Désactive le mode modification
     setModeModification(false);
   }
 
-  if (error) {
-    return <SidebarLayout title="Account Information">{error}</SidebarLayout>;
+  // Affiche un message d'erreur s'il y a un problème
+  if (erreur) {
+    return <SidebarLayout title="Account Information">{erreur}</SidebarLayout>;
   }
 
-  if (!user || !utilisateurModifie) {
+  // Affiche un message de chargement pendant la récupération des données
+  if (!utilisateur || !utilisateurModifie) {
     return (
       <SidebarLayout title="Account Information">Loading...</SidebarLayout>
     );
   }
+
   return (
     <SidebarLayout title="Account Information">
       <div className="card mt-1 shadow-sm">
         <div className="card-body">
           <div>
-            {/* Username */}
+            {/* Champ du nom d'utilisateur */}
             <div className="d-flex align-items-center mb-3 gap-2">
               <label className="form-label mb-0">
                 <strong>Username:</strong>
@@ -119,10 +150,13 @@ export default function PageProfil() {
                   onChange={gererChangement}
                 />
               ) : (
-                <p className="mb-0">{user.nomUtilisateur || "N/A"}</p>
+                <p className="mb-0">
+                  {utilisateur.nomUtilisateur || "N/A"}
+                </p>
               )}
             </div>
-            {/* Email */}
+
+            {/* Champ du courriel */}
             <div className="d-flex align-items-center mb-3 gap-2">
               <label className="form-label mb-0">
                 <strong>Courriel:</strong>
@@ -137,10 +171,11 @@ export default function PageProfil() {
                   onChange={gererChangement}
                 />
               ) : (
-                <p className="mb-0">{user.courriel || "N/A"}</p>
+                <p className="mb-0">{utilisateur.courriel || "N/A"}</p>
               )}
             </div>
-            {/*Telephone*/}
+
+            {/* Champ du numéro de téléphone */}
             <div className="d-flex align-items-center mb-3 gap-2">
               <label className="form-label mb-0">
                 <strong>Telephone:</strong>
@@ -155,20 +190,23 @@ export default function PageProfil() {
                   onChange={gererChangement}
                 />
               ) : (
-                <p className="mb-0">{user.telephone || "N/A"}</p>
+                <p className="mb-0">{utilisateur.telephone || "N/A"}</p>
               )}
             </div>
 
-            {/* Status du compte */}
+            {/* Statut du compte */}
             <div className="d-flex align-items-center mb-3 gap-2">
               <p className="mb-0">
                 <strong>Account status:</strong>
               </p>
 
-              <p className="mb-0">{user.compteActive ? "Actif" : "Inactif"}</p>
+              <p className="mb-0">
+                {utilisateur.compteActive ? "Actif" : "Inactif"}
+              </p>
             </div>
           </div>
 
+          {/* Boutons affichés lorsque le mode modification est désactivé */}
           {!modeModification ? (
             <>
               <button
@@ -180,13 +218,14 @@ export default function PageProfil() {
 
               <button
                 className="btn btn-outline-secondary mt-3 ms-2"
-                onClick={() => navigate("/Securite")}
+                onClick={() => naviguer("/Securite")}
               >
                 Change Password
               </button>
             </>
           ) : (
             <>
+              {/* Bouton pour confirmer les modifications */}
               <button
                 className="btn btn-success mt-3"
                 onClick={confirmerModification}
@@ -194,6 +233,7 @@ export default function PageProfil() {
                 Confirm
               </button>
 
+              {/* Bouton pour annuler les modifications */}
               <button
                 className="btn btn-outline-danger mt-3 ms-2"
                 onClick={annulerModification}

@@ -16,8 +16,9 @@ import {
 import { Utilisateur } from "../models/utilisateur.js";
 
 const router = Router();
-const saltRounds = 10;
+const nombreToursSel = 10;
 
+// Fonction qui vérifie si l'utilisateur connecté est administrateur
 function verifierAdmin(req: any, res: any) {
   if (req.user?.courriel !== "admin1@pokemon.com") {
     res.status(403).json({ message: "Admin only" });
@@ -27,55 +28,79 @@ function verifierAdmin(req: any, res: any) {
   return true;
 }
 
+// Route de connexion
 router.post("/signIn", async (req, res) => {
   try {
-    let { courriel, motDePasse } = req.body;
+    // Récupère le courriel et le mot de passe envoyés par le frontend
+    const { courriel, motDePasse } = req.body;
 
-    const user = await getUtilisateurByCourriel(getUtilisateurs(), courriel);
+    // Recherche l'utilisateur avec son courriel
+    const utilisateur = await getUtilisateurByCourriel(
+      getUtilisateurs(),
+      courriel,
+    );
 
-    // Make sure the email exists
-    if (user == null || user._id == null)
+    // Vérifie si l'utilisateur existe
+    if (utilisateur == null || utilisateur._id == null) {
       return res.status(401).json({ message: "Email doesn't exist" });
+    }
 
-    if (user.compteActive === false) {
+    // Bloque la connexion si le compte est désactivé
+    if (utilisateur.compteActive === false) {
       return res.status(403).json({ message: "Account disabled" });
     }
 
-    // Make sure the password matches
-    const match = await bcrypt.compare(motDePasse, user!.motDePasse);
-    if (!match)
-      return res.status(401).json({ message: "Password doesn't match" });
+    // Compare le mot de passe entré avec le mot de passe haché dans la base de données
+    const motDePasseCorrespond = await bcrypt.compare(
+      motDePasse,
+      utilisateur.motDePasse,
+    );
 
-    // Create and save refresh token in a safe cookie
-    const refreshToken = await createAndSaveRefreshToken(user._id);
+    // Refuse la connexion si le mot de passe est incorrect
+    if (!motDePasseCorrespond) {
+      return res.status(401).json({ message: "Password doesn't match" });
+    }
+
+    // Crée un refresh token et l'enregistre dans la base de données
+    const refreshToken = await createAndSaveRefreshToken(utilisateur._id);
+
+    // Vérifie si la création du token a échoué
     if (refreshToken == null) {
       return res.status(500).json({ message: "Failed to add refresh token" });
     }
+
+    // Enregistre le token dans un cookie sécurisé côté navigateur
     res.cookie("refresh", refreshToken, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
       secure: false,
     });
 
     return res.status(200).json({ message: "Connected" });
-  } catch (error) {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route d'inscription
 router.post("/signUp", async (req, res) => {
   try {
-    const { courriel, motDePasse,nomUtilisateur, telephone  } = req.body;
+    // Récupère les informations envoyées par le formulaire d'inscription
+    const { courriel, motDePasse, nomUtilisateur, telephone } = req.body;
 
-    // Make sure the email is not already used
-    const userExists = await getUtilisateurByCourriel(getUtilisateurs(), courriel);
-    if (userExists != null) {
+    // Vérifie si le courriel est déjà utilisé
+    const utilisateurExiste = await getUtilisateurByCourriel(
+      getUtilisateurs(),
+      courriel,
+    );
+
+    if (utilisateurExiste != null) {
       return res.status(500).json({ message: "Email already used" });
     }
 
-    // Create the user and hash the password
-    const user: Utilisateur = {
+    // Crée un nouvel utilisateur avec les valeurs par défaut
+    const utilisateur: Utilisateur = {
       courriel,
       motDePasse,
 
@@ -92,114 +117,146 @@ router.post("/signUp", async (req, res) => {
 
       visibiliteProfil: false,
       partageDonnees: false,
-      token: "",
-      panier:{
-        items:[],
-      }
-      
-    };
-    user.motDePasse = await bcrypt.hash(motDePasse, saltRounds);
 
-    // Register the user in the BD
-    const registerResult = await registerUtilisateur(getUtilisateurs(), user);
-    if (!registerResult.acknowledged) {
+      token: "",
+
+      panier: {
+        items: [],
+      },
+    };
+
+    // Hache le mot de passe avant de l'enregistrer
+    utilisateur.motDePasse = await bcrypt.hash(motDePasse, nombreToursSel);
+
+    // Enregistre l'utilisateur dans la base de données
+    const resultatInscription = await registerUtilisateur(
+      getUtilisateurs(),
+      utilisateur,
+    );
+
+    // Vérifie si l'enregistrement a échoué
+    if (!resultatInscription.acknowledged) {
       return res.status(500).json({ message: "Failed to create user" });
     }
 
-    // Create and save refresh token in a safe cookie
+    // Crée un refresh token pour connecter l'utilisateur après l'inscription
     const refreshToken = await createAndSaveRefreshToken(
-      registerResult.insertedId,
+      resultatInscription.insertedId,
     );
+
+    // Vérifie si la création du token a échoué
     if (refreshToken == null) {
       return res.status(500).json({ message: "Failed to add refresh token" });
     }
+
+    // Enregistre le token dans un cookie
     res.cookie("refresh", refreshToken, {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
       secure: false,
     });
 
     return res.status(201).json({ message: "Registered" });
-  } catch (error) {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route de déconnexion
 router.post("/logout", authenticateToken, async (req, res) => {
   try {
-    const userId = req.user?._id;
+    // Récupère l'identifiant de l'utilisateur connecté
+    const idUtilisateur = req.user?._id;
 
-    if (!userId) {
+    // Vérifie si l'utilisateur est authentifié
+    if (!idUtilisateur) {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
-    // Clear the token from the DB
-    await updateUtilisateurToken(getUtilisateurs(), userId);
+    // Supprime le token enregistré dans la base de données
+    await updateUtilisateurToken(getUtilisateurs(), idUtilisateur);
 
-    // Clear the cookie from the browser
+    // Supprime le cookie du navigateur
     res.clearCookie("refresh", {
       httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "lax",
       secure: false,
     });
 
     return res.status(200).json({ message: "Logged out" });
-  } catch (error) {
-    console.error("Logout Error:", error);
+  } catch (erreur) {
+    console.error("Logout Error:", erreur);
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route admin qui retourne la liste de tous les utilisateurs
 router.get("/users", authenticateToken, async (req, res) => {
   try {
+    // Vérifie si l'utilisateur connecté est administrateur
     if (!verifierAdmin(req, res)) return;
 
-    const users = await getAllUtilisateurs(getUtilisateurs());
+    // Récupère tous les utilisateurs de la base de données
+    const utilisateurs = await getAllUtilisateurs(getUtilisateurs());
+
+    // Retourne seulement les champs nécessaires au frontend admin
     return res.status(200).json(
-      users.map((user) => ({
-        _id: user._id,
-        courriel: user.courriel,
-        nomUtilisateur: user.nomUtilisateur,
-        telephone: user.telephone,
-        statutCompte: user.statutCompte,
-        compteActive: user.compteActive,
+      utilisateurs.map((utilisateur) => ({
+        _id: utilisateur._id,
+        courriel: utilisateur.courriel,
+        nomUtilisateur: utilisateur.nomUtilisateur,
+        telephone: utilisateur.telephone,
+        statutCompte: utilisateur.statutCompte,
+        compteActive: utilisateur.compteActive,
       })),
     );
-  } catch {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route admin qui active ou désactive un compte utilisateur
 router.patch("/users/:id", authenticateToken, async (req, res) => {
   try {
+    // Vérifie si l'utilisateur connecté est administrateur
     if (!verifierAdmin(req, res)) return;
 
-    const id = String(req.params.id);
+    // Récupère l'identifiant de l'utilisateur à modifier
+    const idUtilisateur = String(req.params.id);
+
+    // Convertit la valeur reçue en booléen
     const compteActive = Boolean(req.body.compteActive);
+
+    // Définit le statut du compte selon sa valeur active/inactive
     const statutCompte = compteActive ? "Actif" : "Inactif";
 
+    // Met à jour le compte dans la base de données
     await updateUtilisateurCompte(
       getUtilisateurs(),
-      id,
+      idUtilisateur,
       compteActive,
       statutCompte,
     );
 
     return res.status(200).json({ message: "Utilisateur modifié" });
-  } catch {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });
 
+// Route admin qui supprime un utilisateur
 router.delete("/users/:id", authenticateToken, async (req, res) => {
   try {
+    // Vérifie si l'utilisateur connecté est administrateur
     if (!verifierAdmin(req, res)) return;
 
+    // Supprime l'utilisateur ciblé avec son identifiant
     await deleteUtilisateur(getUtilisateurs(), String(req.params.id));
+
     return res.status(200).json({ message: "Utilisateur supprimé" });
-  } catch {
+  } catch (erreur) {
     return res.status(500).json({ message: "Database error" });
   }
 });

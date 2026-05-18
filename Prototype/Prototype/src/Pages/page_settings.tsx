@@ -1,7 +1,8 @@
 import SidebarLayout from "../components/SidebarLayout";
 import { useState, useEffect } from "react";
 
-type UserSettings = {
+// Type représentant les paramètres utilisateur
+type ParametresUtilisateur = {
   notificationEmail: boolean;
   notificationSMS: boolean;
   visibiliteProfil: boolean;
@@ -9,103 +10,122 @@ type UserSettings = {
 };
 
 export default function PageProfil() {
-  const [user, setUser] = useState<UserSettings | null>(null);
-  const [error, setError] = useState("");
+  // État contenant les paramètres de l'utilisateur connecté
+  const [utilisateur, setUtilisateur] =
+    useState<ParametresUtilisateur | null>(null);
 
+  // État contenant le message d'erreur
+  const [erreur, setErreur] = useState("");
+
+  // Charge les paramètres de l'utilisateur lorsque la page s'affiche
   useEffect(() => {
     async function prendreInformation() {
       try {
-        const res = await fetch("http://localhost:4000/test/me", {
+        // Requête pour récupérer les informations de l'utilisateur connecté
+        const reponse = await fetch("http://localhost:4000/test/me", {
           method: "GET",
           credentials: "include",
         });
 
-        const data = await res.json();
+        // Convertit la réponse en objet JavaScript
+        const donnees = await reponse.json();
 
-        if (!res.ok) {
-          throw new Error(data.message || "Erreur");
+        // Si la requête échoue, on lance une erreur
+        if (!reponse.ok) {
+          throw new Error(donnees.message || "Erreur");
         }
 
-        setUser(data);
-      } catch (err) {
-        console.log(err);
-        setError("Erreur d'authentification");
+        // Enregistre les paramètres dans le state
+        setUtilisateur(donnees);
+      } catch (erreur) {
+        console.log(erreur);
+        setErreur("Erreur d'authentification");
       }
     }
 
     prendreInformation();
   }, []);
 
+  // Sauvegarde les paramètres modifiés dans la base de données
   async function sauvegarderChangements() {
-    if (!user) return;
+    if (!utilisateur) return;
 
     try {
-      const res = await fetch("http://localhost:4000/test/updateSettings", {
+      // Envoie les nouveaux paramètres au backend
+      const reponse = await fetch("http://localhost:4000/test/updateSettings", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
         body: JSON.stringify({
-          notificationEmail: user.notificationEmail,
-          notificationSMS: user.notificationSMS,
-          visibiliteProfil: user.visibiliteProfil,
-          partageDonnees: user.partageDonnees,
+          notificationEmail: utilisateur.notificationEmail,
+          notificationSMS: utilisateur.notificationSMS,
+          visibiliteProfil: utilisateur.visibiliteProfil,
+          partageDonnees: utilisateur.partageDonnees,
         }),
       });
 
-      const data = await res.json();
+      // Convertit la réponse du serveur en objet JavaScript
+      const donnees = await reponse.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Erreur lors de la sauvegarde");
+      // Si la sauvegarde échoue, on lance une erreur
+      if (!reponse.ok) {
+        throw new Error(donnees.message || "Erreur lors de la sauvegarde");
       }
-
-    } catch (err) {
-      console.log(err);
-      setError("Erreur lors de la sauvegarde des paramètres");
+    } catch (erreur) {
+      console.log(erreur);
+      setErreur("Erreur lors de la sauvegarde des paramètres");
     }
   }
 
-  function changerEmailNotif() {
-    if (!user) return;
+  // Active ou désactive les notifications par courriel
+  function changerNotificationEmail() {
+    if (!utilisateur) return;
 
-    setUser({
-      ...user,
-      notificationEmail: !user.notificationEmail,
+    setUtilisateur({
+      ...utilisateur,
+      notificationEmail: !utilisateur.notificationEmail,
     });
   }
 
-  function changerSMSNotif() {
-    if (!user) return;
+  // Active ou désactive les notifications par SMS
+  function changerNotificationSMS() {
+    if (!utilisateur) return;
 
-    setUser({
-      ...user,
-      notificationSMS: !user.notificationSMS,
+    setUtilisateur({
+      ...utilisateur,
+      notificationSMS: !utilisateur.notificationSMS,
     });
   }
 
-  function changerProfileVisibilite() {
-    if (!user) return;
+  // Active ou désactive la visibilité du profil
+  function changerVisibiliteProfil() {
+    if (!utilisateur) return;
 
-    setUser({
-      ...user,
-      visibiliteProfil: !user.visibiliteProfil,
+    setUtilisateur({
+      ...utilisateur,
+      visibiliteProfil: !utilisateur.visibiliteProfil,
     });
   }
 
-  function changerDataSharing() {
-    if (!user) return;
+  // Active ou désactive le partage des données
+  function changerPartageDonnees() {
+    if (!utilisateur) return;
 
-    setUser({
-      ...user,
-      partageDonnees: !user.partageDonnees,
+    setUtilisateur({
+      ...utilisateur,
+      partageDonnees: !utilisateur.partageDonnees,
     });
   }
-  if (error) {
-    return <SidebarLayout title="Settings">{error}</SidebarLayout>;
+
+  // Affiche un message d'erreur si une erreur est présente
+  if (erreur) {
+    return <SidebarLayout title="Settings">{erreur}</SidebarLayout>;
   }
 
-  if (!user) {
+  // Affiche un message de chargement pendant la récupération des données
+  if (!utilisateur) {
     return <SidebarLayout title="Settings">Loading...</SidebarLayout>;
   }
 
@@ -113,37 +133,42 @@ export default function PageProfil() {
     <SidebarLayout title="Settings">
       <div className="card mt-4 shadow-sm">
         <div className="card-body">
-          {/* Preferences */}
+          {/* Section des préférences générales */}
           <h5 className="mb-3">Preferences</h5>
           <p>Time Zone: America/Montreal</p>
 
           <hr />
 
-          {/* Notifications */}
+          {/* Section des notifications */}
           <h5 className="mb-3">Notifications</h5>
 
+          {/* Interrupteur pour les notifications par courriel */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">Email Notification:</p>
+
             <div className="form-check form-switch me-3">
               <input
                 className="form-check-input"
                 type="checkbox"
-                checked={user.notificationEmail}
+                checked={utilisateur.notificationEmail}
                 id="notificationEmailSwitch"
-                onChange={changerEmailNotif}
+                onChange={changerNotificationEmail}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
           </div>
+
+          {/* Interrupteur pour les notifications par SMS */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">SMS Notification:</p>
+
             <div className="form-check form-switch me-3">
               <input
                 className="form-check-input"
                 type="checkbox"
-                checked={user.notificationSMS}
+                checked={utilisateur.notificationSMS}
                 id="notificationSMSSwitch"
-                onChange={changerSMSNotif}
+                onChange={changerNotificationSMS}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
@@ -151,35 +176,42 @@ export default function PageProfil() {
 
           <hr />
 
-          {/* Personal Data */}
+          {/* Section des données personnelles */}
           <h5 className="mb-3">Personal Data</h5>
+
+          {/* Interrupteur pour la visibilité du profil */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <p className="mb-0">Profile Visibility:</p>
+
             <div className="form-check form-switch me-3">
               <input
                 className="form-check-input"
                 type="checkbox"
-                checked={user.visibiliteProfil}
+                checked={utilisateur.visibiliteProfil}
                 id="visibiliteProfilSwitch"
-                onChange={changerProfileVisibilite}
-                style={{ transform: "scale(1.5)" }}
-              />
-            </div>
-          </div>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <p className="mb-0">Data Sharing:</p>
-            <div className="form-check form-switch me-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={user.partageDonnees}
-                id="partageDonneesSwitch"
-                onChange={changerDataSharing}
+                onChange={changerVisibiliteProfil}
                 style={{ transform: "scale(1.5)" }}
               />
             </div>
           </div>
 
+          {/* Interrupteur pour le partage des données */}
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <p className="mb-0">Data Sharing:</p>
+
+            <div className="form-check form-switch me-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={utilisateur.partageDonnees}
+                id="partageDonneesSwitch"
+                onChange={changerPartageDonnees}
+                style={{ transform: "scale(1.5)" }}
+              />
+            </div>
+          </div>
+
+          {/* Bouton pour sauvegarder les paramètres */}
           <div className="d-flex justify-content-end">
             <button
               className="btn btn-primary mt-3"

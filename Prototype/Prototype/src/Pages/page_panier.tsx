@@ -8,8 +8,8 @@ import {
   supprimerDuPanier,
   type PanierItem,
 } from "../utils/panier";
-
-type Card = {
+// Type représentant une carte affichée dans le panier
+type Carte = {
   id: string;
   name: string;
   image: string;
@@ -17,85 +17,102 @@ type Card = {
   prix: number;
 };
 
-const eurToUsd = (eur: number) => eur * 1.18;
+// Convertit un prix en euros vers un prix en dollars américains
+const convertirEurVersUsd = (eur: number) => eur * 1.18;
 
 export default function PagePanier() {
-  const navigate = useNavigate();
-  const [cards, setCards] = useState<Card[]>([]);
+  // Permet de naviguer vers une autre page
+  const naviguer = useNavigate();
+
+  // Liste des cartes affichées dans le panier
+  const [cartes, setCartes] = useState<Carte[]>([]);
+
+  // Message affiché à l’utilisateur
   const [message, setMessage] = useState("");
 
+  // Charge les cartes du panier
   async function chargerCartes(items?: PanierItem[]) {
     try {
+      // Si un panier est fourni, on l’utilise. Sinon, on lit le panier actuel.
       const panier = items ?? (await lirePanier());
 
-      const results = await Promise.all(
+      // Récupère les informations complètes de chaque carte
+      const resultats = await Promise.all(
         panier.map(async (item) => {
-          const res = await fetch(
+          const reponse = await fetch(
             `https://api.tcgdex.net/v2/fr/cards/${item.produitId}`,
           );
 
-          if (!res.ok) {
+          if (!reponse.ok) {
             throw new Error("Impossible de charger une carte");
           }
 
-          const data = await res.json();
+          const donnees = await reponse.json();
 
           return {
-            id: data.id,
-            name: data.name,
-            image: data.image,
+            id: donnees.id,
+            name: donnees.name,
+            image: donnees.image,
             quantite: item.quantite,
-            prix: eurToUsd(
-              data.pricing?.cardmarket?.avg ??
-                data.pricing?.cardmarket?.trend ??
-                data.pricing?.cardmarket?.low ??
+            prix: convertirEurVersUsd(
+              donnees.pricing?.cardmarket?.avg ??
+                donnees.pricing?.cardmarket?.trend ??
+                donnees.pricing?.cardmarket?.low ??
                 0,
             ),
           };
         }),
       );
 
-      setCards(results);
+      setCartes(resultats);
       setMessage("");
     } catch {
-      setCards([]);
+      setCartes([]);
       setMessage("Connectez-vous pour voir votre panier.");
     }
   }
 
+  // Charge le panier au chargement de la page
   useEffect(() => {
     chargerCartes();
   }, []);
 
+  // Diminue la quantité d’une carte
   async function diminuerQuantite(id: string) {
-    const carte = cards.find((card) => card.id === id);
+    const carte = cartes.find((carte) => carte.id === id);
+
     if (!carte || carte.quantite <= 1) return;
 
     const panier = await changerQuantitePanier(id, carte.quantite - 1);
     await chargerCartes(panier);
   }
 
+  // Augmente la quantité d’une carte
   async function augmenterQuantite(id: string) {
-    const carte = cards.find((card) => card.id === id);
+    const carte = cartes.find((carte) => carte.id === id);
+
     if (!carte) return;
 
     const panier = await changerQuantitePanier(id, carte.quantite + 1);
     await chargerCartes(panier);
   }
 
+  // Supprime une carte du panier
   async function supprimerCarte(id: string) {
     const panier = await supprimerDuPanier(id);
     await chargerCartes(panier);
   }
 
+  // Confirme la commande et vide le panier
   async function commander() {
     const panier = await commanderPanier();
     await chargerCartes(panier);
     setMessage("Commande confirmée. Votre panier est maintenant vide.");
   }
 
-  const total = cards.reduce(
-    (somme, card) => somme + Number(card.prix) * card.quantite,
+  // Calcule le prix total du panier
+  const total = cartes.reduce(
+    (somme, carte) => somme + Number(carte.prix) * carte.quantite,
     0,
   );
 
@@ -114,24 +131,24 @@ export default function PagePanier() {
             {message && <p className="text-muted">{message}</p>}
 
             <div className="d-flex flex-column gap-3">
-              {cards.length === 0 && !message ? (
+              {cartes.length === 0 && !message ? (
                 <p className="text-muted mb-0">Votre panier est vide.</p>
               ) : (
-                cards.map((card) => (
-                  <div key={card.id} className="card shadow-sm">
+                cartes.map((carte) => (
+                  <div key={carte.id} className="card shadow-sm">
                     <div className="card-body d-flex align-items-center gap-4">
                       <img
-                        src={`${card.image}/high.png`}
-                        alt={card.name}
+                        src={`${carte.image}/high.png`}
+                        alt={carte.name}
                         style={{ width: "100px", borderRadius: "8px" }}
                       />
 
                       <div>
-                        <h5 className="mb-2">{card.name}</h5>
+                        <h5 className="mb-2">{carte.name}</h5>
                         <h5 className="mb-2">
-                          Prix: {Number(card.prix).toFixed(2)}$
+                          Prix: {Number(carte.prix).toFixed(2)}$
                         </h5>
-                        <p className="mb-3">Quantité: {card.quantite}</p>
+                        <p className="mb-3">Quantité: {carte.quantite}</p>
                       </div>
 
                       <div className="ms-auto">
@@ -139,7 +156,7 @@ export default function PagePanier() {
                           <button
                             className="btn btn-outline-secondary"
                             type="button"
-                            onClick={() => diminuerQuantite(card.id)}
+                            onClick={() => diminuerQuantite(carte.id)}
                           >
                             -
                           </button>
@@ -148,14 +165,14 @@ export default function PagePanier() {
                             type="text"
                             style={{ maxWidth: "50px" }}
                             className="form-control text-center"
-                            value={card.quantite}
+                            value={carte.quantite}
                             readOnly
                           />
 
                           <button
                             className="btn btn-outline-secondary"
                             type="button"
-                            onClick={() => augmenterQuantite(card.id)}
+                            onClick={() => augmenterQuantite(carte.id)}
                           >
                             +
                           </button>
@@ -164,7 +181,7 @@ export default function PagePanier() {
                         <button
                           className="btn btn-outline-danger btn-sm mt-2"
                           type="button"
-                          onClick={() => supprimerCarte(card.id)}
+                          onClick={() => supprimerCarte(carte.id)}
                         >
                           Supprimer
                         </button>
@@ -176,8 +193,10 @@ export default function PagePanier() {
             </div>
           </div>
 
-          <div className="position-fixed bottom-0 end-0 bg-white px-5 py-4 shadow-lg"
-               style={{ zIndex: 1020, left: "246px" }}>
+          <div
+            className="position-fixed bottom-0 end-0 bg-white px-5 py-4 shadow-lg"
+            style={{ zIndex: 1020, left: "246px" }}
+          >
             <div className="d-flex justify-content-between align-items-center px-4">
               <h5 className="mb-0">Total: {total.toFixed(2)}$</h5>
 
@@ -185,7 +204,7 @@ export default function PagePanier() {
                 <button
                   className="btn btn-outline-secondary btn-lg rounded-pill px-5"
                   type="button"
-                  onClick={() => navigate("/")}
+                  onClick={() => naviguer("/")}
                 >
                   Exit
                 </button>
@@ -194,7 +213,7 @@ export default function PagePanier() {
                   className="btn btn-outline-primary btn-lg rounded-pill px-5"
                   type="button"
                   onClick={commander}
-                  disabled={cards.length === 0}
+                  disabled={cartes.length === 0}
                 >
                   Commander
                 </button>

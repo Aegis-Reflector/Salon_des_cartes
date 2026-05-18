@@ -23,7 +23,7 @@ router.get("/", authenticateToken, async (req, res) => {
   } catch {
     return res.status(500).json({ message: "Database error" });
   }
-});
+});  
 
 router.post("/items", authenticateToken, async (req, res) => {
   try {
