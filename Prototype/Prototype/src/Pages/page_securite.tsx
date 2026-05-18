@@ -87,6 +87,63 @@ export default function PageProfil() {
     }
   }
 
+  // Fonction appelée lorsque l'utilisateur confirme un nouveau nom d'utilisateur
+  async function confirmerNomUtilisateur(nouveauNom: string) {
+    if (!utilisateur) return;
+
+    try {
+      const reponse = await fetch("http://localhost:4000/test/updateProfil", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          nomUtilisateur: nouveauNom,
+        }),
+      });
+
+      const donnees = await reponse.json();
+
+      if (!reponse.ok) {
+        throw new Error(donnees.message || "Erreur");
+      }
+
+      setUtilisateur({
+        ...utilisateur,
+        nomUtilisateur: nouveauNom,
+      });
+    } catch (erreur) {
+      console.error(erreur);
+      setErreur("Erreur lors de la modification du nom utilisateur");
+    }
+  }
+
+  // Fonction appelée lorsque l'utilisateur confirme un nouveau mot de passe
+  async function confirmerMotDePasse(nouveauMotDePasse: string) {
+    try {
+      const reponse = await fetch("http://localhost:4000/test/changePassword", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          nouveauMotDePasse,
+        }),
+      });
+
+      const donnees = await reponse.json();
+
+      if (!reponse.ok) {
+        throw new Error(donnees.message || "Erreur");
+      }
+    } catch (erreur) {
+      console.error(erreur);
+      setErreur("Erreur lors de la modification du mot de passe");
+    }
+  }
+
   // Fonction appelée lorsque l'utilisateur accepte ou refuse les cookies
   async function changerCookies() {
     if (!utilisateur) return;
@@ -144,41 +201,7 @@ export default function PageProfil() {
               label="Username"
               valeurAffichee={utilisateur.nomUtilisateur || "N/A"}
               placeholder="New username"
-              onConfirm={async (nouveauNom) => {
-                try {
-                  // Envoie le nouveau nom d'utilisateur au backend
-                  const reponse = await fetch(
-                    "http://localhost:4000/test/updateProfil",
-                    {
-                      method: "PATCH",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      credentials: "include",
-                      body: JSON.stringify({
-                        nomUtilisateur: nouveauNom,
-                      }),
-                    },
-                  );
-
-                  // Convertit la réponse en objet JavaScript
-                  const donnees = await reponse.json();
-
-                  // Si la modification échoue, on lance une erreur
-                  if (!reponse.ok) {
-                    throw new Error(donnees.message || "Erreur");
-                  }
-
-                  // Met à jour l'affichage avec le nouveau nom
-                  setUtilisateur({
-                    ...utilisateur,
-                    nomUtilisateur: nouveauNom,
-                  });
-                } catch (erreur) {
-                  console.error(erreur);
-                  setErreur("Erreur lors de la modification du nom utilisateur");
-                }
-              }}
+              onConfirm={confirmerNomUtilisateur}
             />
           </div>
 
@@ -189,37 +212,7 @@ export default function PageProfil() {
               valeurAffichee="*************"
               placeholder="New password"
               type="password"
-              onConfirm={async (nouveauMotDePasse) => {
-                try {
-                  // Envoie le nouveau mot de passe au backend
-                  const reponse = await fetch(
-                    "http://localhost:4000/test/changePassword",
-                    {
-                      method: "PATCH",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      credentials: "include",
-                      body: JSON.stringify({
-                        nouveauMotDePasse,
-                      }),
-                    },
-                  );
-
-                  // Convertit la réponse en objet JavaScript
-                  const donnees = await reponse.json();
-
-                  // Si la modification échoue, on lance une erreur
-                  if (!reponse.ok) {
-                    throw new Error(donnees.message || "Erreur");
-                  }
-
-                  alert("Mot de passe modifié avec succès");
-                } catch (erreur) {
-                  console.error(erreur);
-                  setErreur("Erreur lors de la modification du mot de passe");
-                }
-              }}
+              onConfirm={confirmerMotDePasse}
             />
           </div>
 
