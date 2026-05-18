@@ -235,17 +235,37 @@ http://localhost:5173
 
 ---
 
+## Création d’un compte utilisateur
+
+Pour utiliser les fonctionnalités liées au profil, au panier et aux paramètres, il faut créer un compte utilisateur.
+
+### Étapes d’inscription
+
+1. Ouvrir le site web à l’adresse suivante :
+
+```txt
+http://localhost:5173
+
+2. Aller à la page d’inscription.
+3. Remplir les champs obligatoires :
+
+Nom d’utilisateur
+Numéro de téléphone
+Courriel
+Mot de passe
+Confirmation du mot de passe
+
+__
 ## Accès administrateur
 
 Pour accéder à la page administrateur :
 
 1. Aller à la page de connexion.
-2. Entrer les identifiants suivants :
+2. Creer un compte avec le courriel suivant :
 
 ```txt
-Courriel : admin@pokemon.com
-Mot de passe : admin123
-```
+Courriel : admin1@pokemon.com
+
 
 3. Cliquer sur le bouton **Connexion**.
 
