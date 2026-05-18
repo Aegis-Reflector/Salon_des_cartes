@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TCGdex from "@tcgdex/sdk";
 
@@ -105,7 +105,6 @@ const lienCarte = (carteId: string) =>
 export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [page, setPage] = useState(1);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const promoSets: PromoSet[] = [
     { id: "sv05", title: "Forces Temporelles", img: promo1 },
