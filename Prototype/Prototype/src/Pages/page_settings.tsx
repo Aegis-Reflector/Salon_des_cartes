@@ -60,7 +60,6 @@ export default function PageProfil() {
         throw new Error(data.message || "Erreur lors de la sauvegarde");
       }
 
-      alert("Paramètres sauvegardés avec succès");
     } catch (err) {
       console.log(err);
       setError("Erreur lors de la sauvegarde des paramètres");

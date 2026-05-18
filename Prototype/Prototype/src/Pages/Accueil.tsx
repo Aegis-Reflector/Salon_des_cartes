@@ -9,7 +9,7 @@ import promo3 from "../images/promo3.png";
 import promo4 from "../images/promo4.png";
 import arrowLeft from "../images/flecheG.png";
 import arrowRight from "../images/flecheD.png";
-import backgroundMusic from "../music/Pokemon Black & White Music Driftveil City Music.mp3";
+
 
 import CarteUI from "../components/CarteUI";
 
@@ -105,7 +105,6 @@ const lienCarte = (carteId: string) =>
 export default function Accueil() {
   const [cartes, setCartes] = useState<Carte[]>([]);
   const [page, setPage] = useState(1);
-  const [musicPlaying, setMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const promoSets: PromoSet[] = [
@@ -114,18 +113,6 @@ export default function Accueil() {
     { id: "sv04", title: "Faille Paradoxe", img: promo3 },
     { id: "sv04.5", title: "Destinées de Paldea", img: promo4 },
   ];
-
-  function toggleMusic() {
-    if (!audioRef.current) return;
-
-    if (musicPlaying) {
-      audioRef.current.pause();
-      setMusicPlaying(false);
-    } else {
-      audioRef.current.play();
-      setMusicPlaying(true);
-    }
-  }
 
   async function voirCartes() {
     try {
@@ -204,16 +191,7 @@ export default function Accueil() {
 
   return (
     <div className="container-fluid p-5">
-      <audio ref={audioRef} src={backgroundMusic} loop />
 
-      <button
-        className="btn btn-sm btn-outline-secondary position-fixed bottom-0 end-0 m-3"
-        style={{ zIndex: 9999 }}
-        type="button"
-        onClick={toggleMusic}
-      >
-        {musicPlaying ? "Pause" : "Play"}
-      </button>
 
       <div className="mb-4">
         <Link to="/Catalogue" className="text-decoration-none">
