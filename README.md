@@ -196,7 +196,7 @@ Le conteneur MongoDB devrait apparaître dans la liste des conteneurs actifs.
 Dans un terminal, aller dans le dossier du backend :
 
 ```bash
-cd Prototype/serveurMongo
+cd serveurMongo
 ```
 
 Puis exécuter :
