@@ -79,7 +79,7 @@ cd Application-Web-Transactionelles-CartiFans123-Gr07
 ### 2. Aller dans le dossier du serveur
 
 ```bash
-cd Prototype/serveurMongo
+cd serveurMongo
 ```
 
 ### 3. Installer les dépendances du backend
@@ -124,7 +124,7 @@ tsx
 À partir de la racine du projet :
 
 ```bash
-cd Prototype/Prototype
+cd Salon_des_cartes_web/Frontend
 ```
 
 ### 5. Installer les dépendances du frontend
@@ -218,7 +218,7 @@ http://localhost:4000
 Dans un autre terminal, aller dans le dossier frontend :
 
 ```bash
-cd Prototype/Prototype
+cd Salon_des_cartes_web/Frontend
 ```
 
 Puis exécuter :
@@ -243,7 +243,7 @@ Pour utiliser les fonctionnalités liées au profil, au panier et aux paramètre
 
 1. Ouvrir le site web à l’adresse suivante :
 
-```txt
+````txt
 http://localhost:5173
 
 2. Aller à la page d’inscription.
@@ -278,8 +278,7 @@ L’utilisateur administrateur sera redirigé vers la page administrateur.
 ```txt
 Application-Web-Transactionelles-CartiFans123-Gr07
 │
-├── Prototype
-│   │
+│
 │   ├── serveurMongo
 │   │   ├── node_modules
 │   │   ├── src
@@ -309,7 +308,7 @@ Application-Web-Transactionelles-CartiFans123-Gr07
 │   │   ├── README.md
 │   │   └── tsconfig.json
 │   │
-│   └── Prototype
+│   └── Frontend
 │       ├── .vite
 │       ├── node_modules
 │       ├── public
@@ -339,7 +338,7 @@ Application-Web-Transactionelles-CartiFans123-Gr07
 ├── package-lock.json
 ├── package.json
 └── .gitignore
-```
+````
 
 ---
 

@@ -1,4 +1,4 @@
-import SidebarLayout from "../components/SidebarLayout";
+import SidebarLayout from "../components/SidebarLayout.tsx";
 import { useState, useEffect } from "react";
 import ChampModifiable from "../components/ChampModifiable.tsx";
 
